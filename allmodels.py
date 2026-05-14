@@ -3,17 +3,17 @@ import sys
 import os
 
 # ── page config ──────────────────────────────────────────────────────────────
-st.set_page_config(page_title="Ultimate Sizing Tool", page_icon="⚙️", layout="wide")
+st.set_page_config(page_title="Regulator Sizing Tool Beta (All Models)", page_icon="⚙️", layout="wide")
 
-st.title("⚙️ Ultimate Sizing Tool")
-st.markdown("Gas regulator sizing tool — fill in the inputs below and click **Run Sizing**.")
+st.title("⚙️ Regulator Sizing Tool Beta (All Models)")
+st.markdown("Fill in the inputs on the left and click **Run Sizing**.")
 
 # ── inject all the data + logic from the original script ────────────────────
 # We exec the file up to (but not including) the INPUT section so we get all
 # the data tables and functions, then drive it with Streamlit widgets.
 
 _script_dir = os.path.dirname(os.path.abspath(__file__))
-_tool_path   = os.path.join(_script_dir, "Ultimate Sizing Tool.py")
+_tool_path   = os.path.join(_script_dir, "Ultimate_Sizing_Tool.py")
 
 with open(_tool_path, "r") as f:
     _source = f.read()
@@ -169,25 +169,29 @@ def run_tool(
 with st.sidebar:
     st.header("📋 Inputs")
 
-    st.subheader("Units")
-    inlet_units    = st.selectbox("Inlet pressure units",  ["psi", "bar"])
-    outlet_units   = st.selectbox("Outlet pressure units", ["psi", "in wc", "bar"])  # in wc supported for outlet
-    flowrate_units = st.selectbox("Flow rate units",       ["CFH", "CMH", "BTUH"])
-
     st.subheader("Pressures & Flow")
-    inlet_input  = st.number_input(f"Inlet pressure ({inlet_units})",   min_value=0.001, max_value=100000.0, value=5.0,   step=0.5,  format="%.3f")
-    outlet_input = st.number_input(f"Outlet pressure ({outlet_units})", min_value=0.001, max_value=10000.0,  value=0.25,  step=0.05, format="%.4f")
-    flow_rate    = st.number_input(f"Max gas load / flow rate ({flowrate_units})", min_value=0.001, max_value=500000000.0, value=500.0, step=50.0)
-    min_flow_raw = st.number_input(f"Min gas load / flow rate ({flowrate_units} — enter 0 to use max flow)", min_value=0.0, max_value=500000000.0, value=0.0, step=50.0)
+    inlet_units  = st.selectbox("Inlet pressure units",  ["psi", "bar"])
+    inlet_input  = st.number_input("Inlet pressure",   min_value=0.0, max_value=100000.0, value=0.0,   step=0.5,  format="%.3f")
+
+    outlet_units = st.selectbox("Outlet pressure units", ["psi", "in wc", "bar"])
+    outlet_input = st.number_input("Outlet pressure", min_value=0.0, max_value=10000.0,  value=0.0,  step=0.05, format="%.4f")
+
+    flowrate_units = st.selectbox("Flow rate units", ["CFH", "CMH", "BTUH"])
+    flow_rate    = st.number_input("Max gas load / flow rate", min_value=0.0, max_value=500000000.0, value=0.0, step=50.0)
+    min_flow_raw = st.number_input("Min gas load / flow rate (enter 0 to use max flow)", min_value=0.0, max_value=500000000.0, value=0.0, step=50.0)
     min_flow     = flow_rate if min_flow_raw == 0 else min_flow_raw
-    maop         = st.number_input("Max inlet pressure / MAOP (psi)", min_value=0.001, max_value=1000.0, value=5.0, step=0.5, format="%.3f",
+    maop         = st.number_input("Max inlet pressure / MAOP (psi)", min_value=0.0, max_value=1000.0, value=0.0, step=0.5, format="%.3f",
                                    help="MAOP is always entered in psi")
 
+    # pipe size: display value (fraction string) → actual value passed to tool
+    _pipe_display = ["N/A", '3/8"', '1/2"', '3/4"', '1"', '1-1/4"', '1-1/2"', '2"', '2-1/2"', '3"']
+    _pipe_actual  = ["N/A", "0.375", "0.5", "0.75", "1", "1.25", "1.5", "2", "2.5", "3"]
+
     st.subheader("Pipe & OPP")
-    pipesize_input_raw = st.selectbox("Desired pipe size",
-        ["N/A", "0.375", "0.5", "0.75", "1", "1.25", "1.5", "2", "2.5", "3"],
-        index=4,
-        format_func=lambda x: "N/A" if x == "N/A" else f'{x}"')
+    pipesize_index = st.selectbox("Desired pipe size", range(len(_pipe_display)),
+        index=0,
+        format_func=lambda i: _pipe_display[i])
+    pipesize_input_raw = _pipe_actual[pipesize_index]
     pipesize_input = 0 if pipesize_input_raw == "N/A" else pipesize_input_raw
 
     opp_choice = st.radio("Overpressure protection required?", ["No", "Yes"])
@@ -360,7 +364,7 @@ if run_btn:
                         "Inlet Pressure (psi, converted)":   f"{inlet_psi:.4f}",
                         "Outlet Pressure (psi, converted)":  f"{outlet_psi:.4f}",
                         "Max Flow Rate (CFH, converted)":    f"{flow_cfh:,.1f}",
-                        "Pipe Size": "N/A" if pipesize_input_raw == "N/A" else f'{pipesize_input_raw}"',
+                        "Pipe Size": _pipe_display[pipesize_index],
                         "OPP Type": opp_type,
                         "Gas Type": gastype_input,
                         "Oversize Factor": f"{oversizeby:.2f}× ({oversize_percent:.0f}% oversize)",
@@ -378,17 +382,3 @@ if run_btn:
 else:
     # placeholder before first run
     st.info("👈  Fill in the inputs on the left and click **Run Sizing**.")
-
-    # Show a pressure-unit helper
-    with st.expander("💡 Pressure conversion helper"):
-        st.markdown("""
-| Inches w.c. | PSI (approx.) |
-|-------------|---------------|
-| 1.5\" wc    | 0.054 psi     |
-| 3.5\" wc    | 0.125 psi     |
-| 7\" wc      | 0.250 psi     |
-| 11\" wc     | 0.393 psi     |
-| 14\" wc     | 0.500 psi     |
-| 27\" wc     | 0.964 psi     |
-| 28\" wc     | 1.000 psi     |
-""")
