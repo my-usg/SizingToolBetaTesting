@@ -171,10 +171,10 @@ with st.sidebar:
 
     st.subheader("Pressures & Flow")
     inlet_units  = st.selectbox("Inlet pressure units",  ["psi", "bar"])
-    inlet_input  = st.number_input("Inlet pressure",   min_value=0.0, max_value=100000.0, value=0.0,   step=0.5,  format="%.2f")
+    inlet_input  = st.number_input("Inlet pressure",   min_value=0.0, max_value=100000.0, value=0.0,   step=0.1,  format="%.1f")
 
     outlet_units = st.selectbox("Outlet pressure units", ["psi", "in wc", "bar"])
-    outlet_input = st.number_input("Outlet pressure", min_value=0.0, max_value=10000.0,  value=0.0,  step=0.05, format="%.2f")
+    outlet_input = st.number_input("Outlet pressure", min_value=0.0, max_value=10000.0,  value=0.0,  step=0.1,  format="%.1f")
 
     flowrate_units = st.selectbox("Flow rate units", ["CFH", "CMH", "BTUH"])
     flow_rate    = st.number_input("Max gas load / flow rate", min_value=0, max_value=500000000, value=0, step=50, format="%d")
