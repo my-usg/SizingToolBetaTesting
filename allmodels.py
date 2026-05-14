@@ -364,9 +364,6 @@ if run_btn:
                         "MAOP (psi)": maop,
                         "Requested Pipe Size": _pipe_display[pipesize_index],
                         "Overpressure Protection Required": "Yes" if opp_choice == "Yes" else "No",
-                        "Gas Type": gastype_input,
-                        "% Load Feeding Generator / High-Eff Boiler": f"{pload_pct}%" if higheff == "Yes" else "N/A",
-                        "Oversize Factor": f"{oversize_percent:.0f}%",
                     }
                     if partial:
                         summary["Select Regulator with IRV"] = "Yes"
@@ -374,6 +371,9 @@ if run_btn:
                         summary["Protection Type"] = "IRV" if "IRV" in opp_pref else "Monitor"
                         if "IRV" in opp_pref:
                             summary["IRV Protect Downstream Pressure To (psi)"] = f"{irv_input:.1f}"
+                    summary["Gas Type"] = gastype_input
+                    summary["% Load Feeding Generator / High-Eff Boiler"] = f"{pload_pct}%" if higheff == "Yes" else "N/A"
+                    summary["Oversize Factor"] = f"{oversize_percent:.0f}%"
                     if gastypemult != 1:
                         summary["Gas Multiplier"] = f"{gastypemult:.4f}"
                     import pandas as pd
