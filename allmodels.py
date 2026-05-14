@@ -214,8 +214,9 @@ with st.sidebar:
             opp_type = "IRV"
 
     st.subheader("Load Type & Gas")
-    higheff = st.radio("Feeding a generator or high-efficiency boiler?", ["No", "Yes"])
-    pload   = 0.0
+    higheff   = st.radio("Feeding a generator or high-efficiency boiler?", ["No", "Yes"])
+    pload     = 0.0
+    pload_pct = 0
     if higheff == "Yes":
         pload_pct = st.slider("% of total load feeding generator / high-eff boiler", 0, 100, 50)
         pload = pload_pct / 100.0
@@ -324,8 +325,7 @@ if run_btn:
                         ("Body Size",          match.get("body")),
                         ("Orifice Size",       match.get("orifice")),
                         ("Seat",               match.get("seat")),
-                        ("Spring Color",       match.get("color")),
-                        ("Spring Range",       match.get("range")),
+                        ("Spring", f"{match.get('color', '')} {match.get('range', '')}".strip()),
                     ]
                     for label, val in fields:
                         if val:
@@ -356,17 +356,15 @@ if run_btn:
                     st.divider()
                     st.subheader("Input Summary")
                     summary = {
-                        f"Inlet Pressure ({inlet_units})":    inlet_input,
-                        f"Outlet Pressure ({outlet_units})":  outlet_input,
-                        f"Max Flow Rate ({flowrate_units})":  f"{flow_rate:,.2f}",
-                        f"Min Flow Rate ({flowrate_units})":  f"{min_flow:,.2f}",
+                        f"Inlet Pressure ({inlet_units})":   inlet_input,
+                        f"Outlet Pressure ({outlet_units})": outlet_input,
+                        f"Max Flow Rate ({flowrate_units})": f"{flow_rate:,}",
+                        f"Min Flow Rate ({flowrate_units})": f"{min_flow:,}",
                         "MAOP (psi)": maop,
-                        "Inlet Pressure (psi, converted)":   f"{inlet_psi:.4f}",
-                        "Outlet Pressure (psi, converted)":  f"{outlet_psi:.4f}",
-                        "Max Flow Rate (CFH, converted)":    f"{flow_cfh:,.1f}",
-                        "Pipe Size": _pipe_display[pipesize_index],
-                        "OPP Type": opp_type,
+                        "Requested Pipe Size": _pipe_display[pipesize_index],
+                        "Overpressure Protection Required": "Yes" if opp_choice == "Yes" else "No",
                         "Gas Type": gastype_input,
+                        "% Load Feeding Generator / High-Eff Boiler": f"{pload_pct}%" if higheff == "Yes" else "N/A",
                         "Oversize Factor": f"{oversizeby:.2f}× ({oversize_percent:.0f}% oversize)",
                     }
                     if gastypemult != 1:
