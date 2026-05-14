@@ -13,7 +13,7 @@ st.markdown("Fill in the inputs on the left and click **Run Sizing**.")
 # the data tables and functions, then drive it with Streamlit widgets.
 
 _script_dir = os.path.dirname(os.path.abspath(__file__))
-_tool_path   = os.path.join(_script_dir, "Ultimate_Sizing_Tool.py")
+_tool_path   = os.path.join(_script_dir, "Ultimate Sizing Tool.py")
 
 with open(_tool_path, "r") as f:
     _source = f.read()
