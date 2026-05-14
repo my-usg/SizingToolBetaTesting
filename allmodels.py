@@ -365,7 +365,7 @@ if run_btn:
                         "Overpressure Protection Required": "Yes" if opp_choice == "Yes" else "No",
                         "Gas Type": gastype_input,
                         "% Load Feeding Generator / High-Eff Boiler": f"{pload_pct}%" if higheff == "Yes" else "N/A",
-                        "Oversize Factor": f"{oversizeby:.2f}× ({oversize_percent:.0f}% oversize)",
+                        "Oversize Factor": f"{oversize_percent:.0f}%",
                     }
                     if gastypemult != 1:
                         summary["Gas Multiplier"] = f"{gastypemult:.4f}"
