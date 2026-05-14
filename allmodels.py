@@ -171,16 +171,16 @@ with st.sidebar:
 
     st.subheader("Pressures & Flow")
     inlet_units  = st.selectbox("Inlet pressure units",  ["psi", "bar"])
-    inlet_input  = st.number_input("Inlet pressure",   min_value=0.0, max_value=100000.0, value=0.0,   step=0.5,  format="%.3f")
+    inlet_input  = st.number_input("Inlet pressure",   min_value=0.0, max_value=100000.0, value=0.0,   step=0.5,  format="%.2f")
 
     outlet_units = st.selectbox("Outlet pressure units", ["psi", "in wc", "bar"])
-    outlet_input = st.number_input("Outlet pressure", min_value=0.0, max_value=10000.0,  value=0.0,  step=0.05, format="%.4f")
+    outlet_input = st.number_input("Outlet pressure", min_value=0.0, max_value=10000.0,  value=0.0,  step=0.05, format="%.2f")
 
     flowrate_units = st.selectbox("Flow rate units", ["CFH", "CMH", "BTUH"])
-    flow_rate    = st.number_input("Max gas load / flow rate", min_value=0.0, max_value=500000000.0, value=0.0, step=50.0)
-    min_flow_raw = st.number_input("Min gas load / flow rate (enter 0 to use max flow)", min_value=0.0, max_value=500000000.0, value=0.0, step=50.0)
+    flow_rate    = st.number_input("Max gas load / flow rate", min_value=0, max_value=500000000, value=0, step=50, format="%d")
+    min_flow_raw = st.number_input("Min gas load / flow rate (enter 0 to use max flow)", min_value=0, max_value=500000000, value=0, step=50, format="%d")
     min_flow     = flow_rate if min_flow_raw == 0 else min_flow_raw
-    maop         = st.number_input("Max inlet pressure / MAOP (psi)", min_value=0.0, max_value=1000.0, value=0.0, step=0.5, format="%.3f",
+    maop         = st.number_input("Max inlet pressure / MAOP (psi)", min_value=0.0, max_value=1000.0, value=0.0, step=0.5, format="%.2f",
                                    help="MAOP is always entered in psi")
 
     # pipe size: display value (fraction string) → actual value passed to tool
@@ -203,7 +203,7 @@ with st.sidebar:
         opp_pref = st.radio("Protection type", ["IRV (Internal Relief Valve)", "Monitor regulator"])
         if "IRV" in opp_pref:
             irv_input = st.number_input("IRV protect downstream pressure to (psi)",
-                                        min_value=0.001, max_value=500.0, value=float(outlet_input) + 0.5, step=0.1, format="%.3f")
+                                        min_value=0.001, max_value=500.0, value=float(outlet_input) + 0.5, step=0.1, format="%.2f")
             opp_type = "IRV"
         else:
             opp_type = "Monitor"
@@ -226,7 +226,7 @@ with st.sidebar:
     if gastype_input == "Propane":
         gastypemult = 0.63
     elif gastype_input == "Other":
-        sg = st.number_input("Specific gravity", min_value=0.01, max_value=10.0, value=0.6, step=0.01, format="%.3f")
+        sg = st.number_input("Specific gravity", min_value=0.01, max_value=10.0, value=0.6, step=0.01, format="%.2f")
         gastypemult = min(1.0, (0.6 / sg) ** 0.5)
         st.info("Contact USG for regulator compatibility with gases other than methane or propane.")
 
