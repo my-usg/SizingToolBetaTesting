@@ -203,7 +203,7 @@ with st.sidebar:
         opp_pref = st.radio("Protection type", ["IRV (Internal Relief Valve)", "Monitor regulator"])
         if "IRV" in opp_pref:
             irv_input = st.number_input("IRV protect downstream pressure to (psi)",
-                                        min_value=0.001, max_value=500.0, value=float(outlet_input) + 0.5, step=0.1, format="%.2f")
+                                        min_value=0.0, max_value=500.0, value=2.0, step=0.1, format="%.1f")
             opp_type = "IRV"
         else:
             opp_type = "Monitor"
