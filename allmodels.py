@@ -12,7 +12,8 @@ st.markdown("Gas regulator sizing tool — fill in the inputs below and click **
 # We exec the file up to (but not including) the INPUT section so we get all
 # the data tables and functions, then drive it with Streamlit widgets.
 
-_tool_path = os.path.join(os.path.dirname(__file__), "Ultimate_Sizing_Tool.py")
+_script_dir = os.path.dirname(os.path.abspath(__file__))
+_tool_path   = os.path.join(_script_dir, "Ultimate_Sizing_Tool.py")
 
 with open(_tool_path, "r") as f:
     _source = f.read()
