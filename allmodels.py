@@ -187,7 +187,7 @@ with st.sidebar:
     _pipe_display = ["N/A", '3/8"', '1/2"', '3/4"', '1"', '1-1/4"', '1-1/2"', '2"', '2-1/2"', '3"']
     _pipe_actual  = ["N/A", "0.375", "0.5", "0.75", "1", "1.25", "1.5", "2", "2.5", "3"]
 
-    st.subheader("Pipe & OPP")
+    st.subheader("Design Parameters")
     pipesize_index = st.selectbox("Desired pipe size", range(len(_pipe_display)),
         index=0,
         format_func=lambda i: _pipe_display[i])
@@ -198,9 +198,10 @@ with st.sidebar:
     partial    = False
     irv_input  = 0.0
     opp_type   = "None"
+    opp_pref   = ""
 
     if opp_choice == "Yes":
-        opp_pref = st.radio("Protection type", ["IRV (Internal Relief Valve)", "Monitor regulator"])
+        opp_pref = st.radio("If applicable should the program prioritize sizing with IRV or default to monitor regulator sizing?", ["IRV (Internal Relief Valve)", "Monitor regulator"])
         if "IRV" in opp_pref:
             irv_input = st.number_input("IRV protect downstream pressure to (psi)",
                                         min_value=0.0, max_value=500.0, value=2.0, step=0.1, format="%.1f")
@@ -367,6 +368,12 @@ if run_btn:
                         "% Load Feeding Generator / High-Eff Boiler": f"{pload_pct}%" if higheff == "Yes" else "N/A",
                         "Oversize Factor": f"{oversize_percent:.0f}%",
                     }
+                    if partial:
+                        summary["Select Regulator with IRV"] = "Yes"
+                    if opp_choice == "Yes":
+                        summary["Protection Type"] = "IRV" if "IRV" in opp_pref else "Monitor"
+                        if "IRV" in opp_pref:
+                            summary["IRV Protect Downstream Pressure To (psi)"] = f"{irv_input:.1f}"
                     if gastypemult != 1:
                         summary["Gas Multiplier"] = f"{gastypemult:.4f}"
                     import pandas as pd
