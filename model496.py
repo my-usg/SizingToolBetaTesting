@@ -5,7 +5,7 @@ import pandas as pd
 # ── page config ───────────────────────────────────────────────────────────────
 st.set_page_config(page_title="Model 496 Sizing Tool", page_icon="⚙️", layout="wide")
 
-st.title("⚙️ Model 496 Sizing Tool")
+st.markdown("<style>.beta-badge{display:inline-block;font-size:.6rem;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:#e85d26;border:1.5px solid #e85d26;border-radius:2px;padding:.1rem .35rem;margin-left:.5rem;vertical-align:middle;position:relative;top:-4px;font-family:sans-serif}</style><h1>⚙️ Model 496 Sizing Tool <span class='beta-badge'>Beta</span></h1>", unsafe_allow_html=True)
 st.markdown("Fill in the inputs on the left and click **Run Sizing**.")
 
 # ── load script logic ─────────────────────────────────────────────────────────
