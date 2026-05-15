@@ -1,0 +1,576 @@
+#496 REGULATOR
+from tabulate import tabulate
+
+data496 = {
+	0.25: {
+        1: {'R49638_12': None, 'R49638_38': None, 'R49638_56': 190, 'R49638_14': 160, 'R49638_36': 100, 'R49638_18': None, 'R49612_12': None, 'R49612_38': None, 'R49612_56': 20, 'R49612_14': 20, 'R49612_36': 110, 'R49612_18': None, 'R49634_12': 500, 'R49634_38': 400, 'R49634_56': 300, 'R49634_14': 275, 'R49634_36': 200, 'R49634_18': None, 'R49610_12': 425, 'R49610_38': 400, 'R49610_56': 300, 'R49610_14': 250, 'R49610_36': 200, 'R49610_18': None},
+        2: {'R49638_12': None, 'R49638_38': None, 'R49638_56': 220, 'R49638_14': 200, 'R49638_36': 150, 'R49638_18': None, 'R49612_12': None, 'R49612_38': None, 'R49612_56': 300, 'R49612_14': 240, 'R49612_36': 210, 'R49612_18': None, 'R49634_12': 775, 'R49634_38': 575, 'R49634_56': 475, 'R49634_14': 400, 'R49634_36': 250, 'R49634_18': None, 'R49610_12': 550, 'R49610_38': 525, 'R49610_56': 475, 'R49610_14': 350, 'R49610_36': 300, 'R49610_18': None},
+        5: {'R49638_12': None, 'R49638_38': None, 'R49638_56': 260, 'R49638_14': 250, 'R49638_36': 200, 'R49638_18': 180, 'R49612_12': None, 'R49612_38': None, 'R49612_56': 390, 'R49612_14': 330, 'R49612_36': 290, 'R49612_18': 220, 'R49634_12': 1050, 'R49634_38': 875, 'R49634_56': 725, 'R49634_14': 675, 'R49634_36': 400, 'R49634_18': 275, 'R49610_12': 1150, 'R49610_38': 950, 'R49610_56': 725, 'R49610_14': 600, 'R49610_36': 450, 'R49610_18': 250},
+        10: {'R49638_12': None, 'R49638_38': None, 'R49638_56': 280, 'R49638_14': 270, 'R49638_36': 220, 'R49638_18': 190, 'R49612_12': None, 'R49612_38': None, 'R49612_56': 480, 'R49612_14': 420, 'R49612_36': 350, 'R49612_18': 290, 'R49634_12': 1175, 'R49634_38': 1000, 'R49634_56': 950, 'R49634_14': 900, 'R49634_36': 650, 'R49634_18': 400, 'R49610_12': 1700, 'R49610_38': 1250, 'R49610_56': 1200, 'R49610_14': 900, 'R49610_36': 750, 'R49610_18': 375},
+        15: {'R49638_12': None, 'R49638_38': None, 'R49638_56': 290, 'R49638_14': 280, 'R49638_36': 240, 'R49638_18': 200, 'R49612_12': None, 'R49612_38': None, 'R49612_56': 550, 'R49612_14': 470, 'R49612_36': 410, 'R49612_18': 350, 'R49634_12': 1300, 'R49634_38': 1150, 'R49634_56': 1100, 'R49634_14': 1100, 'R49634_36': 775, 'R49634_18': 500, 'R49610_12': 1800, 'R49610_38': 1550, 'R49610_56': 1550, 'R49610_14': 1150, 'R49610_36': 950, 'R49610_18': 500},
+        20: {'R49638_12': None, 'R49638_38': None, 'R49638_56': 300, 'R49638_14': 290, 'R49638_36': 260, 'R49638_18': 220, 'R49612_12': None, 'R49612_38': None, 'R49612_56': 560, 'R49612_14': 500, 'R49612_36': 490, 'R49612_18': 410, 'R49634_12': 1350, 'R49634_38': 1300, 'R49634_56': 1250, 'R49634_14': 1175, 'R49634_36': 1000, 'R49634_18': 600, 'R49610_12': 1950, 'R49610_38': 1600, 'R49610_56': 1600, 'R49610_14': 1350, 'R49610_36': 1200, 'R49610_18': 600},
+        25: {'R49638_12': None, 'R49638_38': None, 'R49638_56': 300, 'R49638_14': 290, 'R49638_36': 260, 'R49638_18': 230, 'R49612_12': None, 'R49612_38': None, 'R49612_56': 580, 'R49612_14': 550, 'R49612_36': 500, 'R49612_18': 430, 'R49634_12': None, 'R49634_38': 1375, 'R49634_56': 1350, 'R49634_14': 1225, 'R49634_36': 1100, 'R49634_18': 675, 'R49610_12': None, 'R49610_38': 1650, 'R49610_56': 1650, 'R49610_14': 1600, 'R49610_36': 1350, 'R49610_18': 675},
+        30: {'R49638_12': None, 'R49638_38': None, 'R49638_56': 300, 'R49638_14': 300, 'R49638_36': 270, 'R49638_18': 240, 'R49612_12': None, 'R49612_38': None, 'R49612_56': 590, 'R49612_14': 580, 'R49612_36': 520, 'R49612_18': 470, 'R49634_12': None, 'R49634_38': 1500, 'R49634_56': 1475, 'R49634_14': 1300, 'R49634_36': 1250, 'R49634_18': 775, 'R49610_12': None, 'R49610_38': 1850, 'R49610_56': 1825, 'R49610_14': 1800, 'R49610_36': 1550, 'R49610_18': 775},
+        40: {'R49638_12': None, 'R49638_38': None, 'R49638_56': 300, 'R49638_14': 300, 'R49638_36': 280, 'R49638_18': 250, 'R49612_12': None, 'R49612_38': None, 'R49612_56': 600, 'R49612_14': 600, 'R49612_36': 570, 'R49612_18': 500, 'R49634_12': None, 'R49634_38': None, 'R49634_56': 1525, 'R49634_14': 1350, 'R49634_36': 1300, 'R49634_18': 900, 'R49610_12': None, 'R49610_38': None, 'R49610_56': 1950, 'R49610_14': 1900, 'R49610_36': 1875, 'R49610_18': 950},
+        50: {'R49638_12': None, 'R49638_38': None, 'R49638_56': None, 'R49638_14': 300, 'R49638_36': 300, 'R49638_18': 260, 'R49612_12': None, 'R49612_38': None, 'R49612_56': None, 'R49612_14': 600, 'R49612_36': 600, 'R49612_18': 550, 'R49634_12': None, 'R49634_38': None, 'R49634_56': None, 'R49634_14': 1425, 'R49634_36': 1375, 'R49634_18': 1050, 'R49610_12': None, 'R49610_38': None, 'R49610_56': None, 'R49610_14': 2025, 'R49610_36': 2000, 'R49610_18': 1100},
+        60: {'R49638_12': None, 'R49638_38': None, 'R49638_56': None, 'R49638_14': 300, 'R49638_36': 300, 'R49638_18': 270, 'R49612_12': None, 'R49612_38': None, 'R49612_56': None, 'R49612_14': 600, 'R49612_36': 600, 'R49612_18': 570, 'R49634_12': None, 'R49634_38': None, 'R49634_56': None, 'R49634_14': 1500, 'R49634_36': 1425, 'R49634_18': 1250, 'R49610_12': None, 'R49610_38': None, 'R49610_56': None, 'R49610_14': 2100, 'R49610_36': 2075, 'R49610_18': 1250},
+        80: {'R49638_12': None, 'R49638_38': None, 'R49638_56': None, 'R49638_14': None, 'R49638_36': 300, 'R49638_18': 300, 'R49612_12': None, 'R49612_38': None, 'R49612_56': None, 'R49612_14': None, 'R49612_36': 600, 'R49612_18': 600, 'R49634_12': None, 'R49634_38': None, 'R49634_56': None, 'R49634_14': None, 'R49634_36': 1500, 'R49634_18': 1500, 'R49610_12': None, 'R49610_38': None, 'R49610_56': None, 'R49610_14': None, 'R49610_36': 2200, 'R49610_18': 1500},
+        100: {'R49638_12': None, 'R49638_38': None, 'R49638_56': None, 'R49638_14': None, 'R49638_36': 300, 'R49638_18': 300, 'R49612_12': None, 'R49612_38': None, 'R49612_56': None, 'R49612_14': None, 'R49612_36': 600, 'R49612_18': 600, 'R49634_12': None, 'R49634_38': None, 'R49634_56': None, 'R49634_14': None, 'R49634_36': 1550, 'R49634_18': 1550, 'R49610_12': None, 'R49610_38': None, 'R49610_56': None, 'R49610_14': None, 'R49610_36': 2250, 'R49610_18': 1800},
+    },
+    0.5: {
+        1: {'R49638_12': None, 'R49638_38': None, 'R49638_56': 190, 'R49638_14': 160, 'R49638_36': 100, 'R49638_18': None, 'R49612_12': None, 'R49612_38': None, 'R49612_56': 20, 'R49612_14': 20, 'R49612_36': 110, 'R49612_18': None, 'R49634_12': 500, 'R49634_38': 400, 'R49634_56': 300, 'R49634_14': 275, 'R49634_36': 200, 'R49634_18': None, 'R49610_12': 425, 'R49610_38': 400, 'R49610_56': 300, 'R49610_14': 250, 'R49610_36': 200, 'R49610_18': None},
+        2: {'R49638_12': None, 'R49638_38': None, 'R49638_56': 220, 'R49638_14': 200, 'R49638_36': 150, 'R49638_18': None, 'R49612_12': None, 'R49612_38': None, 'R49612_56': 300, 'R49612_14': 240, 'R49612_36': 210, 'R49612_18': None, 'R49634_12': 775, 'R49634_38': 575, 'R49634_56': 475, 'R49634_14': 400, 'R49634_36': 250, 'R49634_18': None, 'R49610_12': 550, 'R49610_38': 525, 'R49610_56': 475, 'R49610_14': 350, 'R49610_36': 300, 'R49610_18': None},
+        5: {'R49638_12': None, 'R49638_38': None, 'R49638_56': 260, 'R49638_14': 250, 'R49638_36': 200, 'R49638_18': 180, 'R49612_12': None, 'R49612_38': None, 'R49612_56': 390, 'R49612_14': 330, 'R49612_36': 290, 'R49612_18': 220, 'R49634_12': 1050, 'R49634_38': 875, 'R49634_56': 725, 'R49634_14': 675, 'R49634_36': 400, 'R49634_18': 275, 'R49610_12': 1150, 'R49610_38': 950, 'R49610_56': 725, 'R49610_14': 600, 'R49610_36': 450, 'R49610_18': 250},
+        10: {'R49638_12': None, 'R49638_38': None, 'R49638_56': 280, 'R49638_14': 270, 'R49638_36': 220, 'R49638_18': 190, 'R49612_12': None, 'R49612_38': None, 'R49612_56': 480, 'R49612_14': 420, 'R49612_36': 350, 'R49612_18': 290, 'R49634_12': 1175, 'R49634_38': 1000, 'R49634_56': 950, 'R49634_14': 900, 'R49634_36': 650, 'R49634_18': 400, 'R49610_12': 1700, 'R49610_38': 1250, 'R49610_56': 1200, 'R49610_14': 900, 'R49610_36': 750, 'R49610_18': 375},
+        15: {'R49638_12': None, 'R49638_38': None, 'R49638_56': 290, 'R49638_14': 280, 'R49638_36': 240, 'R49638_18': 200, 'R49612_12': None, 'R49612_38': None, 'R49612_56': 550, 'R49612_14': 470, 'R49612_36': 410, 'R49612_18': 350, 'R49634_12': 1300, 'R49634_38': 1150, 'R49634_56': 1100, 'R49634_14': 1100, 'R49634_36': 775, 'R49634_18': 500, 'R49610_12': 1800, 'R49610_38': 1550, 'R49610_56': 1550, 'R49610_14': 1150, 'R49610_36': 950, 'R49610_18': 500},
+        20: {'R49638_12': None, 'R49638_38': None, 'R49638_56': 300, 'R49638_14': 290, 'R49638_36': 260, 'R49638_18': 220, 'R49612_12': None, 'R49612_38': None, 'R49612_56': 560, 'R49612_14': 500, 'R49612_36': 490, 'R49612_18': 410, 'R49634_12': 1350, 'R49634_38': 1300, 'R49634_56': 1250, 'R49634_14': 1175, 'R49634_36': 1000, 'R49634_18': 600, 'R49610_12': 1950, 'R49610_38': 1600, 'R49610_56': 1600, 'R49610_14': 1350, 'R49610_36': 1200, 'R49610_18': 600},
+        25: {'R49638_12': None, 'R49638_38': None, 'R49638_56': 300, 'R49638_14': 290, 'R49638_36': 260, 'R49638_18': 230, 'R49612_12': None, 'R49612_38': None, 'R49612_56': 580, 'R49612_14': 550, 'R49612_36': 500, 'R49612_18': 430, 'R49634_12': None, 'R49634_38': 1375, 'R49634_56': 1350, 'R49634_14': 1225, 'R49634_36': 1100, 'R49634_18': 675, 'R49610_12': None, 'R49610_38': 1650, 'R49610_56': 1650, 'R49610_14': 1600, 'R49610_36': 1350, 'R49610_18': 675},
+        30: {'R49638_12': None, 'R49638_38': None, 'R49638_56': 300, 'R49638_14': 300, 'R49638_36': 270, 'R49638_18': 240, 'R49612_12': None, 'R49612_38': None, 'R49612_56': 590, 'R49612_14': 580, 'R49612_36': 520, 'R49612_18': 470, 'R49634_12': None, 'R49634_38': 1500, 'R49634_56': 1475, 'R49634_14': 1300, 'R49634_36': 1250, 'R49634_18': 775, 'R49610_12': None, 'R49610_38': 1850, 'R49610_56': 1825, 'R49610_14': 1800, 'R49610_36': 1550, 'R49610_18': 775},
+        40: {'R49638_12': None, 'R49638_38': None, 'R49638_56': 300, 'R49638_14': 300, 'R49638_36': 280, 'R49638_18': 250, 'R49612_12': None, 'R49612_38': None, 'R49612_56': 600, 'R49612_14': 600, 'R49612_36': 570, 'R49612_18': 500, 'R49634_12': None, 'R49634_38': None, 'R49634_56': 1525, 'R49634_14': 1350, 'R49634_36': 1300, 'R49634_18': 900, 'R49610_12': None, 'R49610_38': None, 'R49610_56': 1950, 'R49610_14': 1900, 'R49610_36': 1875, 'R49610_18': 950},
+        50: {'R49638_12': None, 'R49638_38': None, 'R49638_56': None, 'R49638_14': 300, 'R49638_36': 300, 'R49638_18': 260, 'R49612_12': None, 'R49612_38': None, 'R49612_56': None, 'R49612_14': 600, 'R49612_36': 600, 'R49612_18': 550, 'R49634_12': None, 'R49634_38': None, 'R49634_56': None, 'R49634_14': 1425, 'R49634_36': 1375, 'R49634_18': 1050, 'R49610_12': None, 'R49610_38': None, 'R49610_56': None, 'R49610_14': 2025, 'R49610_36': 2000, 'R49610_18': 1100},
+        60: {'R49638_12': None, 'R49638_38': None, 'R49638_56': None, 'R49638_14': 300, 'R49638_36': 300, 'R49638_18': 270, 'R49612_12': None, 'R49612_38': None, 'R49612_56': None, 'R49612_14': 600, 'R49612_36': 600, 'R49612_18': 570, 'R49634_12': None, 'R49634_38': None, 'R49634_56': None, 'R49634_14': 1500, 'R49634_36': 1425, 'R49634_18': 1250, 'R49610_12': None, 'R49610_38': None, 'R49610_56': None, 'R49610_14': 2100, 'R49610_36': 2075, 'R49610_18': 1250},
+        80: {'R49638_12': None, 'R49638_38': None, 'R49638_56': None, 'R49638_14': None, 'R49638_36': 300, 'R49638_18': 300, 'R49612_12': None, 'R49612_38': None, 'R49612_56': None, 'R49612_14': None, 'R49612_36': 600, 'R49612_18': 600, 'R49634_12': None, 'R49634_38': None, 'R49634_56': None, 'R49634_14': None, 'R49634_36': 1500, 'R49634_18': 1500, 'R49610_12': None, 'R49610_38': None, 'R49610_56': None, 'R49610_14': None, 'R49610_36': 2200, 'R49610_18': 1500},
+        100: {'R49638_12': None, 'R49638_38': None, 'R49638_56': None, 'R49638_14': None, 'R49638_36': 300, 'R49638_18': 300, 'R49612_12': None, 'R49612_38': None, 'R49612_56': None, 'R49612_14': None, 'R49612_36': 600, 'R49612_18': 600, 'R49634_12': None, 'R49634_38': None, 'R49634_56': None, 'R49634_14': None, 'R49634_36': 1550, 'R49634_18': 1550, 'R49610_12': None, 'R49610_38': None, 'R49610_56': None, 'R49610_14': None, 'R49610_36': 2250, 'R49610_18': 1800},
+    },
+	2.0: {	
+        5: {'R49638_12': None, 'R49638_38': None, 'R49638_56': 380, 'R49638_14': 330, 'R49638_36': 280, 'R49638_18': 150, 'R49612_12': None, 'R49612_38': None, 'R49612_56': 420, 'R49612_14': 340, 'R49612_36': 290, 'R49612_18': 160, 'R49634_12': 650, 'R49634_38': 550, 'R49634_56': 500, 'R49634_14': 350, 'R49634_36': 300, 'R49634_18': 200, 'R49610_12': 750, 'R49610_38': 450, 'R49610_56': 400, 'R49610_14': 350, 'R49610_36': 275, 'R49610_18': 250},
+        10: {'R49638_12': None, 'R49638_38': None, 'R49638_56': 440, 'R49638_14': 430, 'R49638_36': 400, 'R49638_18': 240, 'R49612_12': None, 'R49612_38': None, 'R49612_56': 500, 'R49612_14': 480, 'R49612_36': 420, 'R49612_18': 250, 'R49634_12': 1050, 'R49634_38': 800, 'R49634_56': 700, 'R49634_14': 600, 'R49634_36': 500, 'R49634_18': 325, 'R49610_12': 1050, 'R49610_38': 900, 'R49610_56': 650, 'R49610_14': 500, 'R49610_36': 425, 'R49610_18': 300},
+        15: {'R49638_12': None, 'R49638_38': None, 'R49638_56': 500, 'R49638_14': 460, 'R49638_36': 440, 'R49638_18': 310, 'R49612_12': None, 'R49612_38': None, 'R49612_56': 620, 'R49612_14': 520, 'R49612_36': 490, 'R49612_18': 320, 'R49634_12': 1150, 'R49634_38': 1050, 'R49634_56': 900, 'R49634_14': 725, 'R49634_36': 650, 'R49634_18': 425, 'R49610_12': 1200, 'R49610_38': 1050, 'R49610_56': 1000, 'R49610_14': 700, 'R49610_36': 500, 'R49610_18': 400},
+        20: {'R49638_12': None, 'R49638_38': None, 'R49638_56': 510, 'R49638_14': 480, 'R49638_36': 450, 'R49638_18': 350, 'R49612_12': None, 'R49612_38': None, 'R49612_56': 650, 'R49612_14': 590, 'R49612_36': 510, 'R49612_18': 360, 'R49634_12': 1400, 'R49634_38': 1200, 'R49634_56': 1050, 'R49634_14': 850, 'R49634_36': 725, 'R49634_18': 525, 'R49610_12': 1500, 'R49610_38': 1300, 'R49610_56': 1200, 'R49610_14': 800, 'R49610_36': 650, 'R49610_18': 475},
+        25: {'R49638_12': None, 'R49638_38': None, 'R49638_56': 530, 'R49638_14': 500, 'R49638_36': 460, 'R49638_18': 380, 'R49612_12': None, 'R49612_38': None, 'R49612_56': 700, 'R49612_14': 660, 'R49612_36': 550, 'R49612_18': 390, 'R49634_12': None, 'R49634_38': None, 'R49634_56': 1175, 'R49634_14': 1000, 'R49634_36': 850, 'R49634_18': 575, 'R49610_12': None, 'R49610_38': 1400, 'R49610_56': 1300, 'R49610_14': 1000, 'R49610_36': 700, 'R49610_18': 550},
+        30: {'R49638_12': None, 'R49638_38': None, 'R49638_56': 560, 'R49638_14': 520, 'R49638_36': 490, 'R49638_18': 430, 'R49612_12': None, 'R49612_38': None, 'R49612_56': 760, 'R49612_14': 720, 'R49612_36': 590, 'R49612_18': 440, 'R49634_12': None, 'R49634_38': None, 'R49634_56': 1300, 'R49634_14': 1100, 'R49634_36': 900, 'R49634_18': 600, 'R49610_12': None, 'R49610_38': 1500, 'R49610_56': 1400, 'R49610_14': 1100, 'R49610_36': 850, 'R49610_18': 650},
+        40: {'R49638_12': None, 'R49638_38': None, 'R49638_56': 580, 'R49638_14': 560, 'R49638_36': 510, 'R49638_18': 450, 'R49612_12': None, 'R49612_38': None, 'R49612_56': 810, 'R49612_14': 800, 'R49612_36': 700, 'R49612_18': 520, 'R49634_12': None, 'R49634_38': None, 'R49634_56': 1500, 'R49634_14': 1250, 'R49634_36': 950, 'R49634_18': 700, 'R49610_12': None, 'R49610_38': None, 'R49610_56': 1500, 'R49610_14': 1300, 'R49610_36': 1050, 'R49610_18': 800},
+        50: {'R49638_12': None, 'R49638_38': None, 'R49638_56': None, 'R49638_14': 570, 'R49638_36': 550, 'R49638_18': 460, 'R49612_12': None, 'R49612_38': None, 'R49612_56': None, 'R49612_14': 840, 'R49612_36': 750, 'R49612_18': 530, 'R49634_12': None, 'R49634_38': None, 'R49634_56': None, 'R49634_14': 1400, 'R49634_36': 1100, 'R49634_18': 800, 'R49610_12': None, 'R49610_38': None, 'R49610_56': None, 'R49610_14': 1500, 'R49610_36': 1225, 'R49610_18': 900},
+        60: {'R49638_12': None, 'R49638_38': None, 'R49638_56': None, 'R49638_14': 590, 'R49638_36': 560, 'R49638_18': 470, 'R49612_12': None, 'R49612_38': None, 'R49612_56': None, 'R49612_14': 920, 'R49612_36': 870, 'R49612_18': 580, 'R49634_12': None, 'R49634_38': None, 'R49634_56': None, 'R49634_14': 1500, 'R49634_36': 1250, 'R49634_18': 900, 'R49610_12': None, 'R49610_38': None, 'R49610_56': None, 'R49610_14': 1700, 'R49610_36': 1350, 'R49610_18': 1000},
+        80: {'R49638_12': None, 'R49638_38': None, 'R49638_56': None, 'R49638_14': None, 'R49638_36': 570, 'R49638_18': 540, 'R49612_12': None, 'R49612_38': None, 'R49612_56': None, 'R49612_14': None, 'R49612_36': 910, 'R49612_18': 670, 'R49634_12': None, 'R49634_38': None, 'R49634_56': None, 'R49634_14': None, 'R49634_36': 1425, 'R49634_18': 1100, 'R49610_12': None, 'R49610_38': None, 'R49610_56': None, 'R49610_14': None, 'R49610_36': 1800, 'R49610_18': 1300},
+        100: {'R49638_12': None, 'R49638_38': None, 'R49638_56': None, 'R49638_14': None, 'R49638_36': 580, 'R49638_18': 570, 'R49612_12': None, 'R49612_38': None, 'R49612_56': None, 'R49612_14': None, 'R49612_36': 1000, 'R49612_18': 750, 'R49634_12': None, 'R49634_38': None, 'R49634_56': None, 'R49634_14': None, 'R49634_36': 1500, 'R49634_18': 1200, 'R49610_12': None, 'R49610_38': None, 'R49610_56': None, 'R49610_14': None, 'R49610_36': 2000, 'R49610_18': 1700},
+    },
+}
+
+
+# Interpolation Function
+# ------------------------------------------------------------------------------------------------------
+
+def interpolate_capacity(data, inlet, outlet, monitor_used, vp):
+    outlet_vals = sorted(data.keys())
+
+    if outlet < outlet_vals[0] or outlet > outlet_vals[-1]:
+        return "Error: inlet pressure is out of range for given outlet pressure"
+
+    outlet_low = max([p for p in outlet_vals if p <= outlet])
+    outlet_high = min([p for p in outlet_vals if p >= outlet])
+
+    def inlet_interpolate(section):
+        #Interpolate capacities at the target inlet pressure within one outlet section.
+        inlet_vals = sorted(section.keys())
+        if not inlet_vals or inlet < inlet_vals[0] or inlet > inlet_vals[-1]:
+            return None
+        inlet_low = max([p for p in inlet_vals if p <= inlet])
+        inlet_high = min([p for p in inlet_vals if p >= inlet])
+        u = (inlet - inlet_low) / (inlet_high - inlet_low) if inlet_high != inlet_low else 0
+        result = {}
+        for reg in section[inlet_low]:
+            f0 = section[inlet_low][reg]
+            f1 = section[inlet_high][reg]
+            if f0 is None or f1 is None:
+                result[reg] = None
+            else:
+                result[reg] = (1 - u) * f0 + u * f1
+        return result
+
+    cap_low = inlet_interpolate(data[outlet_low])
+    cap_high = inlet_interpolate(data[outlet_high])
+
+    if cap_low is None or cap_high is None:
+        return "Error: inlet pressure is out of range for given outlet pressure"
+
+    t = (outlet - outlet_low) / (outlet_high - outlet_low) if outlet_high != outlet_low else 0
+
+    capacities = {}
+    for reg in cap_low:
+        v_low = cap_low[reg]
+        v_high = cap_high.get(reg)
+        if v_low is None or v_high is None:
+            capacities[reg] = "N/A"
+            continue
+        interpolated = (1 - t) * v_low + t * v_high
+
+        if monitor_used:
+            interpolated *= 0.7
+
+        if vp:
+            interpolated *= 0.8
+
+        interpolated *= gastypemult
+
+        capacities[reg] = int(round(interpolated))
+
+    return capacities
+
+
+# Orifice Types & MAOP Function
+# ------------------------------------------------------------------------------------------------------
+
+def orifice_typeSMALL(reg):
+    suf = reg[-2:]
+    if suf == "18":
+        return '1/8"'
+    elif suf == "36":
+        return '3/16"'
+    elif suf == "14":
+        return '1/4"'
+    elif suf == "56":
+        return '5/16"'
+    elif suf == "38":
+        return '3/8"'
+    elif suf == "12":
+        return '1/2"'
+
+def orifice_max496(reg):
+    suf = reg[-2:]
+    if suf == "18":
+        return 125
+    elif suf == "36":
+        return 125
+    elif suf == "14":
+        return 60
+    elif suf == "56":
+        return 40
+    elif suf == "38":
+        return 30
+    elif suf == "12":
+        return 30
+
+# Spring Selections
+# ------------------------------------------------------------------------------------------------------
+
+def spring_496(op):
+    if op < 6/28 and op >= 3.5/28:
+        return {
+            'color': 'Silver',
+            'range': '(3.5" - 10.5" wc)',
+        }
+    elif op < 8/28:
+        return {
+            'color': 'Blue',
+            'range': '(6" - 8" wc)',
+        }
+    elif op < 14/28:
+        return {
+            'color': 'Green',
+            'range': '(6" - 14" wc)',
+        }
+    elif op < 1:
+        return {
+            'color': 'Red',
+            'range': '(12" - 28" wc)',
+        }
+    elif op <= 2:
+        return {
+            'color': 'Black',
+            'range': '(1 - 2 psi)',
+        }
+    
+
+# Will Regulator Work Function & Will IRV Work
+# ------------------------------------------------------------------------------------------------------
+
+def will_work(cap, reg, orifice_max):
+    if cap == "N/A":
+        return "No"
+    else:
+        if cap >= (flow_rate * oversizeby) and orifice_max >= maop:
+            return "Yes"
+        else:
+            return "No"
+
+def will_irv_work496(reg):
+    orif = orifice_typeSMALL(reg)
+
+    # Partial IRV
+    if partial:
+        return "Partial"
+    
+    if irv_lim >= 1.75:
+        if orif == '1/8"':
+            max = 125
+        elif orif == '3/16"':
+            max = 74
+        elif orif == '1/4"':
+            max = 44
+        elif orif == '5/16"':
+            max = 30
+        elif orif == '3/8"':
+            max = 21
+        elif orif == '1/2"':
+            max = 14
+    elif irv_lim >= 1.25:
+        if orif == '1/8"':
+            max = 125
+        elif orif == '3/16"':
+            max = 56
+        elif orif == '1/4"':
+            max = 31
+        elif orif == '5/16"':
+            max = 22
+        elif orif == '3/8"':
+            max = 18
+        elif orif == '1/2"':
+            max = 10
+    elif irv_lim >= 0.75:
+        if orif == '1/8"':
+            max = 76
+        elif orif == '3/16"':
+            max = 28
+        elif orif == '1/4"':
+            max = 18
+        elif orif == '5/16"':
+            max = 12
+        elif orif == '3/8"':
+            max = 10
+        elif orif == '1/2"':
+            max = 7
+    else:
+        max = 0
+    
+    if inlet_input <= max:
+        return "Yes"
+    else:
+        return "No"
+
+
+# Regulator Match Functions
+# ------------------------------------------------------------------------------------------------------
+
+def gen_match496(result, model, opp):
+    match = None
+
+    body_labels496 = {
+        'R49638': '3/8"',
+        'R49612': '1/2"',
+        'R49634': '3/4"',
+        'R49610': '1"',
+    }
+
+    pipe_priority = {
+        '3/8"': 'R49638',
+        '1/2"':   'R49612',
+        '3/4"':  'R49634',
+        '1"':     'R49610',
+    }
+
+    all_prefixes = list(body_labels496.keys())
+    prioritized = pipe_priority.get(pipesize_input)
+    if prioritized:
+        ordered_prefixes = [prioritized] + [p for p in all_prefixes if p != prioritized]
+    else:
+        ordered_prefixes = all_prefixes
+
+    # largest to smallest orifices
+    orifice_order496 = ['12', '38', '56', '14', '36', '18']
+
+    # IRV
+    if opp != "None":
+        for prefix in ordered_prefixes:
+            for orifice in orifice_order496:
+                reg = f"{prefix}_{orifice}"
+                if reg in result:
+                    cap = result[reg]
+                    if will_work(cap, reg, orifice_max496(reg)) == "Yes" and will_irv_work496(reg) != "No":
+                        match = {
+                            'reg' : reg,
+                            'model': model,
+                            'diap': None,
+                            'body': body_labels496[prefix],
+                            'orifice': orifice_typeSMALL(reg),
+                            'seat': None,
+                            'color': spring_496(outlet_input)['color'],
+                            'range': spring_496(outlet_input)['range'],
+                            'capacity': cap,
+                            'opp': "IRV",
+                        }
+                        return match
+    # No OPP
+    else:
+        for prefix in ordered_prefixes:
+            for orifice in orifice_order496:
+                reg = f"{prefix}_{orifice}"
+                if reg in result:
+                    cap = result[reg]
+                    if will_work(cap, reg, orifice_max496(reg)) == "Yes":
+                        match = {
+                            'reg' : reg,
+                            'model': model,
+                            'diap': None,
+                            'body': body_labels496[prefix],
+                            'orifice': orifice_typeSMALL(reg),
+                            'seat': None,
+                            'color': spring_496(outlet_input)['color'],
+                            'range': spring_496(outlet_input)['range'],
+                            'capacity': cap,
+                            'opp': "None",
+                        }
+                        return match
+
+
+def run_regulator_selection496(inlet, outlet, opp):
+    result = interpolate_capacity(data496, inlet, outlet, False, False)
+
+    warning = None
+
+    if isinstance(result, str):
+        warning = result
+        result = None
+        match = None
+        apply = False
+        return result, match, apply, warning
+
+    match = gen_match496(result, '496', opp)
+
+    if match:
+        apply = True
+        if opp == "IRV" and not partial:
+            warning = "Sized for IRV"
+    else:
+        apply = False
+
+    return result, match, apply, warning
+
+
+# Part Number Configurator
+# ------------------------------------------------------------------------------------------------------
+
+# Holland Part Number
+def hsc_pnc496(match):
+    body_map = {
+        '3/8"': '3/8',
+        '1/2"': '1/2',
+        '3/4"': '3/4',
+        '1"': '1',
+    }
+    orifice_map = {
+        '1/8"': '10',
+        '3/16"': '11',
+        '1/4"': '12',
+        '5/16"': '13',
+        '3/8"': '14',
+        '1/2"': '15',
+    }
+    spring_map = {
+        'Silver': '00',
+        'Blue': '11',
+        'Green': '12',
+        'Red': '10',
+        'Black': '14',
+    }
+
+    body = body_map.get(match['body'])
+    orifice = orifice_map.get(match['orifice'])
+    spring = spring_map.get(match['color'])
+
+    return f"R.496-20.{body}.{orifice}.{spring}"
+
+
+# Output Functions
+# ------------------------------------------------------------------------------------------------------
+
+def print_model_table(title, prefix, opp, result):
+    
+    if opp == "IRV":
+        rows = [
+            [orifice_typeSMALL(reg), f"{cap:,.0f}" if isinstance(cap, (int, float)) else cap, will_work(cap, reg, orifice_max496(reg)), will_irv_work496(reg)]
+            for reg, cap in result.items()
+            if reg.startswith(prefix)
+        ]
+        print("\n" + title)
+        print(tabulate(rows, headers=["Orifice Size", "Calculated Capacity (CFH)", "Will Reg Work?", "Will IRV Work?"], tablefmt="simple_grid"))
+    else:
+        rows = [
+            [orifice_typeSMALL(reg), f"{cap:,.0f}" if isinstance(cap, (int, float)) else cap, will_work(cap, reg, orifice_max496(reg))]
+            for reg, cap in result496.items()
+            if reg.startswith(prefix)
+        ]
+        print("\n" + title)
+        print(tabulate(rows, headers=["Orifice Size", "Calculated Capacity (CFH)", "Will It Work?"], tablefmt="simple_grid"))
+
+def print_regulator_selection(match):
+    print("REGULATOR SELECTION")
+    print(f"Model:", match['model'])
+    if match['diap'] != None:
+        print(f"Diaphragm Size:", match['diap'])
+    print(f"Body Size:", match['body'])
+    if match['orifice'] != None:
+        print(f"Orifice Size:", match['orifice'])
+    if match['seat'] != None:
+        print(f"Seat:", match['seat'])
+    print(f"Spring:", match['color'], match['range'])
+    capacity = match['capacity']
+    cap_str = f"{capacity:,.0f}" if isinstance(capacity, (int, float)) else str(capacity)
+    print(f"Calculated Capacity (CFH): {cap_str}")
+    print(f"Oversized by {oversize_percent:.0f}%")
+    if gastypemult != 1:
+        print(f"Multiplier for other gas: {gastypemult}")
+
+
+# INPUT
+# ------------------------------------------------------------------------------------------------------
+
+print("Model 496 Sizing Tool")
+
+inlet_units = input("Inlet Pressure units (psi, bar): ")
+inlet_input = float(input("Enter inlet pressure: "))
+
+outlet_units = input("Outlet Pressure units (in wc, psi, bar): ")
+outlet_input = float(input("Enter outlet pressure: "))
+
+flowrate_units = input("Gas Load units (CFH, BTUH, CMH): ")
+flow_rate = float(input("Enter gas load/flow rate: "))
+
+maop = float(input("Enter maximum inlet pressure/MAOP (psi): "))
+maop = inlet_input if maop == 0 else maop
+
+pipesize_input = (input("Enter desired pipe size (enter N/A, 0.75, 1, 1.25, ect.): "))
+pipesize_input = 0 if pipesize_input == "N/A" else pipesize_input
+
+# Pressure Units Adjustments
+if outlet_units == "in wc":
+    outlet_input *= 1/28
+elif outlet_units == "bar":
+    outlet_input *= 14.5
+if inlet_units == "bar":
+    inlet_input *= 14.5
+
+opp_input = input("Do you require overpressure protection? (y/n): ").lower()
+partial = False
+irv_input = 0
+if opp_input == "y":
+    irv_input = float(input("IRV protect downstream pressure to: "))
+    irv_lim = irv_input - outlet_input
+    opp_type = "IRV"
+else:
+    partial_input = input("If applicable, select regulator with IRV for partial overpressure protection? (y/n): ")
+    partial = True if partial_input == "y" else False
+    opp_type = "IRV" if partial else "None"
+
+higheff_input = input("Is this feeding a generator or high-efficiency boiler? (y/n): ").lower()
+if higheff_input == "y":
+    pload = float(input("What percent of the total load is feeding a generator or high-efficiency boiler: "))
+    if pload < 0 or pload > 100:
+        print("")
+        print("Error: Percentage must be between 0-100")
+        print("")
+        exit()
+    pload *= 0.01
+else:
+    pload = 0
+oversizeby = 1.2 + (0.8 * pload)
+oversize_percent = (oversizeby - 1) * 100
+
+# Other Gasses
+# -----------------------------
+gastype_input = input("Other gas (n, propane, other): ")
+if gastype_input == "other":
+    sg = float(input("Enter specific gravity: "))
+    gastypemult = (0.6 / sg) ** 0.5
+    if gastypemult > 1:
+        gastypemult = 1
+    print("")
+    print("Contact USG for regulator compatibility with gasses other than methane or propane")
+elif gastype_input == "propane":
+    gastypemult = 0.63
+else:
+    gastypemult = 1
+
+# Flowrate Unit Adjustments
+if flowrate_units == "CMH":
+    flow_rate *= 35.3147
+elif flowrate_units == "BTUH":
+    if gastype_input == "n":
+        flow_rate *= 1/1000
+    elif gastype_input == "propane":
+        flow_rate *= 1/2516
+    else:
+        print("Enter gas load/flow rate in CFH or CMH when using other gasses")
+        exit()
+
+
+# Validation
+# ------------------------------------------------------------------------------------------------------
+
+if inlet_input > 125 or inlet_input < 1:
+    print("")
+    print("Error: Inlet pressure must be between 1 - 125 psi")
+    print("")
+    exit()
+
+if outlet_input < 3.5/28 or outlet_input > 2:
+    print("")
+    print("Error: Outlet pressure must be between 3.5 in wc and 2 psi")
+    print("")
+    exit()
+
+if outlet_input >= inlet_input:
+    print("")
+    print("Error: Outlet pressure must be less than inlet pressure")
+    print("")
+    exit()
+
+if maop < inlet_input and maop != 0:
+    print("")
+    print("Error: Maximum inlet pressure/MAOP must be greater than or equal to inlet pressure")
+    print("")
+    exit()
+
+# Adjust outlet pressures between 3.5" wc and 7" wc to 7" wc
+if 0.125 <= outlet_input < 0.25:
+    outlet_input496 = 0.25
+else:
+    outlet_input496 = outlet_input
+
+# Adjust inlet pressures between 100 and 125 psi
+if 100 < inlet_input <= 125:
+    inlet_input496 = 100
+else:
+    inlet_input496 = inlet_input
+
+
+# Run Regulator Selection
+# ------------------------------------------------------------------------------------------------------
+
+result496, match496, apply496, warning496 = run_regulator_selection496(inlet_input496, outlet_input496, opp_type)
+
+
+# Print Output
+# ------------------------------------------------------------------------------------------------------
+
+# Print regulator selection
+if apply496:
+    if warning496:
+        print("")
+        print(warning496)
+    print("")
+    print_regulator_selection(match496)
+    
+    # HSC Part Number = add_cart
+    add_cart = hsc_pnc496(match496)
+    print(f"HSC P/N:", ', '.join(add_cart) if isinstance(add_cart, (list, set)) else add_cart)
+else:
+    if warning496:
+        print("")
+        print(warning496)
+        print("")
+        exit()
+    else:
+        print("")
+        print("Model 496 will not work for your application.")
+print("")
+
+# Print capacity table
+
+opp_type = "None" if partial else opp_type
+
+print("REGULATOR SIZING TABLES")
+print_model_table('Model 496, 3/8" Body','R49638', opp_type, result496)
+print_model_table('Model 496, 1/2" Body','R49612', opp_type, result496)
+print_model_table('Model 496, 3/4" Body','R49634', opp_type, result496)
+print_model_table('Model 496, 1" Body','R49610', opp_type, result496)
