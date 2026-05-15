@@ -182,13 +182,14 @@ with st.sidebar:
     min_flow     = flow_rate if min_flow_raw == 0 else min_flow_raw
     maop         = st.number_input("Max inlet pressure / MAOP (psi)", min_value=0, max_value=1000, value=0, step=1, format="%d")
 
-    # pipe size: display value (fraction string) → actual value passed to tool
-    pipesize_input_raw = ["N/A", '3/8"', '1/2"', '3/4"', '1"', '1-1/4"', '1-1/2"', '2"', '2-1/2"', '3"']
+    # pipe size: display fraction string → passed directly to script (keys match pipe_priority)
+    _pipe_options = ["N/A", '3/8"', '1/2"', '3/4"', '1"', '1-1/4"', '1-1/2"', '2"', '2-1/2"', '3"']
 
     st.subheader("Design Parameters")
-    pipesize_index = st.selectbox("Desired pipe size", range(len(pipesize_input_raw)),
+    pipesize_index = st.selectbox("Desired pipe size", range(len(_pipe_options)),
         index=0,
-        format_func=lambda i: pipesize_input_raw[i])
+        format_func=lambda i: _pipe_options[i])
+    pipesize_input_raw = _pipe_options[pipesize_index]
     pipesize_input = 0 if pipesize_input_raw == "N/A" else pipesize_input_raw
 
     opp_choice = st.radio("Overpressure protection required?", ["No", "Yes"])
@@ -359,7 +360,7 @@ if run_btn:
                         f"Max Flow Rate ({flowrate_units})": f"{flow_rate:,}",
                         f"Min Flow Rate ({flowrate_units})": f"{min_flow:,}",
                         "MAOP (psi)": f"{int(maop)}",
-                        "Requested Pipe Size": pipesize_input_raw,
+                        "Requested Pipe Size": _pipe_options[pipesize_index],
                         "Overpressure Protection Required": "Yes" if opp_choice == "Yes" else "No",
                     }
                     if partial:
