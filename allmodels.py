@@ -249,7 +249,7 @@ if _outlet_psi_check < 1.5/28 or _outlet_psi_check > 250:
     errors.append("Outlet pressure must be between 1.5\" wc and 250 psi.")
 if _outlet_psi_check >= _inlet_psi_check:
     errors.append("Outlet pressure must be less than inlet pressure.")
-if maop < _inlet_psi_check and maop != 0:
+if int(maop) != 0 and maop < _inlet_psi_check:
     errors.append("MAOP must be ≥ inlet pressure.")
 if min_flow > flow_rate:
     errors.append("Minimum flow must be ≤ maximum flow rate.")
@@ -358,7 +358,7 @@ if run_btn:
                         f"Outlet Pressure ({outlet_units})": outlet_input,
                         f"Max Flow Rate ({flowrate_units})": f"{flow_rate:,}",
                         f"Min Flow Rate ({flowrate_units})": f"{min_flow:,}",
-                        "MAOP (psi)": maop,
+                        "MAOP (psi)": f"{int(maop)}",
                         "Requested Pipe Size": pipesize_input_raw,
                         "Overpressure Protection Required": "Yes" if opp_choice == "Yes" else "No",
                     }
