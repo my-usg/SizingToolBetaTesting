@@ -3857,7 +3857,7 @@ else:
                 print("")
 
             # For high-efficiency equipment and no OPP, size 121/122 first, else size 441/461 first
-            elif opp_type == "None" and pload > 50:
+            elif opp_type == "None" and pload >= 50:
                 #121
                 result121, result121_VP, result122, match121, apply121, warning121 = run_regulator_selection121(inlet_input, outlet_input121, opp_type)
                 if apply121:
