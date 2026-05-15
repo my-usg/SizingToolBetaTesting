@@ -1397,7 +1397,7 @@ def will_irv_work243(reg):
         if pre == "R24308":
             if suf == "1030":
                 max = 5
-            elif suf == "3410":
+            elif suf == "3410" or suf == "3430":
                 max = 6
             elif suf == "1210":
                 max = 12
@@ -1424,7 +1424,7 @@ def will_irv_work243(reg):
         if pre == "R24308":
             if suf == "1030":
                 max = 4
-            elif suf == "3410":
+            elif suf == "3410" or suf == "3430":
                 max = 5
             elif suf == "1210":
                 max = 10
@@ -1451,7 +1451,7 @@ def will_irv_work243(reg):
         if pre == "R24308":
             if suf == "1030":
                 max = 3
-            elif suf == "3410":
+            elif suf == "3410" or suf == "3430":
                 max = 4
             elif suf == "1210":
                 max = 7.5
@@ -1478,7 +1478,7 @@ def will_irv_work243(reg):
         if pre == "R24308":
             if suf == "1030":
                 max = 3
-            elif suf == "3410":
+            elif suf == "3410" or suf == "3430":
                 max = 3
             elif suf == "1210":
                 max = 5
