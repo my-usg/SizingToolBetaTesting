@@ -171,23 +171,23 @@ html, body, [data-testid="stAppViewContainer"] {
 </style>
 
 <div style="padding: 2rem 0 1rem 0;">
-    <div class="main-title">Sizing Tool Beta</div>
+    <div class="main-title">Sizing Tool <span class="beta-badge">Beta</span></div>
     </div>
 
 <hr class="divider">
 
 <a class="tool-card featured" href="https://allmodels-usg.streamlit.app/" target="_blank">
-    <div class="card-title featured-title">All Models</div>
+    <div class="card-title featured-title">All Models <span class="beta-badge">Beta</span></div>
     <span class="card-arrow">→</span>
 </a>
 
 <a class="tool-card" href="https://model496-usg.streamlit.app/" target="_blank">
-    <div class="card-title">Model 496</div>
+    <div class="card-title">Model 496 <span class="beta-badge">Beta</span></div>
     <span class="card-arrow">→</span>
 </a>
 
 <a class="tool-card" href="https://model143-usg.streamlit.app/" target="_blank">
-    <div class="card-title">Model 143</div>
+    <div class="card-title">Model 143 <span class="beta-badge">Beta</span></div>
     <span class="card-arrow">→</span>
 </a>
 
