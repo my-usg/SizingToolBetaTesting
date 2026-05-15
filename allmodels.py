@@ -171,27 +171,24 @@ with st.sidebar:
 
     st.subheader("Pressures & Flow")
     inlet_units  = st.selectbox("Inlet pressure units",  ["psi", "bar"])
-    inlet_input  = st.number_input("Inlet pressure",   min_value=0.0, max_value=100000.0, value=0.0,   step=0.1,  format="%.1f")
+    inlet_input  = st.number_input("Inlet pressure",   min_value=0.0, max_value=1000.0, value=0.0,   step=0.1,  format="%.1f")
 
     outlet_units = st.selectbox("Outlet pressure units", ["psi", "in wc", "bar"])
-    outlet_input = st.number_input("Outlet pressure", min_value=0.0, max_value=10000.0,  value=0.0,  step=0.1,  format="%.1f")
+    outlet_input = st.number_input("Outlet pressure", min_value=0.0, max_value=1000.0,  value=0.0,  step=0.1,  format="%.1f")
 
     flowrate_units = st.selectbox("Flow rate units", ["CFH", "CMH", "BTUH"])
-    flow_rate    = st.number_input("Max gas load / flow rate", min_value=0, max_value=500000000, value=0, step=50, format="%d")
-    min_flow_raw = st.number_input("Min gas load / flow rate (enter 0 to use max flow)", min_value=0, max_value=500000000, value=0, step=50, format="%d")
+    flow_rate    = st.number_input("Max gas load / flow rate", min_value=0, max_value=10000000000, value=0, step=1, format="%d")
+    min_flow_raw = st.number_input("Min gas load / flow rate (enter 0 to use max flow)", min_value=0, max_value=10000000000, value=0, step=1, format="%d")
     min_flow     = flow_rate if min_flow_raw == 0 else min_flow_raw
-    maop         = st.number_input("Max inlet pressure / MAOP (psi)", min_value=0, max_value=1000, value=0, step=1, format="%d",
-                                   help="MAOP is always entered in psi")
+    maop         = st.number_input("Max inlet pressure / MAOP (psi)", min_value=0, max_value=1000, value=0, step=1, format="%d")
 
     # pipe size: display value (fraction string) → actual value passed to tool
-    _pipe_display = ["N/A", '3/8"', '1/2"', '3/4"', '1"', '1-1/4"', '1-1/2"', '2"', '2-1/2"', '3"']
-    _pipe_actual  = ["N/A", "0.375", "0.5", "0.75", "1", "1.25", "1.5", "2", "2.5", "3"]
+    pipesize_input_raw = ["N/A", '3/8"', '1/2"', '3/4"', '1"', '1-1/4"', '1-1/2"', '2"', '2-1/2"', '3"']
 
     st.subheader("Design Parameters")
-    pipesize_index = st.selectbox("Desired pipe size", range(len(_pipe_display)),
+    pipesize_index = st.selectbox("Desired pipe size", range(len(pipesize_input_raw)),
         index=0,
-        format_func=lambda i: _pipe_display[i])
-    pipesize_input_raw = _pipe_actual[pipesize_index]
+        format_func=lambda i: pipesize_input_raw[i])
     pipesize_input = 0 if pipesize_input_raw == "N/A" else pipesize_input_raw
 
     opp_choice = st.radio("Overpressure protection required?", ["No", "Yes"])
@@ -362,7 +359,7 @@ if run_btn:
                         f"Max Flow Rate ({flowrate_units})": f"{flow_rate:,}",
                         f"Min Flow Rate ({flowrate_units})": f"{min_flow:,}",
                         "MAOP (psi)": maop,
-                        "Requested Pipe Size": _pipe_display[pipesize_index],
+                        "Requested Pipe Size": pipesize_input_raw,
                         "Overpressure Protection Required": "Yes" if opp_choice == "Yes" else "No",
                     }
                     if partial:

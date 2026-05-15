@@ -797,10 +797,10 @@ def gen_match496(result, model, opp):
     }
 
     pipe_priority = {
-        '0.375': 'R49638',
-        '0.5':   'R49612',
-        '0.75':  'R49634',
-        '1':     'R49610',
+        '3/8"': 'R49638',
+        '1/2"':   'R49612',
+        '3/4"':  'R49634',
+        '1"':     'R49610',
     }
 
     all_prefixes = list(body_labels496.keys())
@@ -1091,9 +1091,9 @@ def gen_match143(result, model, opp):
     }
 
     pipe_priority = {
-        '0.75': 'R14334',
-        '1':    'R14310',
-        '1.25': 'R1431Q',
+        '3/4"': 'R14334',
+        '1"':    'R14310',
+        '1-1/4"': 'R1431Q',
     }
 
     all_prefixes = list(body_labels143.keys())
@@ -1541,9 +1541,9 @@ def gen_match243(result, opp):
         orifice_order = ['1Q10', '1010', '1Q30', '1030', '3430', '3410', '1210', '3810', '1410', '2710']
 
         std_pipe_priority = {
-            '1.25': ['R243081Q', 'R243121Q'],
-            '1.5':  ['R243081H', 'R243121H'],
-            '2':    ['R2430802', 'R2431202'],
+            '1-1/4"': ['R243081Q', 'R243121Q'],
+            '1-1/2"':  ['R243081H', 'R243121H'],
+            '2"':    ['R2430802', 'R2431202'],
         }
         all_prefixes = list(body_labels243.keys())
         priority_list = std_pipe_priority.get(pipesize_input, [])
@@ -1562,9 +1562,9 @@ def gen_match243(result, opp):
         orifice_order = ['1030', '3410', '1210', '3810', '1410']
 
         hp_pipe_priority = {
-            '1.25': 'R243HP1Q',
-            '1.5':  'R243HP1H',
-            '2':    'R243HP02',
+            '1-1/4"': 'R243HP1Q',
+            '1-1/2"':  'R243HP1H',
+            '2"':    'R243HP02',
         }
         all_prefixes = list(body_labels243.keys())
         prioritized = hp_pipe_priority.get(pipesize_input)
@@ -2036,15 +2036,15 @@ def gen_match046(result, opp):
     }
 
     std_pipe_priority = {
-        '0.75': 'R046134',
-        '1':    'R046110',
-        '1.25': 'R04611Q',
+        '3/4"': 'R046134',
+        '1"':    'R046110',
+        '1-1/4"': 'R04611Q',
     }
 
     irv_pipe_priority = {
-        '0.75': 'R046234',
-        '1':    'R046210',
-        '1.25': 'R04621Q',
+        '3/4"': 'R046234',
+        '1"':    'R046210',
+        '1-1/4"': 'R04621Q',
     }
 
     all_std_prefixes = list(std_body_labels046.keys())
@@ -2590,9 +2590,9 @@ def gen_match121(result121, result122, vp, opp):
         body_order121 = ['1H', '20', '2H']
 
         vp_pipe_priority = {
-            '1.5': ['1H'],
-            '2':   ['20'],
-            '2.5': ['2H'],
+            '1-1/2"': ['1H'],
+            '2"':   ['20'],
+            '2-1/2"': ['2H'],
         }
         priority_list = vp_pipe_priority.get(pipesize_input, [])
         ordered_body121 = priority_list + [b for b in body_order121 if b not in priority_list]
@@ -2651,13 +2651,13 @@ def gen_match121(result121, result122, vp, opp):
         body_order121 = ['13', '10', '1Q', '1H', '20', '2H', '30']
 
         novp_pipe_priority = {
-            '0.75': ['13'],
-            '1':    ['13', '10'],
-            '1.25': ['1Q'],
-            '1.5':  ['1H'],
-            '2':    ['20'],
-            '2.5':  ['2H'],
-            '3':    ['30'],
+            '3/4"': ['13'],
+            '1"':    ['13', '10'],
+            '1-1/4"': ['1Q'],
+            '1-1/2"':  ['1H'],
+            '2"':    ['20'],
+            '2-1/2"':  ['2H'],
+            '3"':    ['30'],
         }
         priority_list = novp_pipe_priority.get(pipesize_input, [])
         ordered_body121 = priority_list + [b for b in body_order121 if b not in priority_list]
