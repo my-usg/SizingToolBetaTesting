@@ -13,7 +13,7 @@ st.markdown("Fill in the inputs on the left and click **Run Sizing**.")
 # the data tables and functions, then drive it with Streamlit widgets.
 
 _script_dir = os.path.dirname(os.path.abspath(__file__))
-_tool_path   = os.path.join(_script_dir, "Ultimate Sizing Tool.py")
+_tool_path   = os.path.join(_script_dir, "All Models Script.py")
 
 with open(_tool_path, "r") as f:
     _source = f.read()
@@ -118,7 +118,7 @@ def run_tool(
         return result, msgs
 
     # ── new routing: high-eff + no OPP → try 121/122 before 441/461 ────────
-    if opp_type == "None" and pload > 0.50:
+    if opp_type == "None" and pload >= 0.50:
         r121, r121vp, r122, m121, ok121, w121 = run_regulator_selection121(
             inlet_input, outlet_input121, opp_type)
         if ok121:
@@ -252,7 +252,7 @@ if _outlet_psi_check < 1.5/28 or _outlet_psi_check > 250:
     errors.append("Outlet pressure must be between 1.5\" wc and 250 psi.")
 if _outlet_psi_check >= _inlet_psi_check:
     errors.append("Outlet pressure must be less than inlet pressure.")
-if maop < _inlet_psi_check:
+if maop < _inlet_psi_check and maop != 0:
     errors.append("MAOP must be ≥ inlet pressure.")
 if min_flow > flow_rate:
     errors.append("Minimum flow must be ≤ maximum flow rate.")
