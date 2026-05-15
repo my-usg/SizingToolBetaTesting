@@ -1076,12 +1076,12 @@ def will_irv_work143(reg):
 # Regulator Match Functions
 # ------------------------------------------------------------------------------------------------------
 
-def gen_match143(result, model, opp):
+def gen_match143(result, opp):
     match = None
 
     if outlet_input > 2:
         model = '143-2HP'
-    elif opp == "None":
+    else:
         model = '143-1' if opp == "None" else '143-2'
 
     body_labels143 = {
@@ -1162,7 +1162,7 @@ def run_regulator_selection143(inlet, outlet, opp):
         apply = False
         return result, match, apply, warning
 
-    match = gen_match143(result, '143', opp)
+    match = gen_match143(result, opp)
 
     # if opp = IRV and partial = False, fail if outlet > 2 psi (for 143-2HP)
 
