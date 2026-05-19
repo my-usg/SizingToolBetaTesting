@@ -191,5 +191,25 @@ html, body, [data-testid="stAppViewContainer"] {
     <span class="card-arrow">→</span>
 </a>
 
+<a class="tool-card" href="https://model243-usg.streamlit.app/" target="_blank">
+    <div class="card-title">Model 243 <span class="beta-badge">Beta</span></div>
+    <span class="card-arrow">→</span>
+</a>
+
+<a class="tool-card" href="https://model046-usg.streamlit.app/" target="_blank">
+    <div class="card-title">Model 046 <span class="beta-badge">Beta</span></div>
+    <span class="card-arrow">→</span>
+</a>
+
+<a class="tool-card" href="https://model461-usg.streamlit.app/" target="_blank">
+    <div class="card-title">Model 441/461 <span class="beta-badge">Beta</span></div>
+    <span class="card-arrow">→</span>
+</a>
+
+<a class="tool-card" href="https://model121-usg.streamlit.app/" target="_blank">
+    <div class="card-title">Model 121/122 <span class="beta-badge">Beta</span></div>
+    <span class="card-arrow">→</span>
+</a>
+
 <div class="footer">United Sales Group &nbsp;·&nbsp; Regulator Sizing Platform</div>
 """, unsafe_allow_html=True)
