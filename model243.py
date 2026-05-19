@@ -273,6 +273,9 @@ if run_btn:
                     ('Model 243-8HP, 2" Body',      'R243HP02'),
                 ]
 
+                if opp_type == ("IRV" and outlet_input > 5) or (outlet_input > 4.5 and opp_type == "IRV" and not partial):
+                    opp_type = "Monitor"
+
                 if opp_type == "IRV" and not partial:
                     st.markdown("**Regulator Sizing Tables with IRV**")
                     for title, prefix in STD_IRV_BODIES:
