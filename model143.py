@@ -74,11 +74,10 @@ with st.sidebar:
                            help="MAOP is always entered in psi. Enter 0 to use inlet pressure.")
 
     st.subheader("Design Parameters")
-    _pipe_display = ["N/A", '3/8"', '1/2"', '3/4"', '1"', '1-1/4"', '1-1/2"', '2"', '2-1/2"', '3"']
-    _pipe_actual  = ["N/A", "0.375", "0.5", "0.75", "1", "1.25", "1.5", "2", "2.5", "3"]
-    pipesize_index = st.selectbox("Desired pipe size", range(len(_pipe_display)),
-        index=0, format_func=lambda i: _pipe_display[i])
-    pipesize_input_raw = _pipe_actual[pipesize_index]
+    _pipe_options = ["N/A", '3/8"', '1/2"', '3/4"', '1"', '1-1/4"', '1-1/2"', '2"', '2-1/2"', '3"']
+    pipesize_index = st.selectbox("Desired pipe size", range(len(_pipe_options)),
+        index=0, format_func=lambda i: _pipe_options[i])
+    pipesize_input_raw = _pipe_options[pipesize_index]
     pipesize_input = 0 if pipesize_input_raw == "N/A" else pipesize_input_raw
 
     opp_choice = st.radio("Overpressure protection required?", ["No", "Yes"])
@@ -267,7 +266,7 @@ if run_btn:
                     f"Outlet Pressure ({outlet_units})": outlet_input,
                     f"Gas Load ({flowrate_units})":      f"{flow_rate:,}",
                     "MAOP (psi)":                        f"{int(maop)}",
-                    "Requested Pipe Size":               _pipe_display[pipesize_index],
+                    "Requested Pipe Size":               _pipe_options[pipesize_index],
                     "Overpressure Protection Required":  "Yes" if opp_choice == "Yes" else "No",
                 }
                 if partial:
