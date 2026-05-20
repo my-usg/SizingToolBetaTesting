@@ -18,12 +18,14 @@ _tool_path   = os.path.join(_script_dir, "All Models Script.py")
 
 @st.cache_resource
 def _load_tool():
+    import io, contextlib
     with open(_tool_path, "r") as f:
         _source = f.read()
     _lines = _source.splitlines(keepends=True)
     _code  = "".join(_lines[:3624])
     g = {}
-    exec(compile(_code, _tool_path, "exec"), g)
+    with contextlib.redirect_stdout(io.StringIO()):
+        exec(compile(_code, _tool_path, "exec"), g)
     return g
 
 _globals = _load_tool()
