@@ -16,15 +16,17 @@ st.markdown("Fill in the inputs on the left and click **Run Sizing**.")
 _script_dir = os.path.dirname(os.path.abspath(__file__))
 _tool_path   = os.path.join(_script_dir, "All Models Script.py")
 
-with open(_tool_path, "r") as f:
-    _source = f.read()
+@st.cache_resource
+def _load_tool():
+    with open(_tool_path, "r") as f:
+        _source = f.read()
+    _lines = _source.splitlines(keepends=True)
+    _code  = "".join(_lines[:3624])
+    g = {}
+    exec(compile(_code, _tool_path, "exec"), g)
+    return g
 
-# Split at line 3587 — the print("ULTIMATE SIZING TOOL") line that starts the I/O section
-_lines  = _source.splitlines(keepends=True)
-_code   = "".join(_lines[:3624])
-
-_globals = {}
-exec(compile(_code, _tool_path, "exec"), _globals)
+_globals = _load_tool()
 
 # Make the tool's functions callable directly in this module
 for _k, _v in _globals.items():
