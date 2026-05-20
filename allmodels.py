@@ -385,9 +385,9 @@ if run_btn:
                         summary["Protection Type"] = "IRV" if "IRV" in opp_pref else "Monitor"
                         if "IRV" in opp_pref:
                             summary["IRV Protect Downstream Pressure To (psi)"] = f"{irv_input:.1f}"
+                    summary["% Load Feeding Generator / High-Eff Boiler"] = f"{pload_pct}%" if higheff == "Yes" else "N/A"
                     summary["Combustion Regulator Preferred"] = "Yes" if combust_pref else "No"
                     summary["Gas Type"] = gastype_input
-                    summary["% Load Feeding Generator / High-Eff Boiler"] = f"{pload_pct}%" if higheff == "Yes" else "N/A"
                     df = pd.DataFrame(summary.items(), columns=["Parameter", "Value"])
                     st.dataframe(df, use_container_width=True, hide_index=True)
 
