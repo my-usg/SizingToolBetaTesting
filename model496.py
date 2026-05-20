@@ -282,8 +282,8 @@ if run_btn:
                     summary["Select Regulator with IRV"] = "Yes"
                 if opp_choice == "Yes":
                     summary["IRV Protect Downstream Pressure To (psi)"] = f"{irv_input:.1f}"
-                summary["Gas Type"]             = gastype_input
                 summary["% Load Feeding Generator / High-Eff Boiler"] = f"{pload_pct}%" if higheff == "Yes" else "N/A"
+                summary["Gas Type"]             = gastype_input
 
                 df_summary = pd.DataFrame(summary.items(), columns=["Parameter", "Value"])
                 st.dataframe(df_summary, use_container_width=True, hide_index=True)
