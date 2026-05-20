@@ -856,14 +856,14 @@ std = build_standard_table(inlet_input, outlet_input, flow_rate, min_flow, opp_t
 vp = build_vport_table(inlet_input, outlet_input, flow_rate, min_flow, opp_type != "None")
 match461 = calc_regulator_selection(inlet_input, outlet_input, flow_rate, min_flow, opp_type != "None")
 
-if opp_type != "None":
-    print("")
-    print("Sized for worker/monitor setup")
-print("")
 if match461['model'] == "N/A":
     print("Model 441 or 461 will not work for your application")
     print("")
 else:
+    if opp_type != "None":
+        print("")
+        print("Sized for worker/monitor setup")
+        print("")
     print_regulator_selection(match461)
 
     # HSC Part Number = add_cart

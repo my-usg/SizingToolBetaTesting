@@ -159,12 +159,13 @@ if run_btn:
                 match461 = _globals["calc_regulator_selection"](inlet_psi, outlet_psi, flow_cfh, min_flow, monitor)
 
                 # ── regulator selection ───────────────────────────────────────
-                if monitor:
-                    st.info("ℹ️  Sized for worker/monitor setup.")
 
                 if match461["model"] == "N/A":
                     st.error("❌  Model 441/461 will not work for this application.")
                 else:
+                    if monitor:
+                        st.warning("Sized for worker/monitor setup.")
+
                     st.success("✅  Regulator selected!")
 
                     st.subheader("Regulator Selection")
