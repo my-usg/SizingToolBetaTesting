@@ -1,7 +1,6 @@
 import streamlit as st
 import sys
 import os
-import pandas as pd
 
 # ── page config ──────────────────────────────────────────────────────────────
 st.set_page_config(page_title="Regulator Sizing Tool Beta (All Models)", page_icon="⚙️", layout="wide")
@@ -21,7 +20,7 @@ with open(_tool_path, "r") as f:
 
 # Split at line 3587 — the print("ULTIMATE SIZING TOOL") line that starts the I/O section
 _lines  = _source.splitlines(keepends=True)
-_code   = "".join(_lines[:3618])
+_code   = "".join(_lines[:3624])
 
 _globals = {}
 exec(compile(_code, _tool_path, "exec"), _globals)
@@ -44,7 +43,7 @@ def fmt_pn(pn):
 def run_tool(
     inlet_input, outlet_input, flow_rate, min_flow, maop,
     pipesize_input, opp_type, partial, irv_input,
-    oversizeby, gastypemult, pload
+    oversizeby, gastypemult, pload, combust_pref
 ):
     """Run all regulator selection functions and return (result_dict, warnings)."""
 
@@ -78,6 +77,7 @@ def run_tool(
     _globals["oversizeby"]     = oversizeby
     _globals["gastypemult"]    = gastypemult
     _globals["pload"]          = pload
+    _globals["combust_pref"]   = combust_pref
 
     msgs   = []   # warning messages
     result = {}   # what we'll display
@@ -119,7 +119,7 @@ def run_tool(
         return result, msgs
 
     # ── new routing: high-eff + no OPP → try 121/122 before 441/461 ────────
-    if opp_type == "None" and pload >= 0.50:
+    if combust_pref:
         r121, r121vp, r122, m121, ok121, w121 = run_regulator_selection121(
             inlet_input, outlet_input121, opp_type)
         if ok121:
@@ -221,10 +221,10 @@ with st.sidebar:
         pload_pct = st.slider("% of total load feeding generator / high-eff boiler", 0, 100, 50)
         pload = pload_pct / 100.0
     oversizeby = 1.2 + (0.8 * pload)
-    
-    combust_pref_choice = st.radio("Prefer combustion regulator (Model 121/122)?", ["No", "Yes"])
+
+    combust_pref_choice = st.radio("Prefer combustion regulator (Model 121/122) sizing?", ["No", "Yes"])
     combust_pref = combust_pref_choice == "Yes"
-    
+
     gastype_input = st.selectbox("Gas type", ["Natural Gas", "Propane", "Other"])
     gastypemult   = 1.0
     if gastype_input == "Propane":
@@ -303,7 +303,7 @@ if run_btn:
                 result, msgs = run_tool(
                     inlet_psi, outlet_psi, flow_cfh, minflow_cfh, maop_psi,
                     pipesize_input, opp_type, partial, irv_input,
-                    oversizeby, gastypemult, pload
+                    oversizeby, gastypemult, pload, combust_pref
                 )
 
                 # ── warnings ────────────────────────────────────────────────
@@ -355,17 +355,19 @@ if run_btn:
                         else:
                             st.info("ℹ️  Model 121 regulators have outlet pipe sizing requirements — see brochure.")
 
-                    # ── summary table ────────────────────────────────────────
+                    # ── sizing adjustments ───────────────────────────────────
                     st.divider()
                     st.subheader("Sizing Adjustments")
-                    if opp_type == "Monitor":
-                        summary["Capacity reduction due to Monitor"] = '30%'
-                    summary = {
-                    summary["Oversize Factor"] = f"{oversize_percent:.0f}%"
+                    adj = {"Oversized By": f"{oversize_percent:.0f}%"}
+                    if "match" in result and result["match"].get("opp") == "Monitor":
+                        adj["Monitor Regulator"] = "30% capacity reduction applied"
                     if gastypemult != 1:
-                        summary["Gas Multiplier"] = f"{gastypemult:.4f}"
-                    }
-                    
+                        adj["Gas Type Factor"] = f"{gastypemult:.4f}"
+                    import pandas as pd
+                    df_adj = pd.DataFrame(adj.items(), columns=["Adjustment", "Value"])
+                    st.dataframe(df_adj, use_container_width=True, hide_index=True)
+
+                    # ── input summary ─────────────────────────────────────────
                     st.divider()
                     st.subheader("Input Summary")
                     summary = {
@@ -383,9 +385,9 @@ if run_btn:
                         summary["Protection Type"] = "IRV" if "IRV" in opp_pref else "Monitor"
                         if "IRV" in opp_pref:
                             summary["IRV Protect Downstream Pressure To (psi)"] = f"{irv_input:.1f}"
+                    summary["Combustion Regulator Preferred"] = "Yes" if combust_pref else "No"
+                    summary["Gas Type"] = gastype_input
                     summary["% Load Feeding Generator / High-Eff Boiler"] = f"{pload_pct}%" if higheff == "Yes" else "N/A"
-                    summary["Prefer combustion regulator (Model 121/122)"] = combust_pref_choice
-
                     df = pd.DataFrame(summary.items(), columns=["Parameter", "Value"])
                     st.dataframe(df, use_container_width=True, hide_index=True)
 
