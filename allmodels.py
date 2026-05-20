@@ -1,6 +1,7 @@
 import streamlit as st
 import sys
 import os
+import pandas as pd
 
 # ── page config ──────────────────────────────────────────────────────────────
 st.set_page_config(page_title="Regulator Sizing Tool Beta (All Models)", page_icon="⚙️", layout="wide")
