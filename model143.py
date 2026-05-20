@@ -19,7 +19,7 @@ except FileNotFoundError as e:
     st.stop()
 
 _lines  = _source.splitlines(keepends=True)
-_code   = "".join(_lines[:445])   # stop before INPUT section
+_code   = "".join(_lines[:450])   # stop before INPUT section
 
 _globals = {}
 try:
@@ -226,9 +226,6 @@ if run_btn:
                             st.markdown(f"**Calculated Capacity (CFH):** {int(round(float(cap))):,}")
                         except Exception:
                             st.markdown(f"**Calculated Capacity (CFH):** {cap}")
-                    st.markdown(f"**Oversized by:** {oversize_percent:.0f}%")
-                    if gastypemult != 1:
-                        st.markdown(f"**Gas Multiplier:** {gastypemult:.4f}")
 
                     st.subheader("HSC Part Number(s)")
                     pn = _globals["hsc_pnc143"](match143)
@@ -258,6 +255,17 @@ if run_btn:
                         st.markdown(f"**{title}**")
                         st.dataframe(df, use_container_width=True, hide_index=True)
 
+                # ── sizing adjustments ───────────────────────────────────────
+                st.divider()
+                st.subheader("Sizing Adjustments")
+                adj = {"Oversized By": f"{oversize_percent:.0f}%"}
+                if apply143 and match143.get("opp") == "Monitor":
+                    adj["Monitor Regulator"] = "30% capacity reduction applied"
+                if gastypemult != 1:
+                    adj["Gas Type Factor"] = f"{gastypemult:.4f}"
+                df_adj = pd.DataFrame(adj.items(), columns=["Adjustment", "Value"])
+                st.dataframe(df_adj, use_container_width=True, hide_index=True)
+
                 # ── input summary ─────────────────────────────────────────────
                 st.divider()
                 st.subheader("Input Summary")
@@ -273,11 +281,8 @@ if run_btn:
                     summary["Select Regulator with IRV"] = "Yes"
                 if opp_choice == "Yes":
                     summary["IRV Protect Downstream Pressure To (psi)"] = f"{irv_input:.1f}"
-                summary["Gas Type"]             = gastype_input
                 summary["% Load Feeding Generator / High-Eff Boiler"] = f"{pload_pct}%" if higheff == "Yes" else "N/A"
-                summary["Oversize Factor"]      = f"{oversize_percent:.0f}%"
-                if gastypemult != 1:
-                    summary["Gas Multiplier"]   = f"{gastypemult:.4f}"
+                summary["Gas Type"]             = gastype_input
 
                 df_summary = pd.DataFrame(summary.items(), columns=["Parameter", "Value"])
                 st.dataframe(df_summary, use_container_width=True, hide_index=True)
