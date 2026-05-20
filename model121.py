@@ -219,8 +219,7 @@ if run_btn:
                         st.code(pn)
 
                 else:
-                    if not warning121:
-                        st.error("❌  Model 121/122 will not work for this application.")
+                    st.error("❌  Model 121/122 will not work for this application.")
 
                 # ── sizing tables ─────────────────────────────────────────────
                 st.divider()
