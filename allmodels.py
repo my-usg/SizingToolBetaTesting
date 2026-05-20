@@ -364,7 +364,6 @@ if run_btn:
                         adj["Monitor Regulator"] = "30% capacity reduction applied"
                     if gastypemult != 1:
                         adj["Gas Type Factor"] = f"{gastypemult:.4f}"
-                    import pandas as pd
                     df_adj = pd.DataFrame(adj.items(), columns=["Adjustment", "Value"])
                     st.dataframe(df_adj, use_container_width=True, hide_index=True)
 
