@@ -407,6 +407,11 @@ def print_regulator_selection(match):
     capacity = match['capacity']
     cap_str = f"{capacity:,.0f}" if isinstance(capacity, (int, float)) else str(capacity)
     print(f"Calculated Capacity (CFH): {cap_str}")
+
+    print("")
+    print("Sizing Adjustments")
+    if match['opp'] == "Monitor":
+        print("Monitor regulator: 30% Capacity reduction")
     print(f"Oversized by {oversize_percent:.0f}%")
     if gastypemult != 1:
         print(f"Multiplier for other gas: {gastypemult}")
