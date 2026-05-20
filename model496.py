@@ -223,9 +223,6 @@ if run_btn:
                             st.markdown(f"**Calculated Capacity (CFH):** {int(round(float(cap))):,}")
                         except Exception:
                             st.markdown(f"**Calculated Capacity (CFH):** {cap}")
-                    st.markdown(f"**Oversized by:** {oversize_percent:.0f}%")
-                    if gastypemult != 1:
-                        st.markdown(f"**Gas Multiplier:** {gastypemult:.4f}")
 
                     st.subheader("HSC Part Number(s)")
                     pn = _globals["hsc_pnc496"](match496)
