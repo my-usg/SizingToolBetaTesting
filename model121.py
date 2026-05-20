@@ -19,7 +19,7 @@ except FileNotFoundError as e:
     st.stop()
 
 _lines  = _source.splitlines(keepends=True)
-_code   = "".join(_lines[:919])
+_code   = "".join(_lines[:924])
 
 _globals = {}
 try:
@@ -203,9 +203,6 @@ if run_btn:
                             st.markdown(f"**Calculated Capacity (CFH):** {int(round(float(cap))):,}")
                         except Exception:
                             st.markdown(f"**Calculated Capacity (CFH):** {cap}")
-                    st.markdown(f"**Oversized by:** {oversize_percent:.0f}%")
-                    if gastypemult != 1:
-                        st.markdown(f"**Gas Multiplier:** {gastypemult:.4f}")
 
                     # 121 outlet pipe note
                     model_name = match121.get("model", "")
@@ -300,6 +297,17 @@ if run_btn:
                         st.markdown("**Model 121-HP**")
                         st.dataframe(df, use_container_width=True, hide_index=True)
 
+                # ── sizing adjustments ───────────────────────────────────────
+                st.divider()
+                st.subheader("Sizing Adjustments")
+                adj = {"Oversized By": f"{oversize_percent:.0f}%"}
+                if match121 and match121.get("opp") == "Monitor":
+                    adj["Monitor Regulator"] = "30% capacity reduction applied"
+                if gastypemult != 1:
+                    adj["Gas Type Factor"] = f"{gastypemult:.4f}"
+                df_adj = pd.DataFrame(adj.items(), columns=["Adjustment", "Value"])
+                st.dataframe(df_adj, use_container_width=True, hide_index=True)
+
                 # ── input summary ─────────────────────────────────────────────
                 st.divider()
                 st.subheader("Input Summary")
@@ -311,12 +319,9 @@ if run_btn:
                     "MAOP (psi)":                        f"{int(maop)}",
                     "Requested Pipe Size":               _pipe_options[pipesize_index],
                     "Overpressure Protection Required":  "Yes" if opp_choice == "Yes" else "No",
-                    "Gas Type":                          gastype_input,
                     "% Load Feeding Generator / High-Eff Boiler": f"{pload_pct}%" if higheff == "Yes" else "N/A",
-                    "Oversize Factor":                   f"{oversize_percent:.0f}%",
+                    "Gas Type":                          gastype_input,
                 }
-                if gastypemult != 1:
-                    summary["Gas Multiplier"] = f"{gastypemult:.4f}"
 
                 df_summary = pd.DataFrame(summary.items(), columns=["Parameter", "Value"])
                 st.dataframe(df_summary, use_container_width=True, hide_index=True)
