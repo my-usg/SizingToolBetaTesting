@@ -769,9 +769,6 @@ min_flow = flow_rate if min_flow == 0 else min_flow
 maop = float(input("Enter maximum inlet pressure/MAOP (psi): "))
 maop = inlet_input if maop == 0 else maop
 
-pipesize_input = (input("Enter desired pipe size (enter N/A, 0.75, 1, 1.25, ect.): "))
-pipesize_input = 0 if pipesize_input == "N/A" else pipesize_input
-
 # Pressure Units Adjustments
 if outlet_units == "in wc":
     outlet_input *= 1/28
