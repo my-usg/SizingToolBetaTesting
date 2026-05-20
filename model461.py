@@ -68,11 +68,6 @@ with st.sidebar:
                            help="MAOP is always entered in psi. Enter 0 to use inlet pressure.")
 
     st.subheader("Design Parameters")
-    _pipe_options = ["N/A", '3/8"', '1/2"', '3/4"', '1"', '1-1/4"', '1-1/2"', '2"', '2-1/2"', '3"']
-    pipesize_index = st.selectbox("Desired pipe size", range(len(_pipe_options)),
-        index=0, format_func=lambda i: _pipe_options[i])
-    pipesize_input_raw = _pipe_options[pipesize_index]
-    pipesize_input = 0 if pipesize_input_raw == "N/A" else pipesize_input_raw
 
     opp_choice = st.radio("Overpressure protection required?", ["No", "Yes"])
     opp_type   = "Monitor" if opp_choice == "Yes" else "None"
@@ -151,7 +146,6 @@ if run_btn:
                     "flow_rate":         flow_cfh,
                     "min_flow":          min_flow,
                     "maop":              maop_psi,
-                    "pipesize_input":    pipesize_input,
                     "opp_type":          opp_type,
                     "oversizeby":        1.2,
                     "oversize_percent":  oversize_percent,
@@ -192,9 +186,6 @@ if run_btn:
                             st.markdown(f"**Calculated Capacity (CFH):** {int(round(float(cap))):,}")
                         except Exception:
                             st.markdown(f"**Calculated Capacity (CFH):** {cap}")
-                    st.markdown(f"**Oversized by:** {oversize_percent:.0f}%")
-                    if gastypemult != 1:
-                        st.markdown(f"**Gas Multiplier:** {gastypemult:.4f}")
 
                     st.subheader("HSC Part Number(s)")
                     pn = _globals["hsc_pnc461"](match461)
@@ -239,7 +230,6 @@ if run_btn:
                     f"Max Gas Load ({flowrate_units})":  f"{flow_rate:,}",
                     f"Min Gas Load ({flowrate_units})":  f"{min_flow_raw:,}" if min_flow_raw > 0 else "Same as max",
                     "MAOP (psi)":                        f"{int(maop)}",
-                    "Requested Pipe Size":               _pipe_options[pipesize_index],
                     "Overpressure Protection Required":  "Yes" if opp_choice == "Yes" else "No",
                     "Gas Type":                          gastype_input,
                 }
