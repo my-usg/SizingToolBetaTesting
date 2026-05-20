@@ -3605,6 +3605,11 @@ def print_regulator_selection(match):
     capacity = match['capacity']
     cap_str = f"{capacity:,.0f}" if isinstance(capacity, (int, float)) else str(capacity)
     print(f"Calculated Capacity (CFH): {cap_str}")
+
+    print("")
+    print("Sizing Adjustments")
+    if match['opp'] == "Monitor":
+        print("Monitor regulator: 30% Capacity reduction")
     print(f"Oversized by {oversize_percent:.0f}%")
     if gastypemult != 1:
         print(f"Multiplier for other gas: {gastypemult}")
@@ -3632,7 +3637,7 @@ min_flow = flow_rate if min_flow == 0 else min_flow
 maop = float(input("Enter maximum inlet pressure/MAOP (psi): "))
 maop = inlet_input if maop == 0 else maop
 
-pipesize_input = (input("Enter desired pipe size (enter N/A, 0.75, 1, 1.25, ect.): "))
+pipesize_input = (input('Enter desired pipe size (enter N/A, 3/4", 1", 1-1/4", ect.): '))
 pipesize_input = 0 if pipesize_input == "N/A" else pipesize_input
 
 # Pressure Units Adjustments
@@ -3672,6 +3677,9 @@ else:
     pload = 0
 oversizeby = 1.2 + (0.8 * pload)
 oversize_percent = (oversizeby - 1) * 100
+
+combust_pref = input("Combustion Regulator (Model 121-122) Preferred? ")
+combust_pref = True if combust_pref == "y" else False
 
 # Other Gasses
 # -----------------------------
@@ -3856,8 +3864,8 @@ else:
                 print(f"HSC P/N:", ', '.join(add_cart) if isinstance(add_cart, (list, set)) else add_cart)
                 print("")
 
-            # For high-efficiency equipment and no OPP, size 121/122 first, else size 441/461 first
-            elif opp_type == "None" and pload >= 50:
+            # For combustion regulators preferred size 121/122 first, else size 441/461 first
+            elif combust_pref:
                 #121
                 result121, result121_VP, result122, match121, apply121, warning121 = run_regulator_selection121(inlet_input, outlet_input121, opp_type)
                 if apply121:
