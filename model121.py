@@ -177,12 +177,13 @@ if run_btn:
                 result121, result121_VP, result122, match121, apply121, warning121 = \
                     _globals["run_regulator_selection121"](inlet_psi, outlet_input121, opp_type)
 
-                # ── warnings ─────────────────────────────────────────────────
-                if warning121:
-                    st.warning(warning121)
 
                 # ── regulator selection ───────────────────────────────────────
                 if match121:
+                    if warning121:
+                        st.warning(warning121)
+
+
                     st.success("✅  Regulator selected!")
 
                     st.subheader("Regulator Selection")

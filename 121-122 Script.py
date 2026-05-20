@@ -1066,14 +1066,8 @@ if match121:
         print(f"Note: Model 121 regulators have outlet pipe sizing requirements, regulator was sized for use with {body_size_min121(ip=inlet_input, reg=match121['reg'])} outlet pipe.  For capacities with smaller outlet piping, see regulator brochure.")
 
 else:
-    if warning121:
-        print("")
-        print(warning121)
-        print("")
-        exit()
-    else:
-        print("")
-        print("Model 121-122 will not work for your application.")
+    print("")
+    print("Model 121-122 will not work for your application.")
 print("")
 
 # Print capacity table
