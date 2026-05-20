@@ -19,7 +19,7 @@ except FileNotFoundError as e:
     st.stop()
 
 _lines  = _source.splitlines(keepends=True)
-_code   = "".join(_lines[:750])
+_code   = "".join(_lines[:756])
 
 _globals = {}
 try:
@@ -219,6 +219,17 @@ if run_btn:
                 df_vp = table_to_df(vp)
                 st.dataframe(df_vp, use_container_width=True, hide_index=True)
 
+                # ── sizing adjustments ───────────────────────────────────────
+                st.divider()
+                st.subheader("Sizing Adjustments")
+                adj = {"Oversized By": f"{oversize_percent:.0f}%"}
+                if match461["model"] != "N/A" and match461.get("opp") == "Monitor":
+                    adj["Monitor Regulator"] = "30% capacity reduction applied"
+                if gastypemult != 1:
+                    adj["Gas Type Factor"] = f"{gastypemult:.4f}"
+                df_adj = pd.DataFrame(adj.items(), columns=["Adjustment", "Value"])
+                st.dataframe(df_adj, use_container_width=True, hide_index=True)
+
                 # ── input summary ─────────────────────────────────────────────
                 st.divider()
                 st.subheader("Input Summary")
@@ -231,10 +242,7 @@ if run_btn:
                     "Requested Pipe Size":               _pipe_options[pipesize_index],
                     "Overpressure Protection Required":  "Yes" if opp_choice == "Yes" else "No",
                     "Gas Type":                          gastype_input,
-                    "Oversize Factor":                   f"{oversize_percent:.0f}%",
                 }
-                if gastypemult != 1:
-                    summary["Gas Multiplier"] = f"{gastypemult:.4f}"
 
                 df_summary = pd.DataFrame(summary.items(), columns=["Parameter", "Value"])
                 st.dataframe(df_summary, use_container_width=True, hide_index=True)
