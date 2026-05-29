@@ -680,7 +680,7 @@ outlet_input = float(input("Enter outlet pressure: "))
 flowrate_units = input("Gas Load units (CFH, BTUH, CMH): ")
 flow_rate = float(input("Enter gas load/flow rate: "))
 
-maop = float(input("Enter maximum inlet pressure/MAOP (psi): "))
+maop = float(input("MAOP (psi): "))
 maop = inlet_input if maop == 0 else maop
 
 pipesize_input = (input("Enter desired pipe size (enter N/A, 0.75, 1, 1.25, ect.): "))

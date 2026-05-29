@@ -70,7 +70,7 @@ with st.sidebar:
     flowrate_units = st.selectbox("Flow rate units", ["CFH", "CMH", "BTUH"])
     flow_rate    = st.number_input("Gas load / flow rate", min_value=0, max_value=500000000, value=0, step=50, format="%d")
 
-    maop = st.number_input("Max inlet pressure / MAOP (psi)", min_value=0, max_value=1000, value=0, step=1, format="%d",
+    maop = st.number_input("MAOP (psi)", min_value=0, max_value=1000, value=0, step=1, format="%d",
                            help="MAOP is always entered in psi. Enter 0 to use inlet pressure.")
 
     st.subheader("Design Parameters")
