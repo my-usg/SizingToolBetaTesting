@@ -802,7 +802,8 @@ if apply046:
         print(warning046)
     print("")
     print_regulator_selection(match046)
-
+    print("")
+    
     # HSC Part Number = add_cart
     add_cart = hsc_pnc046(match046)
     print(f"HSC P/N:", ', '.join(add_cart) if isinstance(add_cart, (list, set)) else add_cart)

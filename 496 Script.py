@@ -555,6 +555,7 @@ if apply496:
         print(warning496)
     print("")
     print_regulator_selection(match496)
+    print("")
     
     # HSC Part Number = add_cart
     add_cart = hsc_pnc496(match496)

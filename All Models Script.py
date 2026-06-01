@@ -3819,7 +3819,8 @@ if apply496:
         print(warning496)
         print("")
     print_regulator_selection(match496)
-    
+    print("")
+
     # HSC Part Number = add_cart
     add_cart = hsc_pnc496(match496)
     print(f"HSC P/N:", ', '.join(add_cart) if isinstance(add_cart, (list, set)) else add_cart)
@@ -3832,6 +3833,7 @@ else:
             print(warning143)
             print("")
         print_regulator_selection(match143)
+        print("")
 
         # HSC Part Number = add_cart
         add_cart = hsc_pnc143(match143)
@@ -3845,7 +3847,8 @@ else:
                 print(warning243)
                 print("")
             print_regulator_selection(match243)         
-            
+            print("")
+
             # HSC Part Number = add_cart
             add_cart = hsc_pnc243(match243)
             print(f"HSC P/N:", ', '.join(add_cart) if isinstance(add_cart, (list, set)) else add_cart)
@@ -3858,7 +3861,8 @@ else:
                     print(warning046)
                     print("")
                 print_regulator_selection(match046)                
-                
+                print("")
+
                 # HSC Part Number = add_cart
                 add_cart = hsc_pnc046(match046)
                 print(f"HSC P/N:", ', '.join(add_cart) if isinstance(add_cart, (list, set)) else add_cart)
@@ -3873,7 +3877,8 @@ else:
                         print(warning121)
                         print("")
                     print_regulator_selection(match121)
-                    
+                    print("")
+
                     # HSC Part Number = add_cart
                     add_cart = hsc_pnc121(match121)
                     print(f"HSC P/N:", ', '.join(add_cart) if isinstance(add_cart, (list, set)) else add_cart)
@@ -3891,7 +3896,8 @@ else:
                             print("Sized for worker/monitor setup")
                             print("")
                         print_regulator_selection(match461)
-                        
+                        print("")
+
                         # HSC Part Number = add_cart
                         add_cart = hsc_pnc461(match461)
                         print(f"HSC P/N:", ', '.join(add_cart) if isinstance(add_cart, (list, set)) else add_cart)
@@ -3908,7 +3914,8 @@ else:
                         print("Sized for worker/monitor setup")
                         print("")
                     print_regulator_selection(match461)
-                    
+                    print("")
+
                     # HSC Part Number = add_cart
                     add_cart = hsc_pnc461(match461)
                     print(f"HSC P/N:", ', '.join(add_cart) if isinstance(add_cart, (list, set)) else add_cart)
@@ -3921,6 +3928,7 @@ else:
                             print(warning121)
                             print("")
                         print_regulator_selection(match121)
+                        print("")
                         
                         # HSC Part Number = add_cart
                         add_cart = hsc_pnc121(match121)
