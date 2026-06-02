@@ -559,7 +559,7 @@ def calc_regulator_selection(inlet_p, outlet_p, max_flow, min_flow, monitor):
     else:
         diap = None
 
-    if opp_type != "None":
+    if monitor:
         opp = "Monitor"
     else:
         opp = "None"
