@@ -134,6 +134,8 @@ def run_tool(
         m461 = calc_regulator_selection(
             inlet_input, outlet_input, flow_rate, min_flow, opp_type == "Monitor" or (opp_type == "IRV" and not partial))
         if m461["model"] != "N/A":
+            if m461['opp'] == "Monitor":
+                msgs.append("Sized for worker/monitor setup")
             result["match"] = m461
             result["pn"]    = hsc_pnc461(m461)
             return result, msgs
@@ -145,7 +147,7 @@ def run_tool(
     m461 = calc_regulator_selection(
         inlet_input, outlet_input, flow_rate, min_flow, opp_type == "Monitor" or (opp_type == "IRV" and not partial))
     if m461["model"] != "N/A":
-        if opp_type != "None":
+        if m461['opp'] == "Monitor":
             msgs.append("Sized for worker/monitor setup")
         result["match"] = m461
         result["pn"]    = hsc_pnc461(m461)

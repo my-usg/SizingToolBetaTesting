@@ -3893,7 +3893,7 @@ else:
                 else:
                     match461 = calc_regulator_selection(inlet_input, outlet_input, flow_rate, min_flow, opp_type == "Monitor" or (opp_type == "IRV" and not partial))
                     if match461['model'] != "N/A":
-                        if opp_type != "None":
+                        if match461['opp'] == "Monitor":
                             print("Sized for worker/monitor setup")
                             print("")
                         print_regulator_selection(match461)
@@ -3911,7 +3911,7 @@ else:
             else:
                 match461 = calc_regulator_selection(inlet_input, outlet_input, flow_rate, min_flow, opp_type == "Monitor" or (opp_type == "IRV" and not partial))
                 if match461['model'] != "N/A":
-                    if opp_type != "None":
+                    if match461['opp'] == "Monitor":
                         print("Sized for worker/monitor setup")
                         print("")
                     print_regulator_selection(match461)
