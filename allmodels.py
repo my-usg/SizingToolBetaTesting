@@ -118,7 +118,7 @@ def run_tool(
         result["pn"]    = hsc_pnc046(m046)
         return result, msgs
 
-    # ── new routing: high-eff + no OPP → try 121/122 before 441/461 ────────
+    # ── new routing: try 121/122 before 441/461 ────────
     if combust_pref:
         r121, r121vp, r122, m121, ok121, w121 = run_regulator_selection121(
             inlet_input, outlet_input121, opp_type)
@@ -132,7 +132,7 @@ def run_tool(
 
         # 121 didn't work — fall through to 441/461
         m461 = calc_regulator_selection(
-            inlet_input, outlet_input, flow_rate, min_flow, False)
+            inlet_input, outlet_input, flow_rate, min_flow, opp_type == "Monitor" or (opp_type == "IRV" and not partial))
         if m461["model"] != "N/A":
             result["match"] = m461
             result["pn"]    = hsc_pnc461(m461)
@@ -143,7 +143,7 @@ def run_tool(
 
     # ── standard routing: 441/461 before 121/122 ────────────────────────────
     m461 = calc_regulator_selection(
-        inlet_input, outlet_input, flow_rate, min_flow, opp_type != "None")
+        inlet_input, outlet_input, flow_rate, min_flow, opp_type == "Monitor" or (opp_type == "IRV" and not partial))
     if m461["model"] != "N/A":
         if opp_type != "None":
             msgs.append("Sized for worker/monitor setup")
@@ -222,7 +222,7 @@ with st.sidebar:
         pload = pload_pct / 100.0
     oversizeby = 1.2 + (0.8 * pload)
 
-    combust_pref_choice = st.radio("Prefer combustion regulator (Model 121/122) sizing?", ["No", "Yes"])
+    combust_pref_choice = st.radio("If applicable, combustion regulator (Model 121/122) preferred?", ["No", "Yes"])
     combust_pref = combust_pref_choice == "Yes"
 
     gastype_input = st.selectbox("Gas type", ["Natural Gas", "Propane", "Other"])
