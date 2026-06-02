@@ -2315,7 +2315,7 @@ def spring_121_122(op, reg):
                 'color': 'Black',
                 'range': '(2 - 4.25 psi)',
             }
-    elif reg == 'R121121H' or reg == 'R1211220' or reg == '121122H':
+    elif reg == 'R121121H' or reg == 'R1211220' or reg == 'R121122H':
         if op >= 1.5/28 and op <= 3.5/28:
             return {
                 'color': 'Red with counter',
