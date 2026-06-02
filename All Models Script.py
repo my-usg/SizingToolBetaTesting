@@ -2750,7 +2750,7 @@ def run_regulator_selection121(inlet, outlet, opp):
     else:
         data_used121 = hpdata121
 
-    if opp == "Monitor":
+    if opp == "Monitor" or (opp == "IRV" and not partial):
         monitor = True
         warning = "Sized for worker/monitor setup"
     else:
@@ -3631,6 +3631,7 @@ outlet_input = float(input("Enter outlet pressure: "))
 
 flowrate_units = input("Gas Load units (CFH, BTUH, CMH): ")
 flow_rate = float(input("Enter gas load/flow rate: "))
+
 min_flow = float(input("Enter minimum gas load/flow rate: "))
 min_flow = flow_rate if min_flow == 0 else min_flow
 
@@ -3678,7 +3679,7 @@ else:
 oversizeby = 1.2 + (0.8 * pload)
 oversize_percent = (oversizeby - 1) * 100
 
-combust_pref = input("Combustion Regulator (Model 121-122) Preferred? ")
+combust_pref = input("If applicable, combustion regulator (Model 121-122) preferred? ")
 combust_pref = True if combust_pref == "y" else False
 
 # Other Gasses
@@ -3890,7 +3891,7 @@ else:
                         print("")
                 
                 else:
-                    match461 = calc_regulator_selection(inlet_input, outlet_input, flow_rate, min_flow, opp_type != "None")
+                    match461 = calc_regulator_selection(inlet_input, outlet_input, flow_rate, min_flow, opp_type == "Monitor" or (opp_type == "IRV" and not partial))
                     if match461['model'] != "N/A":
                         if opp_type != "None":
                             print("Sized for worker/monitor setup")
@@ -3908,7 +3909,7 @@ else:
                         print("")
 
             else:
-                match461 = calc_regulator_selection(inlet_input, outlet_input, flow_rate, min_flow, opp_type != "None")
+                match461 = calc_regulator_selection(inlet_input, outlet_input, flow_rate, min_flow, opp_type == "Monitor" or (opp_type == "IRV" and not partial))
                 if match461['model'] != "N/A":
                     if opp_type != "None":
                         print("Sized for worker/monitor setup")
