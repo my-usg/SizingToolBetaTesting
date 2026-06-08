@@ -2946,7 +2946,7 @@ def model_461_double(inlet_p, outlet_p):
 # Returns 441 models for 2-3"
 def model_441_2(inlet_p, outlet_p, max_pressure=None, tier2_max=None):
     if inlet_p <= 100 and maop <= 100:
-        if outlet_p < 5.25:
+        if outlet_p < 5.25/28:
             return "N/A"
         elif outlet_p < 3:
             return "441-S"
