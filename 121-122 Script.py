@@ -624,6 +624,16 @@ def gen_match121(result121, result122, vp, opp):
     
     match = None
 
+    # monset is the monitor setpoint, will be 0 unless we are sizing for a monitor regulator
+    monset = 0
+    if opp == "Monitor":
+        if outlet_input <= 0.5:
+            monset = 1
+        elif outlet_input < 3:
+            monset = outlet_input + 1
+        else:
+            monset = outlet_input + 2
+
     if vp:
 
         body_order121 = ['1H', '20', '2H']
@@ -641,16 +651,6 @@ def gen_match121(result121, result122, vp, opp):
             'R12112': '121-12',
         }
 
-
-    # monset is the monitor setpoint, will be 0 unless we are sizing for a monitor regulator
-    monset = 0
-    if opp == "Monitor":
-        if outlet_input <= 0.5:
-            monset = 1
-        elif outlet_input < 3:
-            monset = outlet_input + 1
-        else:
-            monset = outlet_input + 2
 
         # -------- 121 Standard only --------
         if outlet_input <= 3:
