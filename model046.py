@@ -212,11 +212,12 @@ if run_btn:
 
                     st.subheader("Regulator Selection")
                     fields = [
-                        ("Model",        match046.get("model")),
-                        ("Body Size",    match046.get("body")),
-                        ("Orifice Size", match046.get("orifice")),
-                        ("Seat",         match046.get("seat")),
-                        ("Spring",       f"{match046.get('color','')} {match046.get('range','')}".strip()),
+                        ("Model",          match046.get("model")),
+                        ("Body Size",      match046.get("body")),
+                        ("Orifice Size",   match046.get("orifice")),
+                        ("Seat",           match046.get("seat")),
+                        ("Spring",         f"{match046.get('color','')} {match046.get('range','')}".strip()),
+                        ("Monitor Spring", f"{match046.get('mon_color','')} {match046.get('mon_range','')}".strip() if match046.get("mon_color") else None),
                     ]
                     for label, val in fields:
                         if val:
