@@ -303,6 +303,11 @@ def spring_121_122(op, reg):
                 'color': 'Black',
                 'range': '(2 - 4.25 psi)',
             }
+        else:
+            return {
+                'color': None,
+                'range': None,
+            }
     elif reg == 'R121081H' or reg == 'R1210820' or reg == 'R121082H':
         if op >= 1 and op <= 2:
             return {
@@ -313,6 +318,11 @@ def spring_121_122(op, reg):
             return {
                 'color': 'Black',
                 'range': '(2 - 4.25 psi)',
+            }
+        else:
+            return {
+                'color': None,
+                'range': None,
             }
     elif reg == 'R121121H' or reg == 'R1211220' or reg == 'R121122H':
         if op >= 1.5/28 and op <= 3.5/28:
@@ -350,6 +360,11 @@ def spring_121_122(op, reg):
                 'color': 'Cadmium',
                 'range': '(1.5 - 3 psi)',
             }
+        else:
+            return {
+                'color': None,
+                'range': None,
+            }
     elif reg == 'R1211230':
         if op >= 1 and op < 2:
             return {
@@ -360,6 +375,11 @@ def spring_121_122(op, reg):
             return {
                 'color': 'Cadmium',
                 'range': '(1.5 - 3 psi)',
+            }
+        else:
+            return {
+                'color': None,
+                'range': None,
             }
     elif reg == 'R1211630':
         if op >= 3.5/28 and op < 6.5/28:
@@ -387,6 +407,11 @@ def spring_121_122(op, reg):
                 'color': 'Yellow',
                 'range': '(0.5 - 1.25 psi)',
             }
+        else:
+            return {
+                'color': None,
+                'range': None,
+            }
     elif reg == 'R121HP13' or reg == 'R121HP1Q' or reg == 'R121HP1H' or reg == 'R121HP20' or reg == 'R121HP2H':
         if op >= 3 and op < 6.5:
             return {
@@ -397,6 +422,11 @@ def spring_121_122(op, reg):
             return {
                 'color': 'Cadmium + White',
                 'range': '(6 - 10 psi)',
+            }
+        else:
+            return {
+                'color': None,
+                'range': None,
             }
     elif reg == 'R1220810' or reg == 'R122081Q':
         if op >= 1.5/28 and op <= 3.5/28:
@@ -429,6 +459,11 @@ def spring_121_122(op, reg):
                 'color': 'Orange',
                 'range': '(1 - 2 psi)',
             }
+        else:
+            return {
+                'color': None,
+                'range': None,
+            }
     elif reg == 'R122121H' or reg == 'R1221220' or reg == 'R122122H':
         if op >= 1.5/28 and op <= 3.5:
             return {
@@ -459,6 +494,11 @@ def spring_121_122(op, reg):
             return {
                 'color': 'Black',
                 'range': '(1 - 2 psi)',
+            }
+        else:
+            return {
+                'color': None,
+                'range': None,
             }
     return {
         'color': "None",
@@ -601,6 +641,17 @@ def gen_match121(result121, result122, vp, opp):
             'R12112': '121-12',
         }
 
+
+    # monset is the monitor setpoint, will be 0 unless we are sizing for a monitor regulator
+    monset = 0
+    if opp == "Monitor":
+        if outlet_input <= 0.5:
+            monset = 1
+        elif outlet_input < 3:
+            monset = outlet_input + 1
+        else:
+            monset = outlet_input + 2
+
         # -------- 121 Standard only --------
         if outlet_input <= 3:
         
@@ -610,9 +661,35 @@ def gen_match121(result121, result122, vp, opp):
                     if reg in result121:
                         cap = result121[reg]
                         if will_work_vp(cap, reg, vp) == "Yes":
+                            mon_color = spring_121_122(monset, reg)['color'] if opp == "Monitor" else None
+                            if opp != "Monitor" or (opp == "Monitor" and mon_color != None):
+                                match = {
+                                    'reg': reg,
+                                    'model': model_labels_121[prefix],
+                                    'diap': None,
+                                    'body': body_type121(reg),
+                                    'orifice': "V-Port",
+                                    'seat': None,
+                                    'color': spring_121_122(outlet_input, reg)['color'],
+                                    'range': spring_121_122(outlet_input, reg)['range'],
+                                    'capacity': cap,
+                                    'opp': opp,
+                                    'mon_color': mon_color,
+                                    'mon_range': spring_121_122(monset, reg)['range'],
+                                }
+                                return match
+        # -------- 121 HP --------    
+        else:
+            for body in ordered_body121:
+                reg = f"R121HP{body}"
+                if reg in result121:
+                    cap = result121[reg]
+                    if will_work_vp(cap, reg, vp) == "Yes":
+                        mon_color = spring_121_122(monset, reg)['color'] if opp == "Monitor" else None
+                        if opp != "Monitor" or (opp == "Monitor" and mon_color != None):
                             match = {
                                 'reg': reg,
-                                'model': model_labels_121[prefix],
+                                'model': '121-8-HP',
                                 'diap': None,
                                 'body': body_type121(reg),
                                 'orifice': "V-Port",
@@ -621,28 +698,10 @@ def gen_match121(result121, result122, vp, opp):
                                 'range': spring_121_122(outlet_input, reg)['range'],
                                 'capacity': cap,
                                 'opp': opp,
+                                'mon_color': mon_color,
+                                'mon_range': spring_121_122(monset, reg)['range'],
                             }
                             return match
-        # -------- 121 HP --------    
-        else:
-            for body in ordered_body121:
-                reg = f"R121HP{body}"
-                if reg in result121:
-                    cap = result121[reg]
-                    if will_work_vp(cap, reg, vp) == "Yes":
-                        match = {
-                            'reg': reg,
-                            'model': '121-8-HP',
-                            'diap': None,
-                            'body': body_type121(reg),
-                            'orifice': "V-Port",
-                            'seat': None,
-                            'color': spring_121_122(outlet_input, reg)['color'],
-                            'range': spring_121_122(outlet_input, reg)['range'],
-                            'capacity': cap,
-                            'opp': opp,
-                        }
-                        return match
     
     # NO VP -----------------------------------------------------------
     else:
@@ -676,7 +735,8 @@ def gen_match121(result121, result122, vp, opp):
         }
 
         # -------- 121 or 122 Standard --------
-        if outlet_input <= 2 and isinstance(result122, str) == False:
+        # 122 is used up to 2 psi or 1 psi with monitor
+        if ((outlet_input <= 2 and opp != "Monitor") or (outlet_input <= 1 and opp == "Monitor")) and isinstance(result122, str) == False:
 
             for prefix, label in model_labels_121122.items():
                 res = result121 if prefix.startswith('R121') else result122
@@ -685,19 +745,23 @@ def gen_match121(result121, result122, vp, opp):
                     if reg in res:
                         cap = res[reg]
                         if will_work_vp(cap, reg, vp) == "Yes":
-                            match = {
-                                'reg': reg,
-                                'model': model_labels_121122[prefix],
-                                'diap': None,
-                                'body': body_type121(reg),
-                                'orifice': None,
-                                'seat': None,
-                                'color': spring_121_122(outlet_input, reg)['color'],
-                                'range': spring_121_122(outlet_input, reg)['range'],
-                                'capacity': cap,
-                                'opp': opp,
-                            }
-                            return match
+                            mon_color = spring_121_122(monset, reg)['color'] if opp == "Monitor" else None
+                            if opp != "Monitor" or (opp == "Monitor" and mon_color != None):
+                                match = {
+                                    'reg': reg,
+                                    'model': model_labels_121122[prefix],
+                                    'diap': None,
+                                    'body': body_type121(reg),
+                                    'orifice': None,
+                                    'seat': None,
+                                    'color': spring_121_122(outlet_input, reg)['color'],
+                                    'range': spring_121_122(outlet_input, reg)['range'],
+                                    'capacity': cap,
+                                    'opp': opp,
+                                    'mon_color': mon_color,
+                                    'mon_range': spring_121_122(monset, reg)['range'],
+                                }
+                                return match
         
         # -------- 121 Standard only --------
         elif outlet_input <= 3:
@@ -708,9 +772,35 @@ def gen_match121(result121, result122, vp, opp):
                     if reg in result121:
                         cap = result121[reg]
                         if will_work_vp(cap, reg, vp) == "Yes":
+                            mon_color = spring_121_122(monset, reg)['color'] if opp == "Monitor" else None
+                            if opp != "Monitor" or (opp == "Monitor" and mon_color != None):
+                                match = {
+                                    'reg': reg,
+                                    'model': model_labels_121[prefix],
+                                    'diap': None,
+                                    'body': body_type121(reg),
+                                    'orifice': None,
+                                    'seat': None,
+                                    'color': spring_121_122(outlet_input, reg)['color'],
+                                    'range': spring_121_122(outlet_input, reg)['range'],
+                                    'capacity': cap,
+                                    'opp': opp,
+                                    'mon_color': mon_color,
+                                    'mon_range': spring_121_122(monset, reg)['range'],
+                                }
+                                return match
+        # -------- 121 HP --------    
+        else:
+            for body in ordered_body121:
+                reg = f"R121HP{body}"
+                if reg in result121:
+                    cap = result121[reg]
+                    if will_work_vp(cap, reg, vp) == "Yes":
+                        mon_color = spring_121_122(monset, reg)['color'] if opp == "Monitor" else None
+                        if opp != "Monitor" or (opp == "Monitor" and mon_color != None):
                             match = {
                                 'reg': reg,
-                                'model': model_labels_121[prefix],
+                                'model': '121-8-HP',
                                 'diap': None,
                                 'body': body_type121(reg),
                                 'orifice': None,
@@ -719,31 +809,14 @@ def gen_match121(result121, result122, vp, opp):
                                 'range': spring_121_122(outlet_input, reg)['range'],
                                 'capacity': cap,
                                 'opp': opp,
+                                'mon_color': mon_color,
+                                'mon_range': spring_121_122(monset, reg)['range'],
                             }
                             return match
-        # -------- 121 HP --------    
-        else:
-            for body in ordered_body121:
-                reg = f"R121HP{body}"
-                if reg in result121:
-                    cap = result121[reg]
-                    if will_work_vp(cap, reg, vp) == "Yes":
-                        match = {
-                            'reg': reg,
-                            'model': '121-8-HP',
-                            'diap': None,
-                            'body': body_type121(reg),
-                            'orifice': None,
-                            'seat': None,
-                            'color': spring_121_122(outlet_input, reg)['color'],
-                            'range': spring_121_122(outlet_input, reg)['range'],
-                            'capacity': cap,
-                            'opp': opp,
-                        }
-                        return match
 
 def run_regulator_selection121(inlet, outlet, opp):
     # Select 121 Data Table
+    # 121 is used up to 3 psi with or without monitor
     if outlet_input <= 3:
         data_used121 = stddata121
     else:
@@ -769,7 +842,7 @@ def run_regulator_selection121(inlet, outlet, opp):
         apply = False
         return result121, result121_VP, result122, match, apply, warning
 
-    # 122 can only be used up to 2 psi outlet
+    # 122 can only be used up to 2 psi outlet, 1 psi outlet with monitor
     result122 = interpolate_capacity(stddata122, inlet_input, outlet_input, monitor, vp)
         
     match = gen_match121(result121, result122, vp, opp)
@@ -843,6 +916,7 @@ def hsc_pnc121(match):
     else:
         body = body_map121.get(match['body'])
     spring = spring_map.get(match['color'])
+    monitor_spring = spring_map.get(match['mon_color'])
 
     if model == '121-16':
         diap = '16'
@@ -857,7 +931,7 @@ def hsc_pnc121(match):
         # 122
         if match['opp'] == "Monitor":
             return [
-                f"R.{model}.STD.{body}.{diap}.EXTCON.STD.STD.{spring}.ALU",
+                f"R.{model}.STD.{body}.{diap}.EXTCON.STD.STD.{monitor_spring}.ALU",
                 f"R.{model}.STD.{body}.{diap}.INTCON.STD.STD.{spring}.ALU",
             ]
         else:
@@ -866,7 +940,7 @@ def hsc_pnc121(match):
         # 121
         if match['opp'] == "Monitor":
             return [
-                f"R.{model}.STD.{body}.{diap}.EXTCON.STD.STD.{vp}.{spring}.ALU",
+                f"R.{model}.STD.{body}.{diap}.EXTCON.STD.STD.{vp}.{monitor_spring}.ALU",
                 f"R.{model}.STD.{body}.{diap}.EXTCON.STD.STD.{vp}.{spring}.ALU",
             ]
         else:
@@ -905,6 +979,8 @@ def print_regulator_selection(match):
     if match['seat'] != None:
         print(f"Seat:", match['seat'])
     print(f"Spring:", match['color'], match['range'])
+    if match['mon_color'] != None:
+        print(f"Monitor Spring:", match['mon_color'], match['mon_range'])
     capacity = match['capacity']
     cap_str = f"{capacity:,.0f}" if isinstance(capacity, (int, float)) else str(capacity)
     print(f"Calculated Capacity (CFH): {cap_str}")
@@ -1072,7 +1148,7 @@ else:
 print("")
 
 # Print capacity table
-if outlet_input <= 2 and isinstance(result122, str) == False:
+if ((outlet_input <= 2 and opp_type != "Monitor") or (outlet_input <= 1 and opp_type == "Monitor")) and isinstance(result122, str) == False:
     print("REGULATOR SIZING TABLES WITH MONITOR") if opp_type != "None" else print("REGULATOR SIZING TABLES")
     print("STANDARD VALVES")
     print_model_table121('Model 121-8','R12108', result121, False)
