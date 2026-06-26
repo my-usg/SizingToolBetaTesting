@@ -105,6 +105,17 @@ stddata243 = {
 
 # 234-HP Data
 hpdata243 = {
+    3.0: {
+        5: {'R243HP1Q_3410': 2200, 'R243HP1Q_1210': 1950, 'R243HP1Q_3810': 1650, 'R243HP1Q_1410': 700, 'R243HP1H_1030': 4400, 'R243HP1H_3410': 3400, 'R243HP1H_1210': 2400, 'R243HP1H_3810': 1600, 'R243HP1H_1410': 800, 'R243HP02_1030': 4400, 'R243HP02_3410': 3300, 'R243HP02_1210': 2400, 'R243HP02_3810': 1600, 'R243HP02_1410': 800},
+        10: {'R243HP1Q_3410': 3600, 'R243HP1Q_1210': 2300, 'R243HP1Q_3810': 2150, 'R243HP1Q_1410': 1300, 'R243HP1H_1030': 7100, 'R243HP1H_3410': 5900, 'R243HP1H_1210': 3600, 'R243HP1H_3810': 2400, 'R243HP1H_1410': 1300, 'R243HP02_1030': 7600, 'R243HP02_3410': 5800, 'R243HP02_1210': 3600, 'R243HP02_3810': 2400, 'R243HP02_1410': 1300},
+        15: {'R243HP1Q_3410': 3800, 'R243HP1Q_1210': 3400, 'R243HP1Q_3810': 2350, 'R243HP1Q_1410': 1700, 'R243HP1H_1030': 9600, 'R243HP1H_3410': 7500, 'R243HP1H_1210': 4800, 'R243HP1H_3810': 3400, 'R243HP1H_1410': 1700, 'R243HP02_1030': 11000, 'R243HP02_3410': 7500, 'R243HP02_1210': 4800, 'R243HP02_3810': 3500, 'R243HP02_1410': 1700},
+        25: {'R243HP1Q_3410': 5000, 'R243HP1Q_1210': 3900, 'R243HP1Q_3810': 3250, 'R243HP1Q_1410': 2400, 'R243HP1H_1030': 12500, 'R243HP1H_3410': 10500, 'R243HP1H_1210': 6500, 'R243HP1H_3810': 5000, 'R243HP1H_1410': 2400, 'R243HP02_1030': 15000, 'R243HP02_3410': 10500, 'R243HP02_1210': 8000, 'R243HP02_3810': 5100, 'R243HP02_1410': 2400},
+        40: {'R243HP1Q_3410': 6300, 'R243HP1Q_1210': 4300, 'R243HP1Q_3810': 3700, 'R243HP1Q_1410': 3200, 'R243HP1H_1030': None, 'R243HP1H_3410': 13000, 'R243HP1H_1210': 9600, 'R243HP1H_3810': 7000, 'R243HP1H_1410': 3200, 'R243HP02_1030': None, 'R243HP02_3410': 13000, 'R243HP02_1210': 11000, 'R243HP02_3810': 7000, 'R243HP02_1410': 3400},
+        60: {'R243HP1Q_3410': None, 'R243HP1Q_1210': 5500, 'R243HP1Q_3810': 4400, 'R243HP1Q_1410': 4400, 'R243HP1H_1030': None, 'R243HP1H_3410': None, 'R243HP1H_1210': 12500, 'R243HP1H_3810': 9300, 'R243HP1H_1410': 4400, 'R243HP02_1030': None, 'R243HP02_3410': None, 'R243HP02_1210': 14000, 'R243HP02_3810': 9600, 'R243HP02_1410': 4600},
+        80: {'R243HP1Q_3410': None, 'R243HP1Q_1210': 5500, 'R243HP1Q_3810': 5850, 'R243HP1Q_1410': 5600, 'R243HP1H_1030': None, 'R243HP1H_3410': None, 'R243HP1H_1210': 13500, 'R243HP1H_3810': 11000, 'R243HP1H_1410': 5600, 'R243HP02_1030': None, 'R243HP02_3410': None, 'R243HP02_1210': 15000, 'R243HP02_3810': 11000, 'R243HP02_1410': 5600},
+        100: {'R243HP1Q_3410': None, 'R243HP1Q_1210': None, 'R243HP1Q_3810': 6550, 'R243HP1Q_1410': 7000, 'R243HP1H_1030': None, 'R243HP1H_3410': None, 'R243HP1H_1210': None, 'R243HP1H_3810': 12000, 'R243HP1H_1410': 7000, 'R243HP02_1030': None, 'R243HP02_3410': None, 'R243HP02_1210': None, 'R243HP02_3810': 12000, 'R243HP02_1410': 7000},
+        125: {'R243HP1Q_3410': None, 'R243HP1Q_1210': None, 'R243HP1Q_3810': None, 'R243HP1Q_1410': 8000, 'R243HP1H_1030': None, 'R243HP1H_3410': None, 'R243HP1H_1210': None, 'R243HP1H_3810': None, 'R243HP1H_1410': 8000, 'R243HP02_1030': None, 'R243HP02_3410': None, 'R243HP02_1210': None, 'R243HP02_3810': None, 'R243HP02_1410': 8000},
+    },
     4.5: {
         10: {'R243HP1Q_3410': 3300, 'R243HP1Q_1210': 2050, 'R243HP1Q_3810': 2000, 'R243HP1Q_1410': 1300, 'R243HP1H_1030': 6000, 'R243HP1H_3410': 5500, 'R243HP1H_1210': 3200, 'R243HP1H_3810': 2300, 'R243HP1H_1410': 1300, 'R243HP02_1030': 6000, 'R243HP02_3410': 5500, 'R243HP02_1210': 3200, 'R243HP02_3810': 2400, 'R243HP02_1410': 1300},
         15: {'R243HP1Q_3410': 3400, 'R243HP1Q_1210': 3100, 'R243HP1Q_3810': 2200, 'R243HP1Q_1410': 1700, 'R243HP1H_1030': 8600, 'R243HP1H_3410': 6500, 'R243HP1H_1210': 4400, 'R243HP1H_3810': 3200, 'R243HP1H_1410': 1700, 'R243HP02_1030': 8600, 'R243HP02_3410': 6000, 'R243HP02_1210': 4400, 'R243HP02_3810': 3200, 'R243HP02_1410': 1700},
@@ -306,6 +317,11 @@ def spring_243_12(op):
             'color': 'Cadmium',
             'range': '(1.5 – 3 psi)',
         }
+    else:
+        return {
+            'color': None,
+            'range': None,
+        }
 
 def spring_243_8(op):
     if op < 6.5/28 and op >= 3.5/28:
@@ -328,7 +344,7 @@ def spring_243_8(op):
             'color': 'Green',
             'range': '(12" – 28" wc)',
         }
-    elif op < 2:
+    elif op <= 2:
         return {
             'color': 'Orange',
             'range': '(1 – 2 psi)',
@@ -343,6 +359,11 @@ def spring_243_8(op):
             'color': 'Cadmium',
             'range': '(3 – 5 psi)',
         }
+    else:
+        return {
+            'color': None,
+            'range': None,
+        }
 
 def spring_243hp(op):
     if op < 6.5 and op >= 3:
@@ -355,6 +376,10 @@ def spring_243hp(op):
             'color': 'Cadmium + White',
             'range': '(6 – 10 psi)',
         }
+    return {
+                'color': None,
+                'range': None,
+            }
 
 
 # Will Regulator Work Function & Will IRV Work
@@ -500,11 +525,33 @@ def will_irv_work243(reg):
 
 def gen_match243(result, opp):
     match = None
+    is_hp_data = any(k.startswith('R243HP') for k in result)
 
-    # Data Selection
+    if is_hp_data:
+        model_labels243 = {
+            'R243HP1Q': '243-8HP',
+            'R243HP1H': '243-8HP',
+            'R243HP20': '243-8HP',
+        }
+        body_labels243 = {
+            'R243HP1Q': '1-1/4"',
+            'R243HP1H': '1-1/2"',
+            'R243HP02': '2"',
+        }
+        orifice_order = ['1030', '3410', '1210', '3810', '1410']
 
-    # Standard Data if outlet <= 4.5 or ( outlet > 4.5 and opp = IRV and partial = True)
-    if outlet_input <= 4.5 or (outlet_input > 4.5 and opp == "IRV" and partial):
+        hp_pipe_priority = {
+            '1-1/4"': 'R243HP1Q',
+            '1-1/2"':  'R243HP1H',
+            '2"':    'R243HP02',
+        }
+        all_prefixes = list(body_labels243.keys())
+        prioritized = hp_pipe_priority.get(pipesize_input)
+        if prioritized:
+            ordered_prefixes = [prioritized] + [p for p in all_prefixes if p != prioritized]
+        else:
+            ordered_prefixes = all_prefixes
+    else:
         model_labels243 = {
             'R243081Q': '243-8',
             'R243081H': '243-8',
@@ -533,30 +580,21 @@ def gen_match243(result, opp):
         all_prefixes = list(body_labels243.keys())
         priority_list = std_pipe_priority.get(pipesize_input, [])
         ordered_prefixes = priority_list + [p for p in all_prefixes if p not in priority_list]
-    else:
-        model_labels243 = {
-            'R243HP1Q': '243-8HP',
-            'R243HP1H': '243-8HP',
-            'R243HP20': '243-8HP',
-        }
-        body_labels243 = {
-            'R243HP1Q': '1-1/4"',
-            'R243HP1H': '1-1/2"',
-            'R243HP02': '2"',
-        }
-        orifice_order = ['1030', '3410', '1210', '3810', '1410']
 
-        hp_pipe_priority = {
-            '1-1/4"': 'R243HP1Q',
-            '1-1/2"':  'R243HP1H',
-            '2"':    'R243HP02',
-        }
-        all_prefixes = list(body_labels243.keys())
-        prioritized = hp_pipe_priority.get(pipesize_input)
-        if prioritized:
-            ordered_prefixes = [prioritized] + [p for p in all_prefixes if p != prioritized]
+
+    # monset is the monitor setpoint, will be 0 unless we are sizing for a monitor regulator
+    monset = 0
+    if opp == "Monitor":
+        if outlet_input == 0.25:
+            monset = 0.5
+        elif outlet_input <= 0.5:
+            monset = outlet_input + 0.5
+        elif outlet_input < 3:
+            monset = outlet_input + 1
+        elif outlet_input <= 5:
+            monset = outlet_input + 2
         else:
-            ordered_prefixes = all_prefixes
+            monset = outlet_input + 3
 
 
     # IRV
@@ -586,6 +624,8 @@ def gen_match243(result, opp):
                             'range': range,
                             'capacity': cap,
                             'opp': "None" if partial or prefix == 'R24312EX' else "IRV",
+                            'mon_color': None,
+                            'mon_range': None,
                         }
                         return match
     # Other
@@ -600,31 +640,44 @@ def gen_match243(result, opp):
                             color = spring_243_8(outlet_input)['color']
                             range = spring_243_8(outlet_input)['range']
                             model = '243-8-1'
+                            mon_color = spring_243_8(monset)['color'] if monset != 0 else None
+                            mon_range = spring_243_8(monset)['range'] if monset != 0 else None
                         elif prefix.startswith('R24312') and not prefix.startswith('R24312EX'):
                             color = spring_243_12(outlet_input)['color']
                             range = spring_243_12(outlet_input)['range']
                             model = '243-12-1'
+                            mon_color = spring_243_12(monset)['color'] if monset != 0 else None
+                            mon_range = spring_243_12(monset)['range'] if monset != 0 else None
                         elif prefix.startswith('R24312EX'):
                             color = spring_243_12(outlet_input)['color']
                             range = spring_243_12(outlet_input)['range']
                             model = '243-12-1 with External Control Line'
+                            mon_color = spring_243_12(monset)['color'] if monset != 0 else None
+                            mon_range = spring_243_12(monset)['range'] if monset != 0 else None
                         else:
                             color = spring_243hp(outlet_input)['color']
                             range = spring_243hp(outlet_input)['range']
                             model = '243-8HP'
-                        match = {
-                            'reg' : reg,
-                            'model': model,
-                            'diap': None,
-                            'body': body_labels243[prefix],
-                            'orifice': orifice_type243(reg),
-                            'seat': None,
-                            'color': color,
-                            'range': range,
-                            'capacity': cap,
-                            'opp': opp,
-                        }
-                        return match
+                            mon_color = spring_243hp(monset)['color'] if monset != 0 else None
+                            mon_range = spring_243hp(monset)['range'] if monset != 0 else None
+                        
+                        if opp != "Monitor" or (opp == "Monitor" and mon_color != None):
+                            match = {
+                                'reg' : reg,
+                                'model': model,
+                                'diap': None,
+                                'body': body_labels243[prefix],
+                                'orifice': orifice_type243(reg),
+                                'seat': None,
+                                'color': color,
+                                'range': range,
+                                'capacity': cap,
+                                'opp': opp,
+                                'mon_color': mon_color, # monitor spring color
+                                'mon_range': mon_range, # monitor spring range
+                            }
+                            return match
+
 
 def run_regulator_selection243(inlet, outlet, opp):
     
@@ -639,11 +692,23 @@ def run_regulator_selection243(inlet, outlet, opp):
         hp_warning = "243-8-2 with Cadmium spring only available with partial IRV, sized for worker/monitor setup"
         opp = "Monitor"
 
-    # Standard Data if outlet <= 4.5 or (outlet > 4.5 and opp = IRV and partial = True)
-    if outlet_input <= 4.5 or (outlet_input <= 5 and opp == "IRV" and partial):
-        data_used243 = stddata243
+    # Select data - standard or hp
+    if opp == "Monitor":
+        if outlet_input <= 3:
+            data_used243 = stddata243
+        else:
+            data_used243 = hpdata243
+    elif opp == "IRV":
+        if outlet_input <= 4.5 or (outlet_input <= 5 and partial):
+            data_used243 = stddata243
+        else:
+            data_used243 = hpdata243
     else:
-        data_used243 = hpdata243
+        if outlet_input <= 5:
+            data_used243 = stddata243
+        else:
+            data_used243 = hpdata243
+
 
     if opp == "IRV" and not partial:
         result = interpolate_capacity(data_used243, inlet, outlet, False, False)
@@ -663,8 +728,8 @@ def run_regulator_selection243(inlet, outlet, opp):
         # IRV does not work- try with Monitor
         else:
 
-            # Need to change 243 data used to HP data for pressures > 4.5 psi
-            if outlet_input > 4.5:
+            # Need to change 243 data used to HP data for pressures > 3 psi
+            if outlet_input > 3:
                 data_used243 = hpdata243
                 
             result = interpolate_capacity(data_used243, inlet, outlet, True, False)
@@ -765,13 +830,14 @@ def hsc_pnc243(match):
     orifice = orifice_map.get(match['orifice'])
     spring = spring_map.get(match['color'])
     opp = match['opp']
+    monitor_spring = spring_map.get(match['mon_color'])
 
     if model == '243-12-2':
         return f"R.243-12-2.STD.{body}.12-2.INT.{orifice}.STD.{spring}.ALU"
     
     elif model == '243-12-1' and opp == "Monitor":
         return [
-            f"R.243-12-1M.STD.{body}.12-1.EXT.{orifice}.STD.{spring}.ALU",
+            f"R.243-12-1M.STD.{body}.12-1.EXT.{orifice}.STD.{monitor_spring}.ALU",
             f"R.243-12-1.STD.{body}.12-1.INT.{orifice}.STD.{spring}.ALU",
         ]
     
@@ -780,7 +846,7 @@ def hsc_pnc243(match):
     
     elif model == '243-12-1M with External Control Line' and opp == "Monitor":
         return [
-                f"R.243-12-1M.STD.{body}.12-1.EXT.{orifice}.STD.{spring}.ALU",
+                f"R.243-12-1M.STD.{body}.12-1.EXT.{orifice}.STD.{monitor_spring}.ALU",
                 f"R.243-12-1M.STD.{body}.12-1.EXT.{orifice}.STD.{spring}.ALU",
             ]
     
@@ -792,17 +858,17 @@ def hsc_pnc243(match):
         
     elif model == '243-8-1' and opp == "Monitor":
         return [
-            f"R.243-8-1M.{body}.EXT.{orifice}.STD.{spring}.ALU",
+            f"R.243-8-1M.{body}.EXT.{orifice}.STD.{monitor_spring}.ALU",
             f"R.243-8-1.{body}.INT.{orifice}.STD.{spring}.ALU",
         ]
     
     elif model == '243-8-1':
         return f"R.243-8-1.{body}.INT.{orifice}.STD.{spring}.ALU"
 
-    # 243-8HP    
+    # 243-8HP
     elif model == '243-8HP' and opp == "Monitor":
         return [
-            f"R.243.HP-M.{body}.8-HP.EXT.{orifice}.STD.{spring}.ALU",
+            f"R.243.HP-M.{body}.8-HP.EXT.{orifice}.STD.{monitor_spring}.ALU",
             f"R.243.HP.{body}.8-HP.INT.{orifice}.STD.{spring}.ALU",
         ]
     
@@ -843,6 +909,8 @@ def print_regulator_selection(match):
     if match['seat'] != None:
         print(f"Seat:", match['seat'])
     print(f"Spring:", match['color'], match['range'])
+    if match['mon_color'] != None:
+        print(f"Monitor Spring:", match['mon_color'], match['mon_range'])
     capacity = match['capacity']
     cap_str = f"{capacity:,.0f}" if isinstance(capacity, (int, float)) else str(capacity)
     print(f"Calculated Capacity (CFH): {cap_str}")
@@ -1009,14 +1077,14 @@ print("")
 # Print Capacity Tables ------------------------------
 
 # Fixes user entered IRV but needs HP data
-if opp_type == ("IRV" and outlet_input > 5) or (outlet_input > 4.5 and opp_type == "IRV" and not partial):
+if opp_type == "IRV" and outlet_input > 4.5 and not partial:
     opp_type = "Monitor"
 
-if opp_type == "IRV" and not partial:
+results_irv = interpolate_capacity(stddata243, inlet_input, outlet_input243, False, False)
+result_mon = interpolate_capacity(stddata243, inlet_input, outlet_input243, True, False)
+result_hp_mon = interpolate_capacity(hpdata243, inlet_input, outlet_input243, True, False)
 
-    results_irv = interpolate_capacity(stddata243, inlet_input, outlet_input243, False, False)
-    result_mon = interpolate_capacity(stddata243, inlet_input, outlet_input243, True, False)
-    result_hp = interpolate_capacity(hpdata243, inlet_input, 5, True, False)
+if opp_type == "IRV" and not partial:
 
     print("REGULATOR SIZING TABLES WITH IRV")
     print_model_table('Model 243-8, 1-1/4" Body','R243081Q', "IRV", results_irv)
@@ -1026,19 +1094,50 @@ if opp_type == "IRV" and not partial:
     print_model_table('Model 243-12, 1-1/2" Body','R243121H', "IRV", results_irv)
     print_model_table('Model 243-12, 2" Body','R2431202', "IRV", results_irv)
     print("")
-    print("REGULATOR SIZING TABLES WITH MONITOR")
-    print_model_table('Model 243-8, 1-1/4" Body','R243081Q', "Monitor", result_mon)
-    print_model_table('Model 243-8, 1-1/2" Body','R243081H', "Monitor", result_mon)
-    print_model_table('Model 243-8, 2" Body','R2430802', "Monitor", result_mon)
-    print_model_table('Model 243-12, 1-1/4" Body','R243121Q', "Monitor", result_mon)
-    print_model_table('Model 243-12, 1-1/2" Body','R243121H', "Monitor", result_mon)
-    print_model_table('Model 243-12, 2" Body','R2431202', "Monitor", result_mon)
-    print_model_table('Model 243-12-1 with External Control Line','R24312EX', "Monitor", result_mon)
 
-# User Entered OPP = Monitor or None or partial IRV
+    if outlet_input > 3:
+
+        print("REGULATOR SIZING TABLES WITH MONITOR")
+        print_model_table('Model 243-8HP, 1-1/4" Body', 'R243HP1Q', "Monitor", result_hp_mon)
+        print_model_table('Model 243-8HP, 1-1/2" Body', 'R243HP1H', "Monitor", result_hp_mon)
+        print_model_table('Model 243-8HP, 2" Body',     'R243HP02', "Monitor", result_hp_mon)
+
+    else:
+
+        print("REGULATOR SIZING TABLES WITH MONITOR")
+        print_model_table('Model 243-8, 1-1/4" Body','R243081Q', "Monitor", result_mon)
+        print_model_table('Model 243-8, 1-1/2" Body','R243081H', "Monitor", result_mon)
+        print_model_table('Model 243-8, 2" Body','R2430802', "Monitor", result_mon)
+        print_model_table('Model 243-12, 1-1/4" Body','R243121Q', "Monitor", result_mon)
+        print_model_table('Model 243-12, 1-1/2" Body','R243121H', "Monitor", result_mon)
+        print_model_table('Model 243-12, 2" Body','R2431202', "Monitor", result_mon)
+        print_model_table('Model 243-12-1 with External Control Line','R24312EX', "Monitor", result_mon)
+
+elif opp_type == "Monitor":
+
+    if outlet_input > 3:
+
+        print("REGULATOR SIZING TABLES WITH MONITOR")
+        print_model_table('Model 243-8HP, 1-1/4" Body', 'R243HP1Q', "Monitor", result_hp_mon)
+        print_model_table('Model 243-8HP, 1-1/2" Body', 'R243HP1H', "Monitor", result_hp_mon)
+        print_model_table('Model 243-8HP, 2" Body',     'R243HP02', "Monitor", result_hp_mon)
+
+    else:
+
+        print("REGULATOR SIZING TABLES WITH MONITOR")
+        print_model_table('Model 243-8, 1-1/4" Body','R243081Q', "Monitor", result_mon)
+        print_model_table('Model 243-8, 1-1/2" Body','R243081H', "Monitor", result_mon)
+        print_model_table('Model 243-8, 2" Body','R2430802', "Monitor", result_mon)
+        print_model_table('Model 243-12, 1-1/4" Body','R243121Q', "Monitor", result_mon)
+        print_model_table('Model 243-12, 1-1/2" Body','R243121H', "Monitor", result_mon)
+        print_model_table('Model 243-12, 2" Body','R2431202', "Monitor", result_mon)
+        print_model_table('Model 243-12-1 with External Control Line','R24312EX', "Monitor", result_mon)
+
 else:
-    if outlet_input <= 4.5 or (outlet_input <= 5 and opp_type == "IRV" and partial):
-        print("REGULATOR SIZING TABLES WITH MONITOR") if opp_type == "Monitor" else print("REGULATOR SIZING TABLES")
+
+    if outlet_input <= 5:
+
+        print("REGULATOR SIZING TABLES")
         print_model_table('Model 243-8, 1-1/4" Body','R243081Q', opp_type, result243)
         print_model_table('Model 243-8, 1-1/2" Body','R243081H', opp_type, result243)
         print_model_table('Model 243-8, 2" Body','R2430802', opp_type, result243)
@@ -1046,8 +1145,10 @@ else:
         print_model_table('Model 243-12, 1-1/2" Body','R243121H', opp_type, result243)
         print_model_table('Model 243-12, 2" Body','R2431202', opp_type, result243)
         print_model_table('Model 243-12-1 with External Control Line','R24312EX', opp_type, result243)
+
     else:
-        print("REGULATOR SIZING TABLES WITH MONITOR") if opp_type == "Monitor" else print("REGULATOR SIZING TABLES")
+
+        print("REGULATOR SIZING TABLES")
         print_model_table('Model 243-8HP, 1-1/4" Body', 'R243HP1Q', opp_type, result243)
         print_model_table('Model 243-8HP, 1-1/2" Body', 'R243HP1H', opp_type, result243)
         print_model_table('Model 243-8HP, 2" Body',     'R243HP02', opp_type, result243)

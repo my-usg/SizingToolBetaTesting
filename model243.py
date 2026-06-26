@@ -19,7 +19,7 @@ except FileNotFoundError as e:
     st.stop()
 
 _lines  = _source.splitlines(keepends=True)
-_code   = "".join(_lines[:861])
+_code   = "".join(_lines[:926])
 
 _globals = {}
 try:
@@ -70,7 +70,7 @@ with st.sidebar:
     flowrate_units = st.selectbox("Flow rate units", ["CFH", "CMH", "BTUH"])
     flow_rate    = st.number_input("Gas load / flow rate", min_value=0, max_value=500000000, value=0, step=50, format="%d")
 
-    maop = st.number_input("MAOP (psi)", min_value=0, max_value=1000, value=0, step=1, format="%d",
+    maop = st.number_input("Max inlet pressure / MAOP (psi)", min_value=0, max_value=1000, value=0, step=1, format="%d",
                            help="MAOP is always entered in psi. Enter 0 to use inlet pressure.")
 
     st.subheader("Design Parameters")
@@ -203,7 +203,7 @@ if run_btn:
                 if opp_type == "IRV" and not partial:
                     results_irv = _globals["interpolate_capacity"](_globals["stddata243"], inlet_psi, outlet_input243, False, False)
                     result_mon  = _globals["interpolate_capacity"](_globals["stddata243"], inlet_psi, outlet_input243, True,  False)
-                    result_hp   = _globals["interpolate_capacity"](_globals["hpdata243"],  inlet_psi, 5,               True,  False)
+                    result_hp   = _globals["interpolate_capacity"](_globals["hpdata243"],  inlet_psi, outlet_input243, True,  False)
                 else:
                     results_irv = result243
                     result_mon  = result243
@@ -279,13 +279,20 @@ if run_btn:
                             st.dataframe(df, use_container_width=True, hide_index=True)
 
                     st.markdown("**Regulator Sizing Tables with Monitor**")
-                    for title, prefix in STD_MON_BODIES:
-                        df = build_table(prefix, "Monitor", result_mon, partial)
-                        if not df.empty:
-                            st.markdown(f"**{title}**")
-                            st.dataframe(df, use_container_width=True, hide_index=True)
+                    if outlet_psi > 3:
+                        for title, prefix in HP_BODIES:
+                            df = build_table(prefix, "Monitor", result_hp, partial)
+                            if not df.empty:
+                                st.markdown(f"**{title}**")
+                                st.dataframe(df, use_container_width=True, hide_index=True)
+                    else:
+                        for title, prefix in STD_MON_BODIES:
+                            df = build_table(prefix, "Monitor", result_mon, partial)
+                            if not df.empty:
+                                st.markdown(f"**{title}**")
+                                st.dataframe(df, use_container_width=True, hide_index=True)
 
-                elif outlet_psi <= 4.5 or (outlet_psi <= 5 and opp_type == "IRV" and partial):
+                elif outlet_psi <= 3 or (outlet_psi <= 5 and opp_type == "IRV" and partial):
                     label = "**Regulator Sizing Tables with Monitor**" if opp_type == "Monitor" else "**Regulator Sizing Tables**"
                     st.markdown(label)
                     for title, prefix in STD_MON_BODIES:
