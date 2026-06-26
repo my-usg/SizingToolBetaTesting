@@ -323,6 +323,11 @@ def spring_046(op):
             'color': "Gray",
             'range': "(100 - 200 psi *cannot be used with 046-2)"
         }
+    else:
+        return {
+            'color': None,
+            'range': None,
+        }
 
 
 # Will Regulator Work & Will IRV Work Functions
@@ -465,6 +470,16 @@ def gen_match046(result, opp):
     if maop < 600 and diff < 400:
         seat = 'Poly-Tan'
 
+
+    # monset is the monitor setpoint, will be 0 unless we are sizing for a monitor regulator
+    monset = 0
+    if opp == "Monitor":
+        if outlet_input <= 5:
+            monset = outlet_input + 2
+        else:
+            monset = outlet_input + 3
+
+
     # IRV sizing
     if opp == "IRV":
         for prefix in ordered_irv_prefixes:
@@ -484,6 +499,8 @@ def gen_match046(result, opp):
                             'range': spring_046(outlet_input)['range'],
                             'capacity': cap,
                             'opp': "IRV",
+                            'mon_color': None,
+                            'mon_rnage': None,
                         }
                         return match
     # STD sizing
@@ -505,6 +522,8 @@ def gen_match046(result, opp):
                             'range': spring_046(outlet_input)['range'],
                             'capacity': cap,
                             'opp': opp,
+                            'mon_color': spring_046(monset)['color'] if opp == "Monitor" else None,
+                            'mon_range': spring_046(monset)['range'] if opp == "Monitor" else None,
                         }
                         return match
 
@@ -603,21 +622,22 @@ def hsc_pnc046(match):
     orifice = orifice_map.get(match['orifice'])
     seat = 'TAN' # NetSuite only uses TAN orifice on most models
     spring = spring_map.get(match['color'])
+    monitor_spring = spring_map.get(match['mon_color'])
 
     if model == '046-2':
         return f"R.046-2.IRV.{body}.IRV.{orifice}.{seat}.{spring}.ALU"
     elif model == '046' and match['opp'] != "Monitor":
         return f"R.046-1.STD.{body}.{orifice}.{seat}.{spring}.ALU"
     # Under 125 psi setpoint - use 046-2M for monitor
-    elif spring != '27':
+    elif monitor_spring != '27':
         return [
-            f"R.046-2M.MON.{body}.IRV.{orifice}.{seat}.{spring}.ALU",
+            f"R.046-2M.MON.{body}.IRV.{orifice}.{seat}.{monitor_spring}.ALU",
             f"R.046-1.STD.{body}.{orifice}.{seat}.{spring}.ALU",
         ]
     # over 125 psi setpoint - use 046-M for monitor
     else:
         return [
-            f"R.046-M.MON.{body}.{orifice}.{seat}.{spring}.ALU",
+            f"R.046-M.MON.{body}.{orifice}.{seat}.{monitor_spring}.ALU",
             f"R.046-1.STD.{body}.{orifice}.{seat}.{spring}.ALU",
         ]
 
@@ -654,6 +674,8 @@ def print_regulator_selection(match):
     if match['seat'] != None:
         print(f"Seat:", match['seat'])
     print(f"Spring:", match['color'], match['range'])
+    if match['mon_color'] != None:
+        print(f"Monitor Spring:", match['mon_color'], match['mon_range'])
     capacity = match['capacity']
     cap_str = f"{capacity:,.0f}" if isinstance(capacity, (int, float)) else str(capacity)
     print(f"Calculated Capacity (CFH): {cap_str}")
