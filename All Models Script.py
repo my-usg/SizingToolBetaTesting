@@ -845,7 +845,6 @@ def gen_match496(result, model, opp):
                             'opp': "IRV",
                             'mon_color': None,
                             'mon_range': None,
-                            'mon_diap': None,
                         }
                         return match
     # No OPP
@@ -869,7 +868,6 @@ def gen_match496(result, model, opp):
                             'opp': "None",
                             'mon_color': None,
                             'mon_range': None,
-                            'mon_diap': None,
                         }
                         return match
 
@@ -1144,7 +1142,6 @@ def gen_match143(result, opp):
                             'opp': "IRV",
                             'mon_color': None,
                             'mon_range': None,
-                            'mon_diap': None,
                         }
                         return match
     # No OPP
@@ -1168,7 +1165,6 @@ def gen_match143(result, opp):
                             'opp': "None",
                             'mon_color': None,
                             'mon_range': None,
-                            'mon_diap': None,
                         }
                         return match
 
@@ -1552,11 +1548,33 @@ def will_irv_work243(reg):
 
 def gen_match243(result, opp):
     match = None
+    is_hp_data = any(k.startswith('R243HP') for k in result)
 
-    # Data Selection
+    if is_hp_data:
+        model_labels243 = {
+            'R243HP1Q': '243-8HP',
+            'R243HP1H': '243-8HP',
+            'R243HP20': '243-8HP',
+        }
+        body_labels243 = {
+            'R243HP1Q': '1-1/4"',
+            'R243HP1H': '1-1/2"',
+            'R243HP02': '2"',
+        }
+        orifice_order = ['1030', '3410', '1210', '3810', '1410']
 
-    # Standard Data if outlet <= 4.5 or ( outlet > 4.5 and opp = IRV and partial = True)
-    if outlet_input <= 4.5 or (outlet_input > 4.5 and opp == "IRV" and partial):
+        hp_pipe_priority = {
+            '1-1/4"': 'R243HP1Q',
+            '1-1/2"':  'R243HP1H',
+            '2"':    'R243HP02',
+        }
+        all_prefixes = list(body_labels243.keys())
+        prioritized = hp_pipe_priority.get(pipesize_input)
+        if prioritized:
+            ordered_prefixes = [prioritized] + [p for p in all_prefixes if p != prioritized]
+        else:
+            ordered_prefixes = all_prefixes
+    else:
         model_labels243 = {
             'R243081Q': '243-8',
             'R243081H': '243-8',
@@ -1585,30 +1603,19 @@ def gen_match243(result, opp):
         all_prefixes = list(body_labels243.keys())
         priority_list = std_pipe_priority.get(pipesize_input, [])
         ordered_prefixes = priority_list + [p for p in all_prefixes if p not in priority_list]
-    else:
-        model_labels243 = {
-            'R243HP1Q': '243-8HP',
-            'R243HP1H': '243-8HP',
-            'R243HP20': '243-8HP',
-        }
-        body_labels243 = {
-            'R243HP1Q': '1-1/4"',
-            'R243HP1H': '1-1/2"',
-            'R243HP02': '2"',
-        }
-        orifice_order = ['1030', '3410', '1210', '3810', '1410']
 
-        hp_pipe_priority = {
-            '1-1/4"': 'R243HP1Q',
-            '1-1/2"':  'R243HP1H',
-            '2"':    'R243HP02',
-        }
-        all_prefixes = list(body_labels243.keys())
-        prioritized = hp_pipe_priority.get(pipesize_input)
-        if prioritized:
-            ordered_prefixes = [prioritized] + [p for p in all_prefixes if p != prioritized]
+
+    # monset is the monitor setpoint, will be 0 unless we are sizing for a monitor regulator
+    monset = 0
+    if opp == "Monitor":
+        if outlet_input == 0.25:
+            monset = 0.5
+        elif outlet_input <= 0.5:
+            monset = outlet_input + 0.5
+        elif outlet_input < 3:
+            monset = outlet_input + 1
         else:
-            ordered_prefixes = all_prefixes
+            monset = outlet_input + 2
 
 
     # IRV
@@ -1638,6 +1645,8 @@ def gen_match243(result, opp):
                             'range': range,
                             'capacity': cap,
                             'opp': "None" if partial or prefix == 'R24312EX' else "IRV",
+                            'mon_color': None,
+                            'mon_range': None,
                         }
                         return match
     # Other
@@ -1652,31 +1661,44 @@ def gen_match243(result, opp):
                             color = spring_243_8(outlet_input)['color']
                             range = spring_243_8(outlet_input)['range']
                             model = '243-8-1'
+                            mon_color = spring_243_8(monset)['color'] if monset != 0 else None
+                            mon_range = spring_243_8(monset)['range'] if monset != 0 else None
                         elif prefix.startswith('R24312') and not prefix.startswith('R24312EX'):
                             color = spring_243_12(outlet_input)['color']
                             range = spring_243_12(outlet_input)['range']
                             model = '243-12-1'
+                            mon_color = spring_243_12(monset)['color'] if monset != 0 else None
+                            mon_range = spring_243_12(monset)['range'] if monset != 0 else None
                         elif prefix.startswith('R24312EX'):
                             color = spring_243_12(outlet_input)['color']
                             range = spring_243_12(outlet_input)['range']
                             model = '243-12-1 with External Control Line'
+                            mon_color = spring_243_12(monset)['color'] if monset != 0 else None
+                            mon_range = spring_243_12(monset)['range'] if monset != 0 else None
                         else:
                             color = spring_243hp(outlet_input)['color']
                             range = spring_243hp(outlet_input)['range']
                             model = '243-8HP'
-                        match = {
-                            'reg' : reg,
-                            'model': model,
-                            'diap': None,
-                            'body': body_labels243[prefix],
-                            'orifice': orifice_type243(reg),
-                            'seat': None,
-                            'color': color,
-                            'range': range,
-                            'capacity': cap,
-                            'opp': opp,
-                        }
-                        return match
+                            mon_color = spring_243hp(monset)['color'] if monset != 0 else None
+                            mon_range = spring_243hp(monset)['range'] if monset != 0 else None
+                        
+                        if opp != "Monitor" or (opp == "Monitor" and mon_color != None):
+                            match = {
+                                'reg' : reg,
+                                'model': model,
+                                'diap': None,
+                                'body': body_labels243[prefix],
+                                'orifice': orifice_type243(reg),
+                                'seat': None,
+                                'color': color,
+                                'range': range,
+                                'capacity': cap,
+                                'opp': opp,
+                                'mon_color': mon_color, # monitor spring color
+                                'mon_range': mon_range, # monitor spring range
+                            }
+                            return match
+
 
 def run_regulator_selection243(inlet, outlet, opp):
     
@@ -1691,11 +1713,23 @@ def run_regulator_selection243(inlet, outlet, opp):
         hp_warning = "243-8-2 with Cadmium spring only available with partial IRV, sized for worker/monitor setup"
         opp = "Monitor"
 
-    # Standard Data if outlet <= 4.5 or ( outlet > 4.5 and opp = IRV and partial = True)
-    if outlet_input <= 4.5 or (outlet_input <= 5 and opp == "IRV" and partial):
-        data_used243 = stddata243
+    # Select data - standard or hp
+    if opp == "Monitor":
+        if outlet_input <= 3:
+            data_used243 = stddata243
+        else:
+            data_used243 = hpdata243
+    elif opp == "IRV":
+        if outlet_input <= 4.5 or (outlet_input <= 5 and partial):
+            data_used243 = stddata243
+        else:
+            data_used243 = hpdata243
     else:
-        data_used243 = hpdata243
+        if outlet_input <= 5:
+            data_used243 = stddata243
+        else:
+            data_used243 = hpdata243
+
 
     if opp == "IRV" and not partial:
         result = interpolate_capacity(data_used243, inlet, outlet, False, False)
@@ -1715,8 +1749,8 @@ def run_regulator_selection243(inlet, outlet, opp):
         # IRV does not work- try with Monitor
         else:
 
-            # Need to change 243 data used to HP data for pressures > 4.5 psi
-            if outlet_input > 4.5:
+            # Need to change 243 data used to HP data for pressures > 3 psi
+            if outlet_input > 3:
                 data_used243 = hpdata243
                 
             result = interpolate_capacity(data_used243, inlet, outlet, True, False)
@@ -1817,13 +1851,14 @@ def hsc_pnc243(match):
     orifice = orifice_map.get(match['orifice'])
     spring = spring_map.get(match['color'])
     opp = match['opp']
+    monitor_spring = spring_map.get(match['mon_color'])
 
     if model == '243-12-2':
         return f"R.243-12-2.STD.{body}.12-2.INT.{orifice}.STD.{spring}.ALU"
     
     elif model == '243-12-1' and opp == "Monitor":
         return [
-            f"R.243-12-1M.STD.{body}.12-1.EXT.{orifice}.STD.{spring}.ALU",
+            f"R.243-12-1M.STD.{body}.12-1.EXT.{orifice}.STD.{monitor_spring}.ALU",
             f"R.243-12-1.STD.{body}.12-1.INT.{orifice}.STD.{spring}.ALU",
         ]
     
@@ -1832,7 +1867,7 @@ def hsc_pnc243(match):
     
     elif model == '243-12-1M with External Control Line' and opp == "Monitor":
         return [
-                f"R.243-12-1M.STD.{body}.12-1.EXT.{orifice}.STD.{spring}.ALU",
+                f"R.243-12-1M.STD.{body}.12-1.EXT.{orifice}.STD.{monitor_spring}.ALU",
                 f"R.243-12-1M.STD.{body}.12-1.EXT.{orifice}.STD.{spring}.ALU",
             ]
     
@@ -1844,17 +1879,17 @@ def hsc_pnc243(match):
         
     elif model == '243-8-1' and opp == "Monitor":
         return [
-            f"R.243-8-1M.{body}.EXT.{orifice}.STD.{spring}.ALU",
+            f"R.243-8-1M.{body}.EXT.{orifice}.STD.{monitor_spring}.ALU",
             f"R.243-8-1.{body}.INT.{orifice}.STD.{spring}.ALU",
         ]
     
     elif model == '243-8-1':
         return f"R.243-8-1.{body}.INT.{orifice}.STD.{spring}.ALU"
 
-    # 243-8HP    
+    # 243-8HP
     elif model == '243-8HP' and opp == "Monitor":
         return [
-            f"R.243.HP-M.{body}.8-HP.EXT.{orifice}.STD.{spring}.ALU",
+            f"R.243.HP-M.{body}.8-HP.EXT.{orifice}.STD.{monitor_spring}.ALU",
             f"R.243.HP.{body}.8-HP.INT.{orifice}.STD.{spring}.ALU",
         ]
     
@@ -2142,7 +2177,6 @@ def gen_match046(result, opp):
                             'opp': "IRV",
                             'mon_color': None,
                             'mon_range': None,
-                            'mon_diap': None,
                         }
                         return match
     # STD sizing
@@ -2166,7 +2200,6 @@ def gen_match046(result, opp):
                             'opp': opp,
                             'mon_color': spring_046(monset)['color'] if opp == "Monitor" else None,
                             'mon_range': spring_046(monset)['range'] if opp == "Monitor" else None,
-                            'mon_diap': None,
                         }
                         return match
 
@@ -2736,7 +2769,6 @@ def gen_match121(result121, result122, vp, opp):
                                     'opp': opp,
                                     'mon_color': mon_color,
                                     'mon_range': spring_121_122(monset, reg)['range'],
-                                    'mon_diap': None,
                                 }
                                 return match
         # -------- 121 HP --------    
@@ -2761,7 +2793,6 @@ def gen_match121(result121, result122, vp, opp):
                                 'opp': opp,
                                 'mon_color': mon_color,
                                 'mon_range': spring_121_122(monset, reg)['range'],
-                                'mon_diap': None,
                             }
                             return match
     
@@ -2822,7 +2853,6 @@ def gen_match121(result121, result122, vp, opp):
                                     'opp': opp,
                                     'mon_color': mon_color,
                                     'mon_range': spring_121_122(monset, reg)['range'],
-                                    'mon_diap': None,
                                 }
                                 return match
         
@@ -2850,7 +2880,6 @@ def gen_match121(result121, result122, vp, opp):
                                     'opp': opp,
                                     'mon_color': mon_color,
                                     'mon_range': spring_121_122(monset, reg)['range'],
-                                    'mon_diap': None,
                                 }
                                 return match
         # -------- 121 HP --------    
@@ -2875,7 +2904,6 @@ def gen_match121(result121, result122, vp, opp):
                                 'opp': opp,
                                 'mon_color': mon_color,
                                 'mon_range': spring_121_122(monset, reg)['range'],
-                                'mon_diap': None,
                             }
                             return match
 
@@ -3254,6 +3282,40 @@ def spring_diap_461S(op):
     
     return output
 
+# chooses a monitor spring based on the outlet pressure (not monitor setpoint)
+# uses same diap as worker regulator
+def mon_spring_diap_461S(op):
+    if op <= 3.5/28:
+        output = {
+            'diap': '12" CI',
+            'color': 'Gray',
+            'range': '(0.5 - 1.75 psi)',
+        }
+    elif op <= 14/28:
+        output = {
+            'diap': '12" Al',
+            'color': 'Orange',
+            'range': '(12" wc - 1 psi)',
+        }
+    elif op < 1:
+        output = {
+            'diap': '12" Al',
+            'color': 'Black',
+            'range': '(1 - 2 psi)',
+        }
+    elif op < 2:
+        output = {
+            'diap': '8" Al',
+            'color': 'Black',
+            'range': '(2 - 4.25 psi)',
+        }
+    else:
+        output = {
+            'diap': '8" Al',
+            'color': 'Cadmium',
+            'range': '(3 - 6.5 psi)',
+        }
+
 def spring_diap_441S(op):
     if op >= 4.25/28 and op <= 4.75/28:
         output = {
@@ -3326,6 +3388,54 @@ def spring_diap_441S(op):
     
     return output
 
+# chooses a monitor spring based on the outlet pressure (not monitor setpoint)
+# uses same diap as worker regulator
+def mon_spring_diap_441S(op):
+    if op < 5.25/28:
+        output = {
+            'diap': '18"',
+            'color': 'Blue',
+            'range': '(16.5" - 21" wc)'
+        }
+    elif op <= 7/28:
+        output = {
+            'diap': '16"',
+            'color': 'Gray',
+            'range': '(0.5" - 1 psi)'
+        }
+    elif op <= 8.5/28:
+        output = {
+            'diap': '14"',
+            'color': 'Gray',
+            'range': '(17" wc - 1.25 psi)'
+        }
+    elif op <= 14/28:
+        output = {
+            'diap': '12"',
+            'color': 'Gray',
+            'range': '(21" wc - 1.5 psi)'
+        }
+    elif op < 1:
+        output = {
+            'diap': '12"',
+            'color': 'Blue',
+            'range': '(1.25 - 2.5 psi)'
+        }
+    elif op < 1.5:
+        output = {
+            'diap': '12"',
+            'color': 'Red',
+            'range': '(1.75 - 4 psi)'
+        }
+    else:
+        output = {
+            'diap': '1"',
+            'color': 'Red',
+            'range': '(2.5 - 6 psi)'
+        }
+
+    return output
+
 def spring_57S(op):
     if op < 6 and op >= 3:
         return {'diap': None, 'color': 'Yellow', 'range': '(3 - 6 psi)'}
@@ -3353,6 +3463,7 @@ def spring_X57(op):
         return {'diap': None, 'color': 'Black', 'range': '(150 - 250 psi)'}
     else:
         return 'N/A'
+
 
 # Capacity Function
 # ------------------------------------------------------------------------------------------------------
@@ -3497,7 +3608,6 @@ def calc_regulator_selection(inlet_p, outlet_p, max_flow, min_flow, monitor):
             "opp": "N/A",
             "mon_color": "N/A",
             "mon_range": "N/A",
-            "mon_diap": "N/A",
         }
 
     # Model Selection: resolve ambiguous "or" model strings
@@ -3580,9 +3690,9 @@ def calc_regulator_selection(inlet_p, outlet_p, max_flow, min_flow, monitor):
 
     mon_color = None
     mon_range = None
-    mon_diap = None
 
      # Spring Selection
+     # use outlet input for the mon_spring functions, use monset for the 57S and X57 spring functions when selecting a monitor spring
     if model == "461-57S" or model == "441-57S":
         color = spring_57S(outlet_input)['color']
         range = spring_57S(outlet_input)['range']
@@ -3599,14 +3709,14 @@ def calc_regulator_selection(inlet_p, outlet_p, max_flow, min_flow, monitor):
         color = spring_diap_441S(outlet_input)['color']
         range = spring_diap_441S(outlet_input)['range']
         if monitor:
-            mon_color = spring_diap_441S(monset)['color']
-            mon_range = spring_diap_441S(monset)['range']
+            mon_color = mon_spring_diap_441S(outlet_input)['color']
+            mon_range = mon_spring_diap_441S(outlet_input)['range']
     elif model == "461-S":
         color = spring_diap_461S(outlet_input)['color']
         range = spring_diap_461S(outlet_input)['range']
         if monset:
-            mon_color = spring_diap_461S(monset)['color']
-            mon_range = spring_diap_461S(monset)['range']
+            mon_color = mon_spring_diap_461S(outlet_input)['color']
+            mon_range = mon_spring_diap_461S(outlet_input)['range']
     else:
         color = "N/A"
         range = "N/A"
@@ -3618,12 +3728,8 @@ def calc_regulator_selection(inlet_p, outlet_p, max_flow, min_flow, monitor):
         diap = None
     elif model == "441-S":
         diap = spring_diap_441S(outlet_input)['diap']
-        if monitor:
-            mon_diap = spring_diap_441S(monset)['diap']
     elif model == "461-S":
         diap = spring_diap_461S(outlet_input)['diap']
-        if monitor:
-            mon_diap = spring_diap_461S(monset)['diap']
     else:
         diap = None
 
@@ -3644,7 +3750,6 @@ def calc_regulator_selection(inlet_p, outlet_p, max_flow, min_flow, monitor):
         "opp": opp,
         "mon_color": mon_color,
         "mon_range": mon_range,
-        "mon_diap": mon_diap,
     }
 
 
@@ -3721,8 +3826,6 @@ def hsc_pnc461(match):
     seat = 'PT' if seat == "Poly-Tan" else seat
     spring = spring_map.get(match['color'])
     mon_spring = spring_map.get(match['mon_color'])
-    mon_diap = diap_map.get(match['mon_diap'])
-    mon_diap = 'EXTCON' if mon_diap == None else mon_diap
     opp = match['opp']
     end = 'S' if body[-3:] in ('300', '600') else 'I'
 
@@ -3732,7 +3835,7 @@ def hsc_pnc461(match):
         if opp == "Monitor":
             return [
                 f"R.{model}.{body}.{diap}.{orifice}.{seat}.{spring}.ST",
-                f"R.{model}.{body}.{mon_diap}.{orifice}.{seat}.{mon_spring}.ST",
+                f"R.{model}.{body}.{diap}.{orifice}.{seat}.{mon_spring}.ST",
             ]
         else:
             return f"R.{model}.{body}.{diap}.{orifice}.{seat}.{spring}.ST"
@@ -3763,7 +3866,7 @@ def hsc_pnc461(match):
         if opp == "Monitor":
             return [
                 f"R.{model}.{body}.{diap}.{orifice}.{seat}.{spring}",
-                f"R.{model}.{body}.{mon_diap}.{orifice}.{seat}.{mon_spring}",
+                f"R.{model}.{body}.{diap}.{orifice}.{seat}.{mon_spring}",
             ]
         else:
             return f"R.{model}.{body}.{diap}.{orifice}.{seat}.{spring}"
@@ -3774,7 +3877,7 @@ def hsc_pnc461(match):
         if opp == "Monitor":
             return [
                 f"R.{model}.{body}.{diap}.{orifice}.{seat}.{spring}.{end}",
-                f"R.{model}.{body}.{mon_diap}.{orifice}.{seat}.{mon_spring}.{end}",
+                f"R.{model}.{body}.{diap}.{orifice}.{seat}.{mon_spring}.{end}",
             ]
         else:
             return f"R.{model}.{body}.{diap}.{orifice}.{seat}.{spring}.{end}"
@@ -3799,8 +3902,6 @@ def print_regulator_selection(match):
     print(f"Spring:", match['color'], match['range'])
     if match['mon_color'] != None:
         print(f"Monitor Spring:", match['mon_color'], match['mon_range'])
-    if match['mon_diap'] != None:
-        print(f"Monitor Diaphragm Size:", match['mon_diap'])
     capacity = match['capacity']
     cap_str = f"{capacity:,.0f}" if isinstance(capacity, (int, float)) else str(capacity)
     print(f"Calculated Capacity (CFH): {cap_str}")

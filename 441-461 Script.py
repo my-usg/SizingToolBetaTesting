@@ -237,6 +237,40 @@ def spring_diap_461S(op):
     
     return output
 
+# chooses a monitor spring based on the outlet pressure (not monitor setpoint)
+# uses same diap as worker regulator
+def mon_spring_diap_461S(op):
+    if op <= 3.5/28:
+        output = {
+            'diap': '12" CI',
+            'color': 'Gray',
+            'range': '(0.5 - 1.75 psi)',
+        }
+    elif op <= 14/28:
+        output = {
+            'diap': '12" Al',
+            'color': 'Orange',
+            'range': '(12" wc - 1 psi)',
+        }
+    elif op < 1:
+        output = {
+            'diap': '12" Al',
+            'color': 'Black',
+            'range': '(1 - 2 psi)',
+        }
+    elif op < 2:
+        output = {
+            'diap': '8" Al',
+            'color': 'Black',
+            'range': '(2 - 4.25 psi)',
+        }
+    else:
+        output = {
+            'diap': '8" Al',
+            'color': 'Cadmium',
+            'range': '(3 - 6.5 psi)',
+        }
+
 def spring_diap_441S(op):
     if op >= 4.25/28 and op <= 4.75/28:
         output = {
@@ -309,6 +343,54 @@ def spring_diap_441S(op):
     
     return output
 
+# chooses a monitor spring based on the outlet pressure (not monitor setpoint)
+# uses same diap as worker regulator
+def mon_spring_diap_441S(op):
+    if op < 5.25/28:
+        output = {
+            'diap': '18"',
+            'color': 'Blue',
+            'range': '(16.5" - 21" wc)'
+        }
+    elif op <= 7/28:
+        output = {
+            'diap': '16"',
+            'color': 'Gray',
+            'range': '(0.5" - 1 psi)'
+        }
+    elif op <= 8.5/28:
+        output = {
+            'diap': '14"',
+            'color': 'Gray',
+            'range': '(17" wc - 1.25 psi)'
+        }
+    elif op <= 14/28:
+        output = {
+            'diap': '12"',
+            'color': 'Gray',
+            'range': '(21" wc - 1.5 psi)'
+        }
+    elif op < 1:
+        output = {
+            'diap': '12"',
+            'color': 'Blue',
+            'range': '(1.25 - 2.5 psi)'
+        }
+    elif op < 1.5:
+        output = {
+            'diap': '12"',
+            'color': 'Red',
+            'range': '(1.75 - 4 psi)'
+        }
+    else:
+        output = {
+            'diap': '1"',
+            'color': 'Red',
+            'range': '(2.5 - 6 psi)'
+        }
+
+    return output
+
 def spring_57S(op):
     if op < 6 and op >= 3:
         return {'diap': None, 'color': 'Yellow', 'range': '(3 - 6 psi)'}
@@ -336,6 +418,7 @@ def spring_X57(op):
         return {'diap': None, 'color': 'Black', 'range': '(150 - 250 psi)'}
     else:
         return 'N/A'
+
 
 # Capacity Function
 # ------------------------------------------------------------------------------------------------------
@@ -480,7 +563,6 @@ def calc_regulator_selection(inlet_p, outlet_p, max_flow, min_flow, monitor):
             "opp": "N/A",
             "mon_color": "N/A",
             "mon_range": "N/A",
-            "mon_diap": "N/A",
         }
 
     # Model Selection: resolve ambiguous "or" model strings
@@ -563,9 +645,9 @@ def calc_regulator_selection(inlet_p, outlet_p, max_flow, min_flow, monitor):
 
     mon_color = None
     mon_range = None
-    mon_diap = None
 
      # Spring Selection
+     # use outlet input for the mon_spring functions, use monset for the 57S and X57 spring functions when selecting a monitor spring
     if model == "461-57S" or model == "441-57S":
         color = spring_57S(outlet_input)['color']
         range = spring_57S(outlet_input)['range']
@@ -582,14 +664,14 @@ def calc_regulator_selection(inlet_p, outlet_p, max_flow, min_flow, monitor):
         color = spring_diap_441S(outlet_input)['color']
         range = spring_diap_441S(outlet_input)['range']
         if monitor:
-            mon_color = spring_diap_441S(monset)['color']
-            mon_range = spring_diap_441S(monset)['range']
+            mon_color = mon_spring_diap_441S(outlet_input)['color']
+            mon_range = mon_spring_diap_441S(outlet_input)['range']
     elif model == "461-S":
         color = spring_diap_461S(outlet_input)['color']
         range = spring_diap_461S(outlet_input)['range']
         if monset:
-            mon_color = spring_diap_461S(monset)['color']
-            mon_range = spring_diap_461S(monset)['range']
+            mon_color = mon_spring_diap_461S(outlet_input)['color']
+            mon_range = mon_spring_diap_461S(outlet_input)['range']
     else:
         color = "N/A"
         range = "N/A"
@@ -601,12 +683,8 @@ def calc_regulator_selection(inlet_p, outlet_p, max_flow, min_flow, monitor):
         diap = None
     elif model == "441-S":
         diap = spring_diap_441S(outlet_input)['diap']
-        if monitor:
-            mon_diap = spring_diap_441S(monset)['diap']
     elif model == "461-S":
         diap = spring_diap_461S(outlet_input)['diap']
-        if monitor:
-            mon_diap = spring_diap_461S(monset)['diap']
     else:
         diap = None
 
@@ -627,7 +705,6 @@ def calc_regulator_selection(inlet_p, outlet_p, max_flow, min_flow, monitor):
         "opp": opp,
         "mon_color": mon_color,
         "mon_range": mon_range,
-        "mon_diap": mon_diap,
     }
 
 
@@ -704,8 +781,6 @@ def hsc_pnc461(match):
     seat = 'PT' if seat == "Poly-Tan" else seat
     spring = spring_map.get(match['color'])
     mon_spring = spring_map.get(match['mon_color'])
-    mon_diap = diap_map.get(match['mon_diap'])
-    mon_diap = 'EXTCON' if mon_diap == None else mon_diap
     opp = match['opp']
     end = 'S' if body[-3:] in ('300', '600') else 'I'
 
@@ -715,7 +790,7 @@ def hsc_pnc461(match):
         if opp == "Monitor":
             return [
                 f"R.{model}.{body}.{diap}.{orifice}.{seat}.{spring}.ST",
-                f"R.{model}.{body}.{mon_diap}.{orifice}.{seat}.{mon_spring}.ST",
+                f"R.{model}.{body}.{diap}.{orifice}.{seat}.{mon_spring}.ST",
             ]
         else:
             return f"R.{model}.{body}.{diap}.{orifice}.{seat}.{spring}.ST"
@@ -746,7 +821,7 @@ def hsc_pnc461(match):
         if opp == "Monitor":
             return [
                 f"R.{model}.{body}.{diap}.{orifice}.{seat}.{spring}",
-                f"R.{model}.{body}.{mon_diap}.{orifice}.{seat}.{mon_spring}",
+                f"R.{model}.{body}.{diap}.{orifice}.{seat}.{mon_spring}",
             ]
         else:
             return f"R.{model}.{body}.{diap}.{orifice}.{seat}.{spring}"
@@ -757,7 +832,7 @@ def hsc_pnc461(match):
         if opp == "Monitor":
             return [
                 f"R.{model}.{body}.{diap}.{orifice}.{seat}.{spring}.{end}",
-                f"R.{model}.{body}.{mon_diap}.{orifice}.{seat}.{mon_spring}.{end}",
+                f"R.{model}.{body}.{diap}.{orifice}.{seat}.{mon_spring}.{end}",
             ]
         else:
             return f"R.{model}.{body}.{diap}.{orifice}.{seat}.{spring}.{end}"
@@ -779,8 +854,6 @@ def print_regulator_selection(match):
     print(f"Spring:", match['color'], match['range'])
     if match['mon_color'] != None:
         print(f"Monitor Spring:", match['mon_color'], match['mon_range'])
-    if match['mon_diap'] != None:
-        print(f"Monitor Diaphragm Size:", match['mon_diap'])
     capacity = match['capacity']
     cap_str = f"{capacity:,.0f}" if isinstance(capacity, (int, float)) else str(capacity)
     print(f"Calculated Capacity (CFH): {cap_str}")

@@ -290,7 +290,6 @@ def gen_match496(result, model, opp):
                             'opp': "IRV",
                             'mon_color': None,
                             'mon_range': None,
-                            'mon_diap': None,
                         }
                         return match
     # No OPP
@@ -314,7 +313,6 @@ def gen_match496(result, model, opp):
                             'opp': "None",
                             'mon_color': None,
                             'mon_range': None,
-                            'mon_diap': None,
                         }
                         return match
 
@@ -412,8 +410,6 @@ def print_regulator_selection(match):
     print(f"Spring:", match['color'], match['range'])
     if match['mon_color'] != None:
         print(f"Monitor Spring:", match['mon_color'], match['mon_range'])
-    if match['mon_diap'] != None:
-        print(f"Monitor Diaphragm Size:", match['mon_diap'])
     capacity = match['capacity']
     cap_str = f"{capacity:,.0f}" if isinstance(capacity, (int, float)) else str(capacity)
     print(f"Calculated Capacity (CFH): {cap_str}")

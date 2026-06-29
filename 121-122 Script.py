@@ -676,7 +676,6 @@ def gen_match121(result121, result122, vp, opp):
                                     'opp': opp,
                                     'mon_color': mon_color,
                                     'mon_range': spring_121_122(monset, reg)['range'],
-                                    'mon_diap': None,
                                 }
                                 return match
         # -------- 121 HP --------    
@@ -701,7 +700,6 @@ def gen_match121(result121, result122, vp, opp):
                                 'opp': opp,
                                 'mon_color': mon_color,
                                 'mon_range': spring_121_122(monset, reg)['range'],
-                                'mon_diap': None,
                             }
                             return match
     
@@ -762,7 +760,6 @@ def gen_match121(result121, result122, vp, opp):
                                     'opp': opp,
                                     'mon_color': mon_color,
                                     'mon_range': spring_121_122(monset, reg)['range'],
-                                    'mon_diap': None,
                                 }
                                 return match
         
@@ -790,7 +787,6 @@ def gen_match121(result121, result122, vp, opp):
                                     'opp': opp,
                                     'mon_color': mon_color,
                                     'mon_range': spring_121_122(monset, reg)['range'],
-                                    'mon_diap': None,
                                 }
                                 return match
         # -------- 121 HP --------    
@@ -815,7 +811,6 @@ def gen_match121(result121, result122, vp, opp):
                                 'opp': opp,
                                 'mon_color': mon_color,
                                 'mon_range': spring_121_122(monset, reg)['range'],
-                                'mon_diap': None,
                             }
                             return match
 
@@ -986,8 +981,6 @@ def print_regulator_selection(match):
     print(f"Spring:", match['color'], match['range'])
     if match['mon_color'] != None:
         print(f"Monitor Spring:", match['mon_color'], match['mon_range'])
-    if match['mon_diap'] != None:
-        print(f"Monitor Diaphragm Size:", match['mon_diap'])
     capacity = match['capacity']
     cap_str = f"{capacity:,.0f}" if isinstance(capacity, (int, float)) else str(capacity)
     print(f"Calculated Capacity (CFH): {cap_str}")

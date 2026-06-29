@@ -19,7 +19,7 @@ except FileNotFoundError as e:
     st.stop()
 
 _lines  = _source.splitlines(keepends=True)
-_code   = "".join(_lines[:888])
+_code   = "".join(_lines[:924])
 
 _globals = {}
 try:
@@ -173,9 +173,9 @@ if run_btn:
                 # outlet pressure adjustment (mirror script)
                 outlet_input243 = 0.25 if 0.125 <= outlet_psi < 0.25 else outlet_psi
 
-                # mirror script: IRV with outlet > 4.5 psi → switch to Monitor for tables
+                # mirror script: IRV with outlet > 4.5 psi → sized as Monitor
                 table_opp = opp_type
-                if opp_type == "IRV" and outlet_psi > 4.5 and not partial:
+                if opp_type == "IRV" and outlet_input243 > 4.5 and not partial:
                     table_opp = "Monitor"
 
                 # inject globals
@@ -202,7 +202,11 @@ if run_btn:
                 # pre-compute table datasets
                 if opp_type == "IRV" and not partial:
                     results_irv = _globals["interpolate_capacity"](_globals["stddata243"], inlet_psi, outlet_input243, False, False)
-                    result_mon  = _globals["interpolate_capacity"](_globals["stddata243"], inlet_psi, outlet_input243, True,  False)
+                    # mirror script: IRV monitor fallback switches to hpdata when outlet > 3
+                    if outlet_input243 > 3:
+                        result_mon = _globals["interpolate_capacity"](_globals["hpdata243"], inlet_psi, outlet_input243, True, False)
+                    else:
+                        result_mon = _globals["interpolate_capacity"](_globals["stddata243"], inlet_psi, outlet_input243, True, False)
                     result_hp   = _globals["interpolate_capacity"](_globals["hpdata243"],  inlet_psi, outlet_input243, True,  False)
                 else:
                     results_irv = result243
@@ -271,7 +275,8 @@ if run_btn:
                     ('Model 243-8HP, 2" Body',      'R243HP02'),
                 ]
 
-                if opp_type == "IRV" and not partial:
+                if opp_type == "IRV" and not partial and outlet_input243 <= 4.5:
+                    # outlet <= 4.5: show IRV tables (std) + Monitor fallback tables
                     st.markdown("**Regulator Sizing Tables with IRV**")
                     for title, prefix in STD_IRV_BODIES:
                         df = build_table(prefix, "IRV", results_irv, partial)
@@ -280,9 +285,9 @@ if run_btn:
                             st.dataframe(df, use_container_width=True, hide_index=True)
 
                     st.markdown("**Regulator Sizing Tables with Monitor**")
-                    if outlet_psi > 3:
+                    if outlet_input243 > 3:
                         for title, prefix in HP_BODIES:
-                            df = build_table(prefix, "Monitor", result_hp, partial)
+                            df = build_table(prefix, "Monitor", result_mon, partial)
                             if not df.empty:
                                 st.markdown(f"**{title}**")
                                 st.dataframe(df, use_container_width=True, hide_index=True)
@@ -293,7 +298,7 @@ if run_btn:
                                 st.markdown(f"**{title}**")
                                 st.dataframe(df, use_container_width=True, hide_index=True)
 
-                elif outlet_psi <= 3 or (outlet_psi <= 5 and opp_type == "IRV" and partial):
+                elif outlet_input243 <= 3 or (outlet_input243 <= 5 and opp_type == "IRV" and partial):
                     label = "**Regulator Sizing Tables with Monitor**" if opp_type == "Monitor" else "**Regulator Sizing Tables**"
                     st.markdown(label)
                     for title, prefix in STD_MON_BODIES:
