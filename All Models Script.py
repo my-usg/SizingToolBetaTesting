@@ -3316,6 +3316,8 @@ def mon_spring_diap_461S(op):
             'range': '(3 - 6.5 psi)',
         }
 
+    return output
+
 def spring_diap_441S(op):
     if op >= 4.25/28 and op <= 4.75/28:
         output = {

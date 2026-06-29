@@ -330,7 +330,6 @@ if run_btn:
                         ("Seat",               match.get("seat")),
                         ("Spring",             f"{match.get('color', '')} {match.get('range', '')}".strip()),
                         ("Monitor Spring",     f"{match.get('mon_color','')} {match.get('mon_range','')}".strip() if match.get("mon_color") not in (None, "N/A") else None),
-                        ("Monitor Diaphragm",  match.get("mon_diap") if match.get("mon_diap") not in (None, "N/A") else None),
                     ]
                     for label, val in fields:
                         if val:
