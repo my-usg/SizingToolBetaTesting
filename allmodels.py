@@ -20,7 +20,7 @@ with open(_tool_path, "r") as f:
 
 # Split at line 3587 — the print("ULTIMATE SIZING TOOL") line that starts the I/O section
 _lines  = _source.splitlines(keepends=True)
-_code   = "".join(_lines[:3624])
+_code   = "".join(_lines[:3819])
 
 _globals = {}
 exec(compile(_code, _tool_path, "exec"), _globals)
@@ -82,15 +82,6 @@ def run_tool(
     msgs   = []   # warning messages
     result = {}   # what we'll display
 
-    # 496 -------------------------------------------------------------------
-    r496, m496, ok496, w496 = run_regulator_selection496(
-        inlet_input496, outlet_input496, opp_type)
-    if ok496:
-        if w496: msgs.append(w496)
-        result["match"]  = m496
-        result["pn"]     = hsc_pnc496(m496)
-        return result, msgs
-
     # 143 -------------------------------------------------------------------
     r143, m143, ok143, w143 = run_regulator_selection143(
         inlet_input, outlet_input143, opp_type)
@@ -98,6 +89,15 @@ def run_tool(
         if w143: msgs.append(w143)
         result["match"] = m143
         result["pn"]    = hsc_pnc143(m143)
+        return result, msgs
+
+    # 496 -------------------------------------------------------------------
+    r496, m496, ok496, w496 = run_regulator_selection496(
+        inlet_input496, outlet_input496, opp_type)
+    if ok496:
+        if w496: msgs.append(w496)
+        result["match"]  = m496
+        result["pn"]     = hsc_pnc496(m496)
         return result, msgs
 
     # 243 -------------------------------------------------------------------
@@ -118,7 +118,7 @@ def run_tool(
         result["pn"]    = hsc_pnc046(m046)
         return result, msgs
 
-    # ── new routing: try 121/122 before 441/461 ────────
+    # ── new routing: high-eff + no OPP → try 121/122 before 441/461 ────────
     if combust_pref:
         r121, r121vp, r122, m121, ok121, w121 = run_regulator_selection121(
             inlet_input, outlet_input121, opp_type)
@@ -132,10 +132,8 @@ def run_tool(
 
         # 121 didn't work — fall through to 441/461
         m461 = calc_regulator_selection(
-            inlet_input, outlet_input, flow_rate, min_flow, opp_type == "Monitor" or (opp_type == "IRV" and not partial))
+            inlet_input, outlet_input, flow_rate, min_flow, False)
         if m461["model"] != "N/A":
-            if m461['opp'] == "Monitor":
-                msgs.append("Sized for worker/monitor setup")
             result["match"] = m461
             result["pn"]    = hsc_pnc461(m461)
             return result, msgs
@@ -145,9 +143,9 @@ def run_tool(
 
     # ── standard routing: 441/461 before 121/122 ────────────────────────────
     m461 = calc_regulator_selection(
-        inlet_input, outlet_input, flow_rate, min_flow, opp_type == "Monitor" or (opp_type == "IRV" and not partial))
+        inlet_input, outlet_input, flow_rate, min_flow, opp_type != "None")
     if m461["model"] != "N/A":
-        if m461['opp'] == "Monitor":
+        if opp_type != "None":
             msgs.append("Sized for worker/monitor setup")
         result["match"] = m461
         result["pn"]    = hsc_pnc461(m461)
@@ -183,7 +181,7 @@ with st.sidebar:
     flow_rate    = st.number_input("Max gas load / flow rate", min_value=0, max_value=10000000000, value=0, step=1, format="%d")
     min_flow_raw = st.number_input("Min gas load / flow rate (enter 0 to use max flow)", min_value=0, max_value=10000000000, value=0, step=1, format="%d")
     min_flow     = flow_rate if min_flow_raw == 0 else min_flow_raw
-    maop         = st.number_input("MAOP (psi)", min_value=0, max_value=1000, value=0, step=1, format="%d")
+    maop         = st.number_input("Max inlet pressure / MAOP (psi)", min_value=0, max_value=1000, value=0, step=1, format="%d")
 
     # pipe size: display value (fraction string) → actual value passed to tool
     _pipe_options = ["N/A", '3/8"', '1/2"', '3/4"', '1"', '1-1/4"', '1-1/2"', '2"', '2-1/2"', '3"']
@@ -224,7 +222,7 @@ with st.sidebar:
         pload = pload_pct / 100.0
     oversizeby = 1.2 + (0.8 * pload)
 
-    combust_pref_choice = st.radio("If applicable, combustion regulator (Model 121/122) preferred?", ["No", "Yes"])
+    combust_pref_choice = st.radio("Prefer combustion regulator (Model 121/122) sizing?", ["No", "Yes"])
     combust_pref = combust_pref_choice == "Yes"
 
     gastype_input = st.selectbox("Gas type", ["Natural Gas", "Propane", "Other"])
@@ -330,7 +328,9 @@ if run_btn:
                         ("Body Size",          match.get("body")),
                         ("Orifice Size",       match.get("orifice")),
                         ("Seat",               match.get("seat")),
-                        ("Spring", f"{match.get('color', '')} {match.get('range', '')}".strip()),
+                        ("Spring",             f"{match.get('color', '')} {match.get('range', '')}".strip()),
+                        ("Monitor Spring",     f"{match.get('mon_color','')} {match.get('mon_range','')}".strip() if match.get("mon_color") not in (None, "N/A") else None),
+                        ("Monitor Diaphragm",  match.get("mon_diap") if match.get("mon_diap") not in (None, "N/A") else None),
                     ]
                     for label, val in fields:
                         if val:

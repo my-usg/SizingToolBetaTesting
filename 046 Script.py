@@ -500,7 +500,8 @@ def gen_match046(result, opp):
                             'capacity': cap,
                             'opp': "IRV",
                             'mon_color': None,
-                            'mon_rnage': None,
+                            'mon_range': None,
+                            'mon_diap': None,
                         }
                         return match
     # STD sizing
@@ -524,6 +525,7 @@ def gen_match046(result, opp):
                             'opp': opp,
                             'mon_color': spring_046(monset)['color'] if opp == "Monitor" else None,
                             'mon_range': spring_046(monset)['range'] if opp == "Monitor" else None,
+                            'mon_diap': None,
                         }
                         return match
 
@@ -676,6 +678,8 @@ def print_regulator_selection(match):
     print(f"Spring:", match['color'], match['range'])
     if match['mon_color'] != None:
         print(f"Monitor Spring:", match['mon_color'], match['mon_range'])
+    if match['mon_diap'] != None:
+        print(f"Monitor Diaphragm Size:", match['mon_diap'])
     capacity = match['capacity']
     cap_str = f"{capacity:,.0f}" if isinstance(capacity, (int, float)) else str(capacity)
     print(f"Calculated Capacity (CFH): {cap_str}")

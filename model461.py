@@ -19,7 +19,7 @@ except FileNotFoundError as e:
     st.stop()
 
 _lines  = _source.splitlines(keepends=True)
-_code   = "".join(_lines[:756])
+_code   = "".join(_lines[:814])
 
 _globals = {}
 try:
@@ -170,12 +170,14 @@ if run_btn:
 
                     st.subheader("Regulator Selection")
                     fields = [
-                        ("Model",        match461.get("model")),
-                        ("Diaphragm",    match461.get("diap")),
-                        ("Body Size",    match461.get("body")),
-                        ("Orifice Size", match461.get("orifice")),
-                        ("Seat",         match461.get("seat")),
-                        ("Spring",       f"{match461.get('color','')} {match461.get('range','')}".strip()),
+                        ("Model",              match461.get("model")),
+                        ("Diaphragm",          match461.get("diap")),
+                        ("Body Size",          match461.get("body")),
+                        ("Orifice Size",       match461.get("orifice")),
+                        ("Seat",               match461.get("seat")),
+                        ("Spring",             f"{match461.get('color','')} {match461.get('range','')}".strip()),
+                        ("Monitor Spring",     f"{match461.get('mon_color','')} {match461.get('mon_range','')}".strip() if match461.get("mon_color") not in (None, "N/A") else None),
+                        ("Monitor Diaphragm",  match461.get("mon_diap") if match461.get("mon_diap") not in (None, "N/A") else None),
                     ]
                     for label, val in fields:
                         if val:

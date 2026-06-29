@@ -9,11 +9,11 @@ def model_461_single(inlet_p, outlet_p):
     if inlet_p <= 175 and maop <= 175:
         if outlet_p < 1:
             return "N/A"
-        elif outlet_p < 3:
+        elif outlet_p <= 3:
             return "461-S"
         elif outlet_p <= 10:
             return "461-S or 461-57S"
-        elif outlet_p < 75:
+        elif outlet_p <= 75:
             return "461-57S"
         elif outlet_p <= 100:
             return "461-57S or 461-X57"
@@ -24,7 +24,7 @@ def model_461_single(inlet_p, outlet_p):
     elif inlet_p <= 1000 and maop <= 1000:
         if outlet_p < 3:
             return "N/A"
-        elif outlet_p < 75:
+        elif outlet_p <= 75:
             return "461-57S"
         elif outlet_p <= 100:
             return "461-57S or 461-X57"
@@ -38,11 +38,11 @@ def model_461_single(inlet_p, outlet_p):
 # Returns 461 double valve models
 def model_461_double(inlet_p, outlet_p):
     if inlet_p <= 175 and maop <= 175:
-        if outlet_p < 3:
+        if outlet_p <= 3:
             return "461-S"
         elif outlet_p <= 10:
             return "461-S or 461-57S"
-        elif outlet_p < 75:
+        elif outlet_p <= 75:
             return "461-57S"
         elif outlet_p <= 100:
             return "461-57S or 461-X57"
@@ -53,7 +53,7 @@ def model_461_double(inlet_p, outlet_p):
     elif inlet_p <= 1000 and maop <= 1000:
         if outlet_p < 3:
             return "N/A"
-        elif outlet_p < 75:
+        elif outlet_p <= 75:
             return "461-57S"
         elif outlet_p <= 100:
             return "461-57S or 461-X57"
@@ -71,11 +71,11 @@ def model_441_2(inlet_p, outlet_p, max_pressure=None, tier2_max=None):
     elif inlet_p <= 100 and maop <= 100:
         if outlet_p < 5.25/28:
             return "N/A"
-        elif outlet_p < 3:
+        elif outlet_p <= 3:
             return "441-S"
         elif outlet_p <= 6:
             return "441-S or 441-57S"
-        elif outlet_p < 75:
+        elif outlet_p <= 75:
             return "441-57S"
         elif outlet_p <= 100:
             return "441-57S or 441-X57"
@@ -86,7 +86,7 @@ def model_441_2(inlet_p, outlet_p, max_pressure=None, tier2_max=None):
     elif max_pressure and inlet_p <= max_pressure and maop <= max_pressure:
         if outlet_p < 3:
             return "N/A"
-        elif outlet_p < 75:
+        elif outlet_p <= 75:
             return "441-57S"
         elif outlet_p <= 100:
             return "441-57S or 441-X57"
@@ -107,11 +107,11 @@ def model_441_2(inlet_p, outlet_p, max_pressure=None, tier2_max=None):
 # Returns 441 models for 3"
 def model_441_3(inlet_p, outlet_p, max_pressure=None, tier2_max=None):
     if inlet_p <= 100 and maop <= 100:
-        if outlet_p < 3:
+        if outlet_p <= 3:
             return "441-S"
         elif outlet_p <= 6:
             return "441-S or 441-57S"
-        elif outlet_p < 75:
+        elif outlet_p <= 75:
             return "441-57S"
         elif outlet_p <= 100:
             return "441-57S or 441-X57"
@@ -122,7 +122,7 @@ def model_441_3(inlet_p, outlet_p, max_pressure=None, tier2_max=None):
     elif max_pressure and inlet_p <= max_pressure and maop <= max_pressure:
         if outlet_p < 3:
             return "N/A"
-        elif outlet_p < 75:
+        elif outlet_p <= 75:
             return "441-57S"
         elif outlet_p <= 100:
             return "441-57S or 441-X57"
@@ -143,7 +143,7 @@ def model_441_3(inlet_p, outlet_p, max_pressure=None, tier2_max=None):
 # Returns 441 models for 4"
 def model_441_4(inlet_p, outlet_p, max_pressure):
     if inlet_p <= 100 and maop <= 100:
-        if outlet_p < 3:
+        if outlet_p <= 3:
             return "441-S"
         elif outlet_p <= 6:
             return "441-S or 441-57S"
@@ -233,7 +233,7 @@ def spring_diap_461S(op):
             'range': '(6 - 10 psi)',
         }
     else:
-        output = 'Model not applicable'
+        output = 'N/A'
     
     return output
 
@@ -305,7 +305,7 @@ def spring_diap_441S(op):
             'range': '(2.5 - 6 psi)'
         }
     else:
-        output = 'Model not applicable'
+        output = 'N/A'
     
     return output
 
@@ -325,7 +325,7 @@ def spring_57S(op):
     elif op <= 100:
         return {'diap': None, 'color': 'Brown + White', 'range': '(70 - 100 psi)'}
     else:
-        return 'Model not applicable'
+        return 'N/A'
 
 def spring_X57(op):
     if op < 100 and op >= 75:
@@ -335,7 +335,7 @@ def spring_X57(op):
     elif op <= 250:
         return {'diap': None, 'color': 'Black', 'range': '(150 - 250 psi)'}
     else:
-        return 'Model not applicable'
+        return 'N/A'
 
 # Capacity Function
 # ------------------------------------------------------------------------------------------------------
@@ -478,18 +478,35 @@ def calc_regulator_selection(inlet_p, outlet_p, max_flow, min_flow, monitor):
             "range": "N/A",
             "capacity":     "N/A",
             "opp": "N/A",
+            "mon_color": "N/A",
+            "mon_range": "N/A",
+            "mon_diap": "N/A",
         }
 
-    raw_model = primary["model"]
-
     # Model Selection: resolve ambiguous "or" model strings
-    ambiguous_model = {
-        "461-S or 461-57S":   "461-57S",
-        "441-S or 441-57S":   "441-57S",
-        "461-57S or 461-X57": "461-57S",
-        "441-57S or 441-X57": "441-57S",
-    }
-    model = ambiguous_model.get(raw_model, raw_model)
+    raw_model = primary["model"]
+    if raw_model == "461-S or 461-57S":
+        if outlet_input <= 3:
+            model = "461-S"
+        else:
+            model = "461-57S"
+    elif raw_model == "441-S or 441-57S":
+        if outlet_input <= 3:
+            model = "441-S"
+        else:
+            model = "441-57S"
+    elif raw_model == "461-57S or 461-X57":
+        if outlet_input <= 72:
+            model = "461-57S"
+        else:
+            model = "461-X57"
+    elif raw_model == "441-57S or 441-X57":
+        if outlet_input <= 72:
+            model = "441-57S"
+        else:
+            model = "441-X57"
+    else:
+        model = raw_model
 
     # Body Selection
     body = primary["body"]
@@ -532,19 +549,47 @@ def calc_regulator_selection(inlet_p, outlet_p, max_flow, min_flow, monitor):
     # Max Capacity
     max_capacity = primary["qmax"]
 
-    # Spring Selection
+    # Monitor Pressure Setpoint
+    monset = 0
+    if monitor:
+        if outlet_input <= 0.5:
+            monset = 1
+        elif outlet_input < 3:
+            monset = outlet_input + 1
+        elif outlet_input <= 5:
+            monset = outlet_input + 2
+        else:
+            monset = outlet_input + 3
+
+    mon_color = None
+    mon_range = None
+    mon_diap = None
+
+     # Spring Selection
     if model == "461-57S" or model == "441-57S":
         color = spring_57S(outlet_input)['color']
         range = spring_57S(outlet_input)['range']
+        if monitor:
+            mon_color = spring_57S(monset)['color']
+            mon_range = spring_57S(monset)['range']
     elif model == "461-X57" or model == "441-X57":
         color = spring_X57(outlet_input)['color']
         range = spring_X57(outlet_input)['range']
+        if monitor:
+            mon_color = spring_X57(monset)['color']
+            mon_range = spring_X57(monset)['range']
     elif model == "441-S":
         color = spring_diap_441S(outlet_input)['color']
         range = spring_diap_441S(outlet_input)['range']
+        if monitor:
+            mon_color = spring_diap_441S(monset)['color']
+            mon_range = spring_diap_441S(monset)['range']
     elif model == "461-S":
         color = spring_diap_461S(outlet_input)['color']
         range = spring_diap_461S(outlet_input)['range']
+        if monset:
+            mon_color = spring_diap_461S(monset)['color']
+            mon_range = spring_diap_461S(monset)['range']
     else:
         color = "N/A"
         range = "N/A"
@@ -556,8 +601,12 @@ def calc_regulator_selection(inlet_p, outlet_p, max_flow, min_flow, monitor):
         diap = None
     elif model == "441-S":
         diap = spring_diap_441S(outlet_input)['diap']
+        if monitor:
+            mon_diap = spring_diap_441S(monset)['diap']
     elif model == "461-S":
         diap = spring_diap_461S(outlet_input)['diap']
+        if monitor:
+            mon_diap = spring_diap_461S(monset)['diap']
     else:
         diap = None
 
@@ -576,6 +625,9 @@ def calc_regulator_selection(inlet_p, outlet_p, max_flow, min_flow, monitor):
         "range": range,
         "capacity":      max_capacity,
         "opp": opp,
+        "mon_color": mon_color,
+        "mon_range": mon_range,
+        "mon_diap": mon_diap,
     }
 
 
@@ -651,6 +703,9 @@ def hsc_pnc461(match):
     seat = match['seat']
     seat = 'PT' if seat == "Poly-Tan" else seat
     spring = spring_map.get(match['color'])
+    mon_spring = spring_map.get(match['mon_color'])
+    mon_diap = diap_map.get(match['mon_diap'])
+    mon_diap = 'EXTCON' if mon_diap == None else mon_diap
     opp = match['opp']
     end = 'S' if body[-3:] in ('300', '600') else 'I'
 
@@ -660,7 +715,7 @@ def hsc_pnc461(match):
         if opp == "Monitor":
             return [
                 f"R.{model}.{body}.{diap}.{orifice}.{seat}.{spring}.ST",
-                f"R.{model}.{body}.{diap}.{orifice}.{seat}.{spring}.ST",
+                f"R.{model}.{body}.{mon_diap}.{orifice}.{seat}.{mon_spring}.ST",
             ]
         else:
             return f"R.{model}.{body}.{diap}.{orifice}.{seat}.{spring}.ST"
@@ -671,7 +726,7 @@ def hsc_pnc461(match):
         if opp == "Monitor":
             return [
                 f"R.{model}.{body}.{orifice}.{seat}.{spring}",
-                f"R.{model}.{body}.{orifice}.{seat}.{spring}",
+                f"R.{model}.{body}.{orifice}.{seat}.{mon_spring}",
             ]
         else:
             return f"R.{model}.{body}.{orifice}.{seat}.{spring}"
@@ -682,7 +737,7 @@ def hsc_pnc461(match):
         if opp == "Monitor":
             return [
                 f"R.{model}.{body}.{orifice}.{seat}.{spring}.{end}",
-                f"R.{model}.{body}.{orifice}.{seat}.{spring}.{end}",
+                f"R.{model}.{body}.{orifice}.{seat}.{mon_spring}.{end}",
             ]
         else:
             return f"R.{model}.{body}.{orifice}.{seat}.{spring}.{end}"
@@ -691,7 +746,7 @@ def hsc_pnc461(match):
         if opp == "Monitor":
             return [
                 f"R.{model}.{body}.{diap}.{orifice}.{seat}.{spring}",
-                f"R.{model}.{body}.{diap}.{orifice}.{seat}.{spring}",
+                f"R.{model}.{body}.{mon_diap}.{orifice}.{seat}.{mon_spring}",
             ]
         else:
             return f"R.{model}.{body}.{diap}.{orifice}.{seat}.{spring}"
@@ -702,7 +757,7 @@ def hsc_pnc461(match):
         if opp == "Monitor":
             return [
                 f"R.{model}.{body}.{diap}.{orifice}.{seat}.{spring}.{end}",
-                f"R.{model}.{body}.{diap}.{orifice}.{seat}.{spring}.{end}",
+                f"R.{model}.{body}.{mon_diap}.{orifice}.{seat}.{mon_spring}.{end}",
             ]
         else:
             return f"R.{model}.{body}.{diap}.{orifice}.{seat}.{spring}.{end}"
@@ -722,6 +777,10 @@ def print_regulator_selection(match):
     if match['seat'] != None:
         print(f"Seat:", match['seat'])
     print(f"Spring:", match['color'], match['range'])
+    if match['mon_color'] != None:
+        print(f"Monitor Spring:", match['mon_color'], match['mon_range'])
+    if match['mon_diap'] != None:
+        print(f"Monitor Diaphragm Size:", match['mon_diap'])
     capacity = match['capacity']
     cap_str = f"{capacity:,.0f}" if isinstance(capacity, (int, float)) else str(capacity)
     print(f"Calculated Capacity (CFH): {cap_str}")
