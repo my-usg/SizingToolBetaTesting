@@ -185,55 +185,52 @@ def will_work(cap, reg, orifice_max):
             return "No"
 
 def will_irv_work496(reg):
-    orif = orifice_typeSMALL(reg)
 
     # Partial IRV
     if partial:
         return "Partial"
     
-    if irv_lim >= 1.75:
-        if orif == '1/8"':
-            max = 125
-        elif orif == '3/16"':
-            max = 74
-        elif orif == '1/4"':
-            max = 44
-        elif orif == '5/16"':
-            max = 30
-        elif orif == '3/8"':
-            max = 21
-        elif orif == '1/2"':
-            max = 14
-    elif irv_lim >= 1.25:
-        if orif == '1/8"':
-            max = 125
-        elif orif == '3/16"':
-            max = 56
-        elif orif == '1/4"':
-            max = 31
-        elif orif == '5/16"':
-            max = 22
-        elif orif == '3/8"':
-            max = 18
-        elif orif == '1/2"':
-            max = 10
-    elif irv_lim >= 0.75:
-        if orif == '1/8"':
-            max = 76
-        elif orif == '3/16"':
-            max = 28
-        elif orif == '1/4"':
-            max = 18
-        elif orif == '5/16"':
-            max = 12
-        elif orif == '3/8"':
-            max = 10
-        elif orif == '1/2"':
-            max = 7
-    else:
-        max = 0
+    irvdata496 = {
+        0: {'18': 0.25, '36': 0.25, '14': 0.25, '56': 0.25, '38': 0.25, '12': 0.25},
+        3: {'18': 0.39, '36': 0.39, '14': 0.39, '56': 0.39, '38': 0.39, '12': 0.46},
+        10: {'18': 0.39, '36': 0.39, '14': 0.39, '56': 0.64, '38': 0.79, '12': 1.18},
+        12: {'18': 0.39, '36': 0.39, '14': 0.54, '56': 0.75, '38': 1, '12': 1.54},
+        20: {'18': 0.39, '36': 0.54, '14': 0.82, '56': 1.11, '38': 1.54, '12': 2.61},
+        30: {'18': 0.43, '36': 0.75, '14': 1.11, '56': 1.82, '38': 2.61, '12': None},
+        40: {'18': 0.46, '36': 0.89, '14': 1.54, '56': 2.61, '38': None, '12': None},
+        50: {'18': 0.5, '36': 1.11, '14': 1.96, '56': None, '38': None, '12': None},
+        60: {'18': 0.61, '36': 1.36, '14': 2.32, '56': None, '38': None, '12': None},
+        70: {'18': 0.64, '36': 1.54, '14': None, '56': None, '38': None, '12': None},
+        80: {'18': 0.75, '36': 1.89, '14': None, '56': None, '38': None, '12': None},
+        90: {'18': 0.79, '36': 2.18, '14': None, '56': None, '38': None, '12': None},
+        100: {'18': 0.82, '36': 2.43, '14': None, '56': None, '38': None, '12': None},
+        125: {'18': None, '36': None, '14': None, '56': None, '38': None, '12': None},
+    }
     
-    if inlet_input <= max:
+    # Linear Interpolaton Algorithm to determine the outlet pressure buildup for a given inlet pressure and orifice
+    orifice_key = reg[-2:]
+    inlet_keys = sorted(irvdata496.keys())
+    if inlet_input <= inlet_keys[0]:
+        out_pressure_build = irvdata496[inlet_keys[0]][orifice_key]
+    elif inlet_input >= inlet_keys[-1]:
+        out_pressure_build = irvdata496[inlet_keys[-1]][orifice_key]
+    else:
+        p_low = max(p for p in inlet_keys if p <= inlet_input)
+        p_high = min(p for p in inlet_keys if p >= inlet_input)
+        if p_low == p_high:
+            out_pressure_build = irvdata496[p_low][orifice_key]
+        else:
+            v_low = irvdata496[p_low][orifice_key]
+            v_high = irvdata496[p_high][orifice_key]
+            if v_low is None or v_high is None:
+                out_pressure_build = None
+            else:
+                t = (inlet_input - p_low) / (p_high - p_low)
+                out_pressure_build = (1 - t) * v_low + t * v_high
+
+    if out_pressure_build == None or irv_input == None:
+        return "No"
+    elif (out_pressure_build + outlet_input) <= irv_input:
         return "Yes"
     else:
         return "No"
@@ -456,7 +453,6 @@ partial = False
 irv_input = 0
 if opp_input == "y":
     irv_input = float(input("IRV protect downstream pressure to: "))
-    irv_lim = irv_input - outlet_input
     opp_type = "IRV"
 else:
     partial_input = input("If applicable, select regulator with IRV for partial overpressure protection? (y/n): ")

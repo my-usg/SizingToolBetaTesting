@@ -19,7 +19,7 @@ except FileNotFoundError as e:
     st.stop()
 
 _lines  = _source.splitlines(keepends=True)
-_code   = "".join(_lines[:426])   # stop before INPUT section
+_code   = "".join(_lines[:423])   # stop before INPUT section
 
 _globals = {}
 try:
@@ -179,7 +179,6 @@ if run_btn:
                     "opp_type":       opp_type,
                     "partial":        partial,
                     "irv_input":      irv_input,
-                    "irv_lim":        irv_input - outlet_psi if irv_input else 0,
                     "oversizeby":     oversizeby,
                     "oversize_percent": oversize_percent,
                     "gastypemult":    gastypemult,
