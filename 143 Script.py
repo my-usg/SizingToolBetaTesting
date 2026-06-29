@@ -467,7 +467,7 @@ flow_rate = float(input("Enter gas load/flow rate: "))
 maop = float(input("MAOP (psi): "))
 maop = inlet_input if maop == 0 else maop
 
-pipesize_input = (input("Enter desired pipe size (enter N/A, 0.75, 1, 1.25, ect.): "))
+pipesize_input = (input('Enter desired pipe size (enter N/A, 3/4", 1", 1-1/4", ect.): '))
 pipesize_input = 0 if pipesize_input == "N/A" else pipesize_input
 
 # Pressure Units Adjustments
@@ -592,7 +592,7 @@ if apply143:
     add_cart = hsc_pnc143(match143)
     print(f"HSC P/N:", ', '.join(add_cart) if isinstance(add_cart, (list, set)) else add_cart)
 else:
-    if warning143:
+    if result143 == None:
         print("")
         print(warning143)
         print("")

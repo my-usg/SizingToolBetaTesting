@@ -202,12 +202,11 @@ if run_btn:
                     result_irv = result046
                     result_mon = result046
 
-                # ── warnings ─────────────────────────────────────────────────
-                if warning046:
-                    st.warning(warning046)
-
                 # ── regulator selection ───────────────────────────────────────
                 if apply046:
+                    if warning046:
+                        st.warning(warning046)
+
                     st.success("✅  Regulator selected!")
 
                     st.subheader("Regulator Selection")
@@ -239,7 +238,12 @@ if run_btn:
                         st.code(pn)
 
                 else:
-                    if not warning046:
+                    if result046 is None:
+                        if warning046:
+                            st.warning(warning046)
+                        st.error("❌  Model 046 will not work for this application.")
+                        st.stop()
+                    else:
                         st.error("❌  Model 046 will not work for this application.")
 
                 # ── sizing tables ─────────────────────────────────────────────

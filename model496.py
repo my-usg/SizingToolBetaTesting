@@ -197,12 +197,11 @@ if run_btn:
                 # table opp_type (partial = no IRV in tables)
                 table_opp = "None" if partial else opp_type
 
-                # ── warnings ─────────────────────────────────────────────────
-                if warning496:
-                    st.warning(warning496)
-
                 # ── regulator selection ───────────────────────────────────────
                 if apply496:
+                    if warning496:
+                        st.warning(warning496)
+
                     st.success("✅  Regulator selected!")
 
                     st.subheader("Regulator Selection")
@@ -234,7 +233,12 @@ if run_btn:
                         st.code(pn)
 
                 else:
-                    if not warning496:
+                    if result496 is None:
+                        if warning496:
+                            st.warning(warning496)
+                        st.error("❌  Model 496 will not work for this application.")
+                        st.stop()
+                    else:
                         st.error("❌  Model 496 will not work for this application.")
 
                 # ── sizing tables ─────────────────────────────────────────────

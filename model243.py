@@ -213,12 +213,11 @@ if run_btn:
                     result_mon  = result243
                     result_hp   = result243
 
-                # ── warnings ─────────────────────────────────────────────────
-                if warning243:
-                    st.warning(warning243)
-
                 # ── regulator selection ───────────────────────────────────────
                 if apply243:
+                    if warning243:
+                        st.warning(warning243)
+
                     st.success("✅  Regulator selected!")
 
                     st.subheader("Regulator Selection")
@@ -251,7 +250,12 @@ if run_btn:
                         st.code(pn)
 
                 else:
-                    if not warning243:
+                    if result243 is None:
+                        if warning243:
+                            st.warning(warning243)
+                        st.error("❌  Model 243 will not work for this application.")
+                        st.stop()
+                    else:
                         st.error("❌  Model 243 will not work for this application.")
 
                 # ── sizing tables ─────────────────────────────────────────────

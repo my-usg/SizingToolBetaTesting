@@ -1013,7 +1013,7 @@ min_flow = flow_rate if min_flow == 0 else min_flow
 maop = float(input("MAOP (psi): "))
 maop = inlet_input if maop == 0 else maop
 
-pipesize_input = (input("Enter desired pipe size (enter N/A, 0.75, 1, 1.25, ect.): "))
+pipesize_input = (input('Enter desired pipe size (enter N/A, 3/4", 1", 1-1/4", ect.): '))
 pipesize_input = 0 if pipesize_input == "N/A" else pipesize_input
 
 # Pressure Units Adjustments
@@ -1141,9 +1141,8 @@ if apply121:
     if match121['model'] == '121-8' or match121['model'] == '121-12' or match121['model'] == '121-16' or match121['model'] == '121-HP':
         print("")
         print(f"Note: Model 121 regulators have outlet pipe sizing requirements, regulator was sized for use with {body_size_min121(ip=inlet_input, reg=match121['reg'])} outlet pipe.  For capacities with smaller outlet piping, see regulator brochure.")
-
 else:
-    if warning121:
+    if result121 == None:
         print("")
         print(warning121)
         print("")

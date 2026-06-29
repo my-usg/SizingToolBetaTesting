@@ -221,13 +221,26 @@ if run_btn:
                         st.code(pn)
 
                 else:
-                    st.error("❌  Model 121/122 will not work for this application.")
+                    if result121 is None:
+                        if warning121:
+                            st.warning(warning121)
+                        st.error("❌  Model 121/122 will not work for this application.")
+                        st.stop()
+                    else:
+                        st.error("❌  Model 121/122 will not work for this application.")
 
                 # ── sizing tables ─────────────────────────────────────────────
                 st.divider()
                 table_label = "**Regulator Sizing Tables with Monitor**" if opp_type == "Monitor" else "**Regulator Sizing Tables**"
 
-                if outlet_psi <= 2 and not isinstance(result122, str):
+                show_122 = (
+                    not isinstance(result122, str) and (
+                        (outlet_input121 <= 2 and opp_type != "Monitor") or
+                        (outlet_input121 <= 1 and opp_type == "Monitor")
+                    )
+                )
+
+                if show_122:
                     # Standard + VP + 122
                     st.subheader("Regulator Sizing Tables")
                     st.markdown(table_label)
@@ -255,7 +268,7 @@ if run_btn:
                             st.markdown(f"**{title}**")
                             st.dataframe(df, use_container_width=True, hide_index=True)
 
-                elif outlet_psi <= 3:
+                elif outlet_input121 <= 3:
                     # Standard + VP, no 122
                     st.subheader("Regulator Sizing Tables")
                     st.markdown(table_label)
