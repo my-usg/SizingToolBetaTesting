@@ -470,7 +470,6 @@ def gen_match046(result, opp):
     if maop < 600 and diff < 400:
         seat = 'Poly-Tan'
 
-
     # monset is the monitor setpoint, will be 0 unless we are sizing for a monitor regulator
     monset = 0
     if opp == "Monitor":
@@ -478,7 +477,9 @@ def gen_match046(result, opp):
             monset = outlet_input + 2
         else:
             monset = outlet_input + 3
-
+        # adjust outlet pressure
+        if outlet_input > 195:
+            outlet_input = 195
 
     # IRV sizing
     if opp == "IRV":
