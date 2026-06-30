@@ -166,7 +166,6 @@ if run_btn:
                     "opp_type":          opp_type,
                     "partial":           False,
                     "irv_input":         0,
-                    "irv_lim":           0,
                     "oversizeby":        oversizeby,
                     "oversize_percent":  oversize_percent,
                     "gastypemult":       gastypemult,

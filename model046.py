@@ -183,7 +183,6 @@ if run_btn:
                     "opp_type":          opp_type,
                     "partial":           partial,
                     "irv_input":         irv_input,
-                    "irv_lim":           irv_input - outlet_psi if irv_input else 0,
                     "oversizeby":        oversizeby,
                     "oversize_percent":  oversize_percent,
                     "gastypemult":       gastypemult,

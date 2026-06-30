@@ -20,7 +20,7 @@ with open(_tool_path, "r") as f:
 
 # Split at line 3587 — the print("ULTIMATE SIZING TOOL") line that starts the I/O section
 _lines  = _source.splitlines(keepends=True)
-_code   = "".join(_lines[:3923])
+_code   = "".join(_lines[:3953])
 
 _globals = {}
 exec(compile(_code, _tool_path, "exec"), _globals)
@@ -73,7 +73,6 @@ def run_tool(
     _globals["opp_type"]       = opp_type
     _globals["partial"]        = partial
     _globals["irv_input"]      = irv_input
-    _globals["irv_lim"]        = irv_input - outlet_input if irv_input else 0
     _globals["oversizeby"]     = oversizeby
     _globals["gastypemult"]    = gastypemult
     _globals["pload"]          = pload
