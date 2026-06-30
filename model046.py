@@ -43,7 +43,7 @@ def build_table(prefix, opp_type, result, irv_input_val, partial_flag):
         cap_str = f"{cap:,.0f}" if isinstance(cap, (int, float)) else str(cap)
         works   = _globals["will_work"](cap, reg, _globals["orifice_max046"](reg))
         if opp_type == "IRV" and not partial_flag:
-            irv = _globals["will_irv_work046"](reg, irv_input_val)
+            irv = _globals["will_irv_work046"](reg)
             rows.append([orifice, cap_str, works, irv])
         else:
             rows.append([orifice, cap_str, works])
