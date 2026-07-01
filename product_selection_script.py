@@ -418,6 +418,60 @@ def hsc_pnc461(match):
             return f"R.{model}.{body}.{diap}.{orifice}.{seat}.{spring}.{end}"
 
 
+# 243-RPC HSC Part Number Builder
+# ---------------------------------------------------------------------------
+
+def hsc_pncRPC(match):
+
+    body_map = {
+        '1-1/4" SCD': '1-1/4SCD',
+        '1-1/2" SCD': '1-1/2SCD',
+        '2" SCD': '2SCD',
+        '2" FLG': '2FLG',
+        '2" FLG 10" FTF': '2FLG10',
+    }
+    orifice_map = {
+        '1/4"': '12',
+        '3/8"': '14',
+        '1/2"': '15',
+        '3/4"': '18',
+        '1"': '20',
+        '1-1/4"': '21',
+    }
+    spring_map = {
+        'Red': '10',
+        'Blue': '11',
+        'Green': '12',
+        'Orange': '13',
+        'Black': '14',
+        'White': '25',
+        'Aluminum': '24',
+        'Gray': '27',
+        'Brown': '22',
+    }
+
+    model = match['model']
+    body = body_map.get(match['body'])
+    orifice = orifice_map.get(match['orifice'])
+    spring = spring_map.get(match['color'])
+    opp = match['opp']
+    monitor_spring = spring_map.get(match['mon_color'])
+
+    if model == '243-RPC-B':
+        control = 'INT'
+    else:
+        control = 'EXT'
+
+    if opp == "Monitor":
+        return [
+            f"R.{model}.{body}.{control}.{orifice}.STD.{spring}.ALU",
+            f"R.243-RPC.{body}.EXT.{orifice}.STD.{monitor_spring}.ALU",
+        ]
+
+    else:
+        return f"R.{model}.{body}.{control}.{orifice}.STD.{spring}.ALU"
+
+
 # Run Product Selection Function
 # ---------------------------------------------------------------------------
 
@@ -449,6 +503,8 @@ def run_product_configurator(regulator_type, model, body, orifice, spring_color,
         output = hsc_pnc121(match)
     if regulator_type == '441' or regulator_type == '461':
         output = hsc_pnc461(match)
+    if regulator_type == 'RPC':
+        output = hsc_pncRPC(match)
 
     return output
 

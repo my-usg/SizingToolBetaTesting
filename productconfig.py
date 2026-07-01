@@ -51,7 +51,7 @@ st.write("Select the options for your regulator below. The part number(s) will b
 REGULATOR_TYPES = [
     "496", "143", "243", "046",
     "461-S", "461-57S", "441-57S", "461-X57", "441-S", "441-X57",
-    "121", "122",
+    "121", "122", "RPC",
 ]
 
 regulator_type = st.selectbox("Regulator Type", REGULATOR_TYPES)
@@ -441,6 +441,29 @@ elif regulator_type == "122":
     spring_color = st.selectbox("Spring Color", spring_options)
 
     opp, monitor_color = monitor_block(spring_options, "r122")
+
+# ---------------------------------------------------------------------------
+# RPC
+# ---------------------------------------------------------------------------
+elif regulator_type == "RPC":
+    reg_param = "RPC"
+    model = st.selectbox("Model", ["243-RPC", "243-RPC-A", "243-RPC-B"])
+
+    body_label = st.selectbox("Body Size", ['1-1/4"', '1-1/2"', '2"', '2" FLG'])
+    body_lookup = {
+        '1-1/4"': '1-1/4" SCD',
+        '1-1/2"': '1-1/2" SCD',
+        '2"': '2" SCD',
+        '2" FLG': '2" FLG',
+    }
+    body = body_lookup[body_label]
+
+    orifice = st.selectbox("Orifice Size", ['1/4"', '3/8"', '1/2"', '3/4"', '1"', '1-1/4"'])
+
+    spring_options = ["Red", "Blue", "Green", "Orange", "Black", "White", "Aluminum", "Gray", "Brown"]
+    spring_color = st.selectbox("Spring Color", spring_options)
+
+    opp, monitor_color = monitor_block(spring_options, "rrpc")
 
 
 st.divider()
