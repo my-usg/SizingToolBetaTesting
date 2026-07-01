@@ -292,7 +292,7 @@ def hsc_pnc121(match):
 # ---------------------------------------------------------------------------
 def hsc_pnc461(match):
     body_map = {
-        '2" Screwed': '2" SCD',
+        '2" Screwed': '2SCD',
         '2" ANSI 125': '2FLG125',
         '2" ANSI 250': '2FLG250',
         '2" ANSI 300': '2FLG300',
@@ -408,7 +408,7 @@ def hsc_pnc461(match):
 
     else:
         if model == '441-57S':
-            body = '2FLG' if body == '2FLG125' else '3FLG' if body == '3FLG125' else body
+            body = '2FLG' if body == '2FLG125' else '3FLG' if body == '3FLG125' else '2SCRD' if body == '2SCD' else body
         if opp == "Monitor":
             return [
                 f"R.{model}.{body}.{diap}.{orifice}.{seat}.{spring}.{end}",
