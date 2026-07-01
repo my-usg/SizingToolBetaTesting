@@ -182,7 +182,7 @@ html, body, [data-testid="stAppViewContainer"] {
     <div>· Use the <strong style="color: #111827;">individual model sizing tools</strong> if you want to size a specific model and you have the inlet pressure, outlet pressure, and gas load or flow rate.</div>
 </div>
 
-<a class="tool-card featured" href="https://allmodels-usg.streamlit.app/" target="_blank"> href="https://allmodels-usg.streamlit.app/" target="_blank">
+<a class="tool-card featured" href="https://allmodels-usg.streamlit.app/" target="_blank">
     <div class="card-title featured-title">All Models <span class="beta-badge">Beta</span></div>
     <span class="card-arrow">→</span>
 </a>
