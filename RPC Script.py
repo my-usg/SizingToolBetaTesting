@@ -369,7 +369,7 @@ def gen_matchRPC(result, opp):
         "RPCB": '243-RPC-B',
     }
 
-    if model_input == "RPC-B":
+    if model_input == "243-RPC-B":
         ordered_prefixes = ['RPCB', 'RPCA']
     else:
         ordered_prefixes = ['RPCA', 'RPCB']
@@ -567,7 +567,7 @@ maop = float(input("MAOP (psi): "))
 maop = inlet_input if maop == 0 else maop
 
 model_input = input('Enter desired RPC model (enter "N/A", "243-RPC", "243-RPC-A" or "243-RPC-B"): ')
-model_input = "RPC" if model_input == "N/A" else model_input
+model_input = "243-RPC" if model_input == "N/A" else model_input
 
 pipesize_input = (input('Enter desired pipe size (enter N/A, 1-1/4", 1-1/2" or 2"): '))
 pipesize_input = 0 if pipesize_input == "N/A" else pipesize_input

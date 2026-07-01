@@ -66,7 +66,7 @@ with st.sidebar:
     st.subheader("Design Parameters")
 
     model_choice = st.selectbox("Desired RPC model", ["N/A (any)", "243-RPC", "243-RPC-A", "243-RPC-B"])
-    model_map    = {"N/A (any)": "RPC", "243-RPC": "243-RPC", "243-RPC-A": "243-RPC-A", "243-RPC-B": "243-RPC-B"}
+    model_map    = {"N/A (any)": "243-RPC", "243-RPC": "243-RPC", "243-RPC-A": "243-RPC-A", "243-RPC-B": "243-RPC-B"}
     model_input  = model_map[model_choice]
 
     _pipe_options = ["N/A", '1-1/4"', '1-1/2"', '2"']
