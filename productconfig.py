@@ -2,6 +2,49 @@ import streamlit as st
 from product_selection_script import run_product_configurator
 
 st.set_page_config(page_title="Regulator Part Number Configurator", layout="centered")
+
+st.markdown(
+    """
+    <style>
+    /* Overall base font size */
+    html, body, [class*="css"] {
+        font-size: 18px;
+    }
+    /* Widget labels (selectbox, radio, etc.) */
+    label, .stSelectbox label, .stRadio label {
+        font-size: 1.15rem !important;
+        font-weight: 600 !important;
+    }
+    /* Selected value text inside dropdowns */
+    div[data-baseweb="select"] * {
+        font-size: 1.1rem !important;
+    }
+    /* Dropdown menu options */
+    ul[role="listbox"] li {
+        font-size: 1.1rem !important;
+    }
+    /* Buttons */
+    .stButton button {
+        font-size: 1.15rem !important;
+        padding: 0.6rem 1.2rem;
+    }
+    /* Captions / notes */
+    .stCaption, [data-testid="stCaptionContainer"] {
+        font-size: 1rem !important;
+    }
+    /* Generated part number code blocks */
+    .stCodeBlock, code {
+        font-size: 1.3rem !important;
+    }
+    /* Success / error message boxes */
+    .stAlert {
+        font-size: 1.1rem !important;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
 st.title("Regulator Part Number Configurator")
 st.write("Select the options for your regulator below. The part number(s) will be built automatically.")
 
