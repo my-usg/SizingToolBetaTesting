@@ -332,7 +332,8 @@ if run_btn:
                     ]
                     for label, val in fields:
                         if val:
-                            st.markdown(f"**{label}:** {val}")
+                            st.markdown(f"**{label}**")
+                            st.code(val, language=None)
 
                     cap = match.get("capacity")
                     if cap and cap != "N/A":
