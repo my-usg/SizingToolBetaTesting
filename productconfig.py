@@ -182,15 +182,13 @@ elif regulator_type == "243":
     if model in ("243-8-1", "243-12-1", "243-8HP"):
         opp, monitor_color = monitor_block(spring_options, "r243")
 
-    # 243-12-1 with External Control = Yes uses the external-control model variant
+    # 243-12-1 with External Control = Yes uses the external-control model variant.
+    # The algorithm uses a different model string for the monitor case (note the "M").
     if model == "243-12-1" and external_control == "Yes":
-        model = "243-12-1 with External Control Line"
         if opp == "Monitor":
-            st.caption(
-                "Note: the underlying algorithm doesn't have a Monitor branch for the "
-                "external-control variant, so only a single (non-monitor) part number "
-                "will be generated for this combination."
-            )
+            model = "243-12-1M with External Control Line"
+        else:
+            model = "243-12-1 with External Control Line"
 
 # ---------------------------------------------------------------------------
 # 046
