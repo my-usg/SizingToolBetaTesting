@@ -12,7 +12,7 @@ st.markdown("Fill in the inputs on the left and click **Run Sizing**.")
 _tool_path = os.path.join(os.path.dirname(__file__), "RPC Script.py")
 
 try:
-    with open(_tool_path, "r") as f:
+    with open(_tool_path, "r", encoding="utf-8-sig") as f:
         _source = f.read()
 except FileNotFoundError as e:
     st.error(f"Could not load sizing script: {e}")
