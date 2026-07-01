@@ -454,10 +454,8 @@ if st.button("Generate Part Number(s)", type="primary"):
         st.error("No part number could be generated for this combination. Please review your selections.")
     elif isinstance(result, list):
         st.success(f"{len(result)} part numbers generated:")
-        for i, pn in enumerate(result, start=1):
-            label = "Primary" if i == 1 else "Monitor"
+        for pn in result:
             st.code(pn, language=None)
-            st.caption(label)
     else:
         st.success("Part number generated:")
         st.code(result, language=None)
