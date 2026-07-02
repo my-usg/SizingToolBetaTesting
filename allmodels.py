@@ -1,6 +1,8 @@
 import streamlit as st
 import sys
 import os
+import io
+from openpyxl import load_workbook
 
 # ── page config ──────────────────────────────────────────────────────────────
 st.set_page_config(page_title="Regulator Sizing Tool - All Models", page_icon="⚙️", layout="wide")
@@ -223,6 +225,7 @@ with st.sidebar:
 
     gastype_input = st.selectbox("Gas type", ["Natural Gas", "Propane", "Other"])
     gastypemult   = 1.0
+    sg            = 0.6
     if gastype_input == "Propane":
         gastypemult = 0.63
     elif gastype_input == "Other":
@@ -330,17 +333,14 @@ if run_btn:
                     ]
                     for label, val in fields:
                         if val:
-                            st.markdown(f"**{label}**")
-                            st.code(val, language=None)
+                            st.markdown(f"**{label}:** {val}")
 
                     cap = match.get("capacity")
                     if cap and cap != "N/A":
                         try:
-                            cap_str = f"{int(round(float(cap))):,}"
+                            st.markdown(f"**Calculated Capacity (CFH):** {int(round(float(cap))):,}")
                         except Exception:
-                            cap_str = str(cap)
-                        st.markdown("**Calculated Capacity (CFH)**")
-                        st.code(cap_str, language=None)
+                            st.markdown(f"**Calculated Capacity (CFH):** {cap}")
 
                     st.subheader("HSC Part Number(s)")
                     if isinstance(pn, list):
@@ -355,6 +355,79 @@ if run_btn:
                             st.info(f"ℹ️  Model 121 regulators have outlet pipe sizing requirements. This regulator was sized for use with **{pipe}** outlet pipe. For capacities with smaller outlet piping, see regulator brochure.")
                         else:
                             st.info("ℹ️  Model 121 regulators have outlet pipe sizing requirements — see brochure.")
+
+                    # ── excel download ───────────────────────────────────────
+                    st.divider()
+                    st.subheader("Download Summary")
+                    try:
+                        _tmpl_path = os.path.join(_script_dir, "Regulator Sizing Examples.xlsx")
+                        wb = load_workbook(_tmpl_path)
+                        ws = wb.active
+
+                        # ── inputs ──
+                        ws["B2"]  = inlet_units
+                        ws["B3"]  = inlet_input
+                        ws["B4"]  = outlet_units
+                        ws["B5"]  = outlet_input
+                        ws["B6"]  = flowrate_units
+                        ws["B7"]  = flow_rate
+                        ws["B8"]  = min_flow_raw if min_flow_raw > 0 else 0
+                        ws["B9"]  = int(maop)
+                        ws["B10"] = _pipe_options[pipesize_index]
+                        ws["B11"] = "Yes" if opp_choice == "Yes" else "No"
+                        if opp_choice == "Yes":
+                            ws["B12"] = "IRV" if "IRV" in opp_pref else "Monitor"
+                            ws["B13"] = irv_input if "IRV" in opp_pref else ""
+                            ws["B14"] = ""
+                        else:
+                            ws["B12"] = ""
+                            ws["B13"] = ""
+                            ws["B14"] = "Yes" if opp_type == "Partial" else "No"
+                        ws["B15"] = "Yes" if higheff == "Yes" else "No"
+                        ws["B16"] = f"{pload_pct}%" if higheff == "Yes" else ""
+                        ws["B17"] = "Yes" if combust_pref else "No"
+                        ws["B18"] = gastype_input
+                        ws["B19"] = sg if gastype_input == "Other" else ""
+
+                        # ── outputs ──
+                        ws["B21"] = match.get("model", "")
+                        ws["B22"] = match.get("diap", "") or ""
+                        ws["B23"] = match.get("body", "") or ""
+                        ws["B24"] = match.get("orifice", "") or ""
+                        ws["B25"] = match.get("seat", "") or ""
+                        spring_str = f"{match.get('color','')} {match.get('range','')}".strip()
+                        ws["B26"] = spring_str
+                        mon_color = match.get("mon_color")
+                        mon_range = match.get("mon_range")
+                        if mon_color not in (None, "N/A"):
+                            ws["B27"] = f"{mon_color} {mon_range}".strip()
+                        else:
+                            ws["B27"] = ""
+                        cap = match.get("capacity")
+                        try:
+                            ws["B28"] = int(round(float(cap))) if cap and cap != "N/A" else ""
+                        except Exception:
+                            ws["B28"] = cap or ""
+                        pn_list = pn if isinstance(pn, list) else [pn]
+                        ws["B29"] = pn_list[0] if len(pn_list) > 0 else ""
+                        ws["B30"] = pn_list[1] if len(pn_list) > 1 else ""
+                        warn_list = [m for m in msgs if m]
+                        ws["B31"] = warn_list[0] if len(warn_list) > 0 else ""
+                        ws["B32"] = warn_list[1] if len(warn_list) > 1 else ""
+
+                        buf = io.BytesIO()
+                        wb.save(buf)
+                        buf.seek(0)
+                        st.download_button(
+                            label="⬇️  Download Excel Summary",
+                            data=buf,
+                            file_name="regulator_sizing_summary.xlsx",
+                            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                        )
+                    except FileNotFoundError:
+                        st.info("Template file not found — add 'Regulator Sizing Examples.xlsx' to the app directory to enable Excel download.")
+                    except Exception as _ex:
+                        st.warning(f"Could not generate Excel: {_ex}")
 
                     # ── sizing adjustments ───────────────────────────────────
                     st.divider()
