@@ -558,7 +558,7 @@ def gen_match243(result, opp):
 
 
     # IRV
-    if opp == "IRV":
+    if opp == "IRV" or "Partial":
         for prefix in [p for p in ordered_prefixes if p != 'R24312EX']:
             for orifice in orifice_order:
                 reg = f"{prefix}_{orifice}"
