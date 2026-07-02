@@ -729,10 +729,10 @@ def will_work(cap, reg, orifice_max):
         else:
             return "No"
 
-def will_irv_work496(reg):
+def will_irv_work496(reg, opp):
 
     # Partial IRV
-    if partial:
+    if opp == "Partial":
         return "Partial"
     
     irvdata496 = {
@@ -812,13 +812,13 @@ def gen_match496(result, model, opp):
     orifice_order496 = ['12', '38', '56', '14', '36', '18']
 
     # IRV
-    if opp != "None":
+    if opp == "IRV" or opp == "Partial":
         for prefix in ordered_prefixes:
             for orifice in orifice_order496:
                 reg = f"{prefix}_{orifice}"
                 if reg in result:
                     cap = result[reg]
-                    if will_work(cap, reg, orifice_max496(reg)) == "Yes" and will_irv_work496(reg) != "No":
+                    if will_work(cap, reg, orifice_max496(reg)) == "Yes" and will_irv_work496(reg, opp) != "No":
                         match = {
                             'reg' : reg,
                             'model': model,
@@ -864,6 +864,8 @@ def run_regulator_selection496(inlet, outlet, opp):
 
     warning = None
 
+    opp = "IRV" if opp == "Monitor" else opp
+
     if isinstance(result, str):
         warning = result
         result = None
@@ -875,12 +877,13 @@ def run_regulator_selection496(inlet, outlet, opp):
 
     if match:
         apply = True
-        if opp == "IRV" and not partial:
+        if opp == "IRV":
             warning = "Sized for IRV"
     else:
         apply = False
 
     return result, match, apply, warning
+
 
 
 # Part Number Configurator
@@ -1014,10 +1017,10 @@ def will_work(cap, reg, orifice_max):
         else:
             return "No"
 
-def will_irv_work143(reg):
+def will_irv_work143(reg, opp):
 
     # Partial IRV
-    if partial:
+    if opp == "Partial":
         return "Partial"
      
     irvstddata143 = {
@@ -1097,8 +1100,10 @@ def gen_match143(result, opp):
 
     if outlet_input > 2:
         model = '143-2HP'
+    elif opp == "None":
+        model = '143-1'
     else:
-        model = '143-1' if opp == "None" else '143-2'
+        model = '143-2'
 
     body_labels143 = {
         'R14334': '3/4"',
@@ -1123,13 +1128,13 @@ def gen_match143(result, opp):
     orifice_order143 = ['58', '12', '38', '56', '14', '36', '18']
 
     # IRV
-    if opp != "None":
+    if opp == "IRV" or opp == "Partial":
         for prefix in ordered_prefixes:
             for orifice in orifice_order143:
                 reg = f"{prefix}_{orifice}"
                 if reg in result:
                     cap = result[reg]
-                    if will_work(cap, reg, orifice_max143(reg)) == "Yes" and will_irv_work143(reg) != "No":
+                    if will_work(cap, reg, orifice_max143(reg)) == "Yes" and will_irv_work143(reg, opp) != "No":
                         match = {
                             'reg' : reg,
                             'model': model,
@@ -1163,7 +1168,7 @@ def gen_match143(result, opp):
                             'color': spring_143(outlet_input)['color'],
                             'range': spring_143(outlet_input)['range'],
                             'capacity': cap,
-                            'opp': "None",
+                            'opp': "None" if model == '143-1' else "IRV",
                             'mon_color': None,
                             'mon_range': None,
                         }
@@ -1171,9 +1176,20 @@ def gen_match143(result, opp):
 
 
 def run_regulator_selection143(inlet, outlet, opp):
+    
+    # if opp = IRV, fail if outlet > 2 psi (for 143-2HP)
+    if opp == "IRV" and outlet_input > 2:
+        warning = "Cannot size IRV for outlet pressures > 2 psi"
+        result = None
+        match = None
+        apply = False
+        return result, match, apply, warning
+    
     result = interpolate_capacity(data143, inlet, outlet, False, False)
 
     warning = None
+
+    opp = "IRV" if opp == "Monitor" else opp
 
     if isinstance(result, str):
         warning = result
@@ -1184,14 +1200,9 @@ def run_regulator_selection143(inlet, outlet, opp):
 
     match = gen_match143(result, opp)
 
-    # if opp = IRV and partial = False, fail if outlet > 2 psi (for 143-2HP)
-
-    if opp == "IRV" and outlet_input > 2 and not partial:
-        apply = False
-        warning = "Cannot size IRV for outlet pressures > 2 psi"
-    elif match:
+    if match:
         apply = True
-        if opp == "IRV" and not partial:
+        if opp == "IRV":
             warning = "Sized for IRV"
     else:
         apply = False
@@ -1418,10 +1429,10 @@ def will_work(cap, reg, orifice_max):
         else:
             return "No"
 
-def will_irv_work243(reg):
+def will_irv_work243(reg, opp):
 
     # Partial IRV
-    if partial:
+    if opp == "Partial":
         return "Partial"
 
     # determine orifice size for tables
@@ -1600,12 +1611,12 @@ def gen_match243(result, opp):
 
     # IRV
     if opp == "IRV":
-        for prefix in ordered_prefixes:
+        for prefix in [p for p in ordered_prefixes if p != 'R24312EX']:
             for orifice in orifice_order:
                 reg = f"{prefix}_{orifice}"
                 if reg in result:
                     cap = result[reg]
-                    if will_work(cap, reg, orifice_max243(reg)) == "Yes" and will_irv_work243(reg) != "No":
+                    if will_work(cap, reg, orifice_max243(reg)) == "Yes" and will_irv_work243(reg, opp) != "No":
                         if prefix.startswith('R24308'):
                             color = spring_243_8(outlet_input)['color']
                             range = spring_243_8(outlet_input)['range']
@@ -1624,7 +1635,7 @@ def gen_match243(result, opp):
                             'color': color,
                             'range': range,
                             'capacity': cap,
-                            'opp': "None" if partial or prefix == 'R24312EX' else "IRV",
+                            'opp': "IRV",
                             'mon_color': None,
                             'mon_range': None,
                         }
@@ -1686,10 +1697,10 @@ def run_regulator_selection243(inlet, outlet, opp):
     hp_warning = None
 
     # Correct when user requests IRV but a 243-8HP needs to be used
-    if outlet_input > 5 and opp == "IRV" and not partial:
+    if outlet_input > 5 and (opp == "IRV" or opp == "Partial"):
         hp_warning = "243-HP not available with IRV, sized for worker/monitor setup"
         opp = "Monitor"
-    elif outlet_input > 4.5 and opp == "IRV" and not partial:
+    elif outlet_input > 4.5 and opp == "IRV":
         hp_warning = "243-8-2 with Cadmium spring only available with partial IRV, sized for worker/monitor setup"
         opp = "Monitor"
 
@@ -1699,11 +1710,8 @@ def run_regulator_selection243(inlet, outlet, opp):
             data_used243 = stddata243
         else:
             data_used243 = hpdata243
-    elif opp == "IRV":
-        if outlet_input <= 4.5 or (outlet_input <= 5 and partial):
-            data_used243 = stddata243
-        else:
-            data_used243 = hpdata243
+    elif opp == "IRV" or opp == "Partial":
+        data_used243 = stddata243
     else:
         if outlet_input <= 5:
             data_used243 = stddata243
@@ -1711,7 +1719,7 @@ def run_regulator_selection243(inlet, outlet, opp):
             data_used243 = hpdata243
 
 
-    if opp == "IRV" and not partial:
+    if opp == "IRV":
         result = interpolate_capacity(data_used243, inlet, outlet, False, False)
         if isinstance(result, str):
             warning = result
@@ -1998,12 +2006,12 @@ def will_work(cap, reg, orifice_max):
         else:
             return "No"
 
-def will_irv_work046(reg):
+def will_irv_work046(reg, opp):
     orif = orifice_typeSMALL(reg)
     spring = spring_046(outlet_input)['color']
 
     # Partial IRV
-    if partial:
+    if opp == "Partial":
         return "Partial"
 
     yellow_curves = {
@@ -2180,13 +2188,13 @@ def gen_match046(result, opp):
             monset = outlet_input + 3
 
     # IRV sizing
-    if opp == "IRV":
+    if opp == "IRV" or opp == "Partial":
         for prefix in ordered_irv_prefixes:
             for orifice in orifice_order:
                 reg = f"{prefix}_{orifice}"
                 if reg in result:
                     cap = result[reg]
-                    if will_work(cap, reg, orifice_max046(reg)) == "Yes" and will_irv_work046(reg) != "No":
+                    if will_work(cap, reg, orifice_max046(reg)) == "Yes" and will_irv_work046(reg, opp) != "No":
                         match = {
                             'reg' : reg,
                             'model': '046-2',
@@ -2230,7 +2238,7 @@ def run_regulator_selection046(inlet, outlet, opp):
 
     warning = None
 
-    if opp == "IRV" and not partial:
+    if opp == "IRV":
         result = interpolate_capacity(data046, inlet, outlet, False, False)
 
         if isinstance(result, str):
@@ -2741,6 +2749,7 @@ def gen_match121(result121, result122, vp, opp):
     match = None
 
     # monset is the monitor setpoint, will be 0 unless we are sizing for a monitor regulator
+    # also set opp type
     monset = 0
     if opp == "Monitor":
         if outlet_input <= 0.5:
@@ -2778,7 +2787,7 @@ def gen_match121(result121, result122, vp, opp):
                         cap = result121[reg]
                         if will_work_vp(cap, reg, vp) == "Yes":
                             mon_color = spring_121_122(monset, reg)['color'] if opp == "Monitor" else None
-                            if opp != "Monitor" or (opp == "Monitor" and mon_color != None):
+                            if opp == "None" or (opp == "Monitor" and mon_color != None):
                                 match = {
                                     'reg': reg,
                                     'model': model_labels_121[prefix],
@@ -2802,7 +2811,7 @@ def gen_match121(result121, result122, vp, opp):
                     cap = result121[reg]
                     if will_work_vp(cap, reg, vp) == "Yes":
                         mon_color = spring_121_122(monset, reg)['color'] if opp == "Monitor" else None
-                        if opp != "Monitor" or (opp == "Monitor" and mon_color != None):
+                        if opp == "None" or (opp == "Monitor" and mon_color != None):
                             match = {
                                 'reg': reg,
                                 'model': '121-8-HP',
@@ -2852,7 +2861,7 @@ def gen_match121(result121, result122, vp, opp):
 
         # -------- 121 or 122 Standard --------
         # 122 is used up to 2 psi or 1 psi with monitor
-        if ((outlet_input <= 2 and opp != "Monitor") or (outlet_input <= 1 and opp == "Monitor")) and isinstance(result122, str) == False:
+        if ((outlet_input <= 2 and opp == "None") or (outlet_input <= 1 and opp == "Monitor")) and isinstance(result122, str) == False:
 
             for prefix, label in model_labels_121122.items():
                 res = result121 if prefix.startswith('R121') else result122
@@ -2862,7 +2871,7 @@ def gen_match121(result121, result122, vp, opp):
                         cap = res[reg]
                         if will_work_vp(cap, reg, vp) == "Yes":
                             mon_color = spring_121_122(monset, reg)['color'] if opp == "Monitor" else None
-                            if opp != "Monitor" or (opp == "Monitor" and mon_color != None):
+                            if opp == "None" or (opp == "Monitor" and mon_color != None):
                                 match = {
                                     'reg': reg,
                                     'model': model_labels_121122[prefix],
@@ -2889,7 +2898,7 @@ def gen_match121(result121, result122, vp, opp):
                         cap = result121[reg]
                         if will_work_vp(cap, reg, vp) == "Yes":
                             mon_color = spring_121_122(monset, reg)['color'] if opp == "Monitor" else None
-                            if opp != "Monitor" or (opp == "Monitor" and mon_color != None):
+                            if opp == "None" or (opp == "Monitor" and mon_color != None):
                                 match = {
                                     'reg': reg,
                                     'model': model_labels_121[prefix],
@@ -2913,7 +2922,7 @@ def gen_match121(result121, result122, vp, opp):
                     cap = result121[reg]
                     if will_work_vp(cap, reg, vp) == "Yes":
                         mon_color = spring_121_122(monset, reg)['color'] if opp == "Monitor" else None
-                        if opp != "Monitor" or (opp == "Monitor" and mon_color != None):
+                        if opp == "None" or (opp == "Monitor" and mon_color != None):
                             match = {
                                 'reg': reg,
                                 'model': '121-8-HP',
@@ -2938,10 +2947,12 @@ def run_regulator_selection121(inlet, outlet, opp):
     else:
         data_used121 = hpdata121
 
-    if opp == "Monitor":
+    if opp == "Monitor" or opp == "IRV":
+        opp = "Monitor"
         monitor = True
         warning = "Sized for worker/monitor setup"
     else:
+        opp = "None"
         monitor = False
         warning = None
 
@@ -3526,7 +3537,7 @@ def applicable(model_str, qmax, qmin, max_flow, min_flow):
 # Capacity Table Function
 # ------------------------------------------------------------------------------------------------------
 
-def build_standard_table(inlet_p, outlet_p, max_flow, min_flow, monitor):
+def build_standard_table(inlet_p, outlet_p, max_flow, min_flow, opp):
     rows = [
         # (body,   orifice,         K,      model_fn)
         ('2"',  '11/16" single',   650,   model_461_single(inlet_p, outlet_p)),
@@ -3546,6 +3557,13 @@ def build_standard_table(inlet_p, outlet_p, max_flow, min_flow, monitor):
         ('6"',  '4-1/4"',        33000,   model_441_6(inlet_p, outlet_p, max_pressure=150)),
     ]
 
+    if opp == "Monitor" or opp == "IRV":
+        monitor = True
+        opp = "Monitor"
+    else:
+        monitor = False
+        opp = "None"
+
     table = []
     for body, orifice, K, model in rows:
         qmax = calc_qmax(K, inlet_p, outlet_p, monitor)
@@ -3562,7 +3580,7 @@ def build_standard_table(inlet_p, outlet_p, max_flow, min_flow, monitor):
     return table
 
 
-def build_vport_table(inlet_p, outlet_p, max_flow, min_flow, monitor):
+def build_vport_table(inlet_p, outlet_p, max_flow, min_flow, opp):
     rows = [
         # (body,   orifice,         K,      model_fn)
         ('2"',  '1" single',      975,   model_461_single(inlet_p, outlet_p)),
@@ -3579,6 +3597,13 @@ def build_vport_table(inlet_p, outlet_p, max_flow, min_flow, monitor):
         ('6"',  '3"',            14430,   model_441_6(inlet_p, outlet_p, max_pressure=300)),
         ('6"',  '4-1/4"',        25500,   model_441_6(inlet_p, outlet_p, max_pressure=150)),
     ]
+
+    if opp == "Monitor" or opp == "IRV":
+        monitor = True
+        opp = "Monitor"
+    else:
+        monitor = False
+        opp = "None"
 
     table = []
     for body, orifice, K, model in rows:
@@ -3608,10 +3633,19 @@ def find_first(table):
 
 # Computes regulator selection outputs
 # Returns dict with : model, body, orifice, seat, max_capacity
-def calc_regulator_selection(inlet_p, outlet_p, max_flow, min_flow, monitor):
+def calc_regulator_selection(inlet_p, outlet_p, max_flow, min_flow, opp):
+    
+    if opp == "Monitor" or opp == "IRV":
+        monitor = True
+        opp = "Monitor"
+        warning = "Sized for worker/monitor setup"
+    else:
+        monitor = False
+        opp = "None"
+        warning = None
 
-    std = build_standard_table(inlet_p, outlet_p, max_flow, min_flow, monitor)
-    vp  = build_vport_table(inlet_p, outlet_p, max_flow, min_flow, monitor)
+    std = build_standard_table(inlet_p, outlet_p, max_flow, min_flow, opp)
+    vp  = build_vport_table(inlet_p, outlet_p, max_flow, min_flow, opp)
 
     std_match = find_first(std)
     vp_match  = find_first(vp)
@@ -3758,12 +3792,7 @@ def calc_regulator_selection(inlet_p, outlet_p, max_flow, min_flow, monitor):
     else:
         diap = None
 
-    if monitor:
-        opp = "Monitor"
-    else:
-        opp = "None"
-
-    return {
+    match = {
         "model":   model,
         "diap":   diap,
         "body":    body,
@@ -3776,6 +3805,13 @@ def calc_regulator_selection(inlet_p, outlet_p, max_flow, min_flow, monitor):
         "mon_color": mon_color,
         "mon_range": mon_range,
     }
+
+    if match['model'] != "N/A":
+        apply = True
+    else:
+        apply = False
+
+    return match, apply, warning
 
 
 # Part Number Configurator
@@ -3974,8 +4010,8 @@ elif outlet_units == "bar":
 if inlet_units == "bar":
     inlet_input *= 14.5
 
+# Overpressure Protection Inputs
 opp_input = input("Do you require overpressure protection? (y/n): ").lower()
-partial = False
 irv_input = 0
 if opp_input == "y":
     opp_pref = input("If applicable should the program prioritize sizing with IRV or default to monitor regulator sizing? (irv/mon) ").lower()
@@ -3986,9 +4022,9 @@ if opp_input == "y":
         opp_type = "Monitor"
 else:
     partial_input = input("If applicable, select regulator with IRV for partial overpressure protection? (y/n): ")
-    partial = True if partial_input == "y" else False
-    opp_type = "IRV" if partial else "None"
+    opp_type = "Partial" if partial_input == "y" else "None"
 
+# Oversize due to high-efficiency equipment function
 higheff_input = input("Is this feeding a generator or high-efficiency boiler? (y/n): ").lower()
 if higheff_input == "y":
     pload = float(input("What percent of the total load is feeding a generator or high-efficiency boiler: "))
@@ -4215,36 +4251,35 @@ else:
                         print("")
                 
                 else:
-                    match461 = calc_regulator_selection(inlet_input, outlet_input, flow_rate, min_flow, opp_type == "Monitor" or (opp_type == "IRV" and not partial))
-                    if match461['model'] != "N/A":
-                        if match461['opp'] == "Monitor":
-                            print("Sized for worker/monitor setup")
+                    match461, apply461, warning461 = calc_regulator_selection(inlet_input, outlet_input, flow_rate, min_flow, opp_type)
+                    if apply461:
+                        if warning461:
                             print("")
+                            print(warning461)
+                        print("")
                         print_regulator_selection(match461)
                         print("")
-
+                        
                         # HSC Part Number = add_cart
                         add_cart = hsc_pnc461(match461)
                         print(f"HSC P/N:", ', '.join(add_cart) if isinstance(add_cart, (list, set)) else add_cart)
-                        print("")
-                    
                     else:
                         print("No USG Regulators will work for your application")
                         print("")
 
             else:
-                match461 = calc_regulator_selection(inlet_input, outlet_input, flow_rate, min_flow, opp_type == "Monitor" or (opp_type == "IRV" and not partial))
-                if match461['model'] != "N/A":
-                    if match461['opp'] == "Monitor":
-                        print("Sized for worker/monitor setup")
+                match461, apply461, warning461 = calc_regulator_selection(inlet_input, outlet_input, flow_rate, min_flow, opp_type)
+                if apply461:
+                    if warning461:
                         print("")
+                        print(warning461)
+                    print("")
                     print_regulator_selection(match461)
                     print("")
-
+                    
                     # HSC Part Number = add_cart
                     add_cart = hsc_pnc461(match461)
                     print(f"HSC P/N:", ', '.join(add_cart) if isinstance(add_cart, (list, set)) else add_cart)
-                    print("")
 
                 else:
                     result121, result121_VP, result122, match121, apply121, warning121 = run_regulator_selection121(inlet_input, outlet_input121, opp_type)

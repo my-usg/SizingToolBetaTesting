@@ -20,7 +20,7 @@ with open(_tool_path, "r") as f:
 
 # Split at line 3587 — the print("ULTIMATE SIZING TOOL") line that starts the I/O section
 _lines  = _source.splitlines(keepends=True)
-_code   = "".join(_lines[:3943])
+_code   = "".join(_lines[:3981])
 
 _globals = {}
 exec(compile(_code, _tool_path, "exec"), _globals)
@@ -42,7 +42,7 @@ def fmt_pn(pn):
 
 def run_tool(
     inlet_input, outlet_input, flow_rate, min_flow, maop,
-    pipesize_input, opp_type, partial, irv_input,
+    pipesize_input, opp_type, irv_input,
     oversizeby, gastypemult, pload, combust_pref
 ):
     """Run all regulator selection functions and return (result_dict, warnings)."""
@@ -71,7 +71,6 @@ def run_tool(
     _globals["maop"]           = maop
     _globals["pipesize_input"] = pipesize_input
     _globals["opp_type"]       = opp_type
-    _globals["partial"]        = partial
     _globals["irv_input"]      = irv_input
     _globals["oversizeby"]     = oversizeby
     _globals["gastypemult"]    = gastypemult
@@ -130,9 +129,10 @@ def run_tool(
             return result, msgs
 
         # 121 didn't work — fall through to 441/461
-        m461 = calc_regulator_selection(
-            inlet_input, outlet_input, flow_rate, min_flow, False)
-        if m461["model"] != "N/A":
+        m461, ok461, w461 = calc_regulator_selection(
+            inlet_input, outlet_input, flow_rate, min_flow, opp_type)
+        if ok461:
+            if w461: msgs.append(w461)
             result["match"] = m461
             result["pn"]    = hsc_pnc461(m461)
             return result, msgs
@@ -141,11 +141,10 @@ def run_tool(
         return result, msgs
 
     # ── standard routing: 441/461 before 121/122 ────────────────────────────
-    m461 = calc_regulator_selection(
-        inlet_input, outlet_input, flow_rate, min_flow, opp_type != "None")
-    if m461["model"] != "N/A":
-        if opp_type != "None":
-            msgs.append("Sized for worker/monitor setup")
+    m461, ok461, w461 = calc_regulator_selection(
+        inlet_input, outlet_input, flow_rate, min_flow, opp_type)
+    if ok461:
+        if w461: msgs.append(w461)
         result["match"] = m461
         result["pn"]    = hsc_pnc461(m461)
         return result, msgs
@@ -193,7 +192,6 @@ with st.sidebar:
     pipesize_input = 0 if pipesize_input_raw == "N/A" else pipesize_input_raw
 
     opp_choice = st.radio("Overpressure protection required?", ["No", "Yes"])
-    partial    = False
     irv_input  = 0.0
     opp_type   = "None"
     opp_pref   = ""
@@ -209,8 +207,7 @@ with st.sidebar:
     else:
         partial_choice = st.radio("Select regulator with IRV for partial overpressure protection?", ["No", "Yes"])
         if partial_choice == "Yes":
-            partial  = True
-            opp_type = "IRV"
+            opp_type = "Partial"
 
     st.subheader("Load Type & Gas")
     higheff   = st.radio("Feeding a generator or high-efficiency boiler?", ["No", "Yes"])
@@ -301,7 +298,7 @@ if run_btn:
 
                 result, msgs = run_tool(
                     inlet_psi, outlet_psi, flow_cfh, minflow_cfh, maop_psi,
-                    pipesize_input, opp_type, partial, irv_input,
+                    pipesize_input, opp_type, irv_input,
                     oversizeby, gastypemult, pload, combust_pref
                 )
 
@@ -329,6 +326,7 @@ if run_btn:
                         ("Seat",               match.get("seat")),
                         ("Spring",             f"{match.get('color', '')} {match.get('range', '')}".strip()),
                         ("Monitor Spring",     f"{match.get('mon_color','')} {match.get('mon_range','')}".strip() if match.get("mon_color") not in (None, "N/A") else None),
+                        ("Monitor Diaphragm",  match.get("mon_diap") if match.get("mon_diap") not in (None, "N/A") else None),
                     ]
                     for label, val in fields:
                         if val:
@@ -382,7 +380,7 @@ if run_btn:
                         "Requested Pipe Size": _pipe_options[pipesize_index],
                         "Overpressure Protection Required": "Yes" if opp_choice == "Yes" else "No",
                     }
-                    if partial:
+                    if opp_type == "Partial":
                         summary["Select Regulator with IRV"] = "Yes"
                     if opp_choice == "Yes":
                         summary["Protection Type"] = "IRV" if "IRV" in opp_pref else "Monitor"
