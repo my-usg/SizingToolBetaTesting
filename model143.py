@@ -19,7 +19,7 @@ except FileNotFoundError as e:
     st.stop()
 
 _lines  = _source.splitlines(keepends=True)
-_code   = "".join(_lines[:466])   # stop before INPUT section
+_code   = "".join(_lines[:474])   # stop before INPUT section
 
 _globals = {}
 try:
@@ -81,7 +81,6 @@ with st.sidebar:
     pipesize_input = 0 if pipesize_input_raw == "N/A" else pipesize_input_raw
 
     opp_choice = st.radio("Overpressure protection required?", ["No", "Yes"])
-    partial    = False
     irv_input  = 0.0
     opp_type   = "None"
     opp_pref   = ""
@@ -93,8 +92,7 @@ with st.sidebar:
     else:
         partial_choice = st.radio("If applicable, select regulator with IRV for partial overpressure protection?", ["No", "Yes"])
         if partial_choice == "Yes":
-            partial  = True
-            opp_type = "IRV"
+            opp_type = "Partial"
 
     st.subheader("Load Type & Gas")
     higheff   = st.radio("Feeding a generator or high-efficiency boiler?", ["No", "Yes"])
@@ -181,7 +179,6 @@ if run_btn:
                     "maop":              maop_psi,
                     "pipesize_input":    pipesize_input,
                     "opp_type":          opp_type,
-                    "partial":           partial,
                     "irv_input":         irv_input,
                     "oversizeby":        oversizeby,
                     "oversize_percent":  oversize_percent,
@@ -196,8 +193,8 @@ if run_btn:
 
                 _globals["result143"] = result143
 
-                # table opp_type (partial = no IRV in tables)
-                table_opp = "None" if partial else opp_type
+                # table opp_type
+                table_opp = opp_type
 
                 # ── regulator selection ───────────────────────────────────────
                 if apply143:
@@ -281,7 +278,7 @@ if run_btn:
                     "Requested Pipe Size":               _pipe_options[pipesize_index],
                     "Overpressure Protection Required":  "Yes" if opp_choice == "Yes" else "No",
                 }
-                if partial:
+                if opp_type == "Partial":
                     summary["Select Regulator with IRV"] = "Yes"
                 if opp_choice == "Yes":
                     summary["IRV Protect Downstream Pressure To (psi)"] = f"{irv_input:.1f}"

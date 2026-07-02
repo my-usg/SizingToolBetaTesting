@@ -19,7 +19,7 @@ except FileNotFoundError as e:
     st.stop()
 
 _lines  = _source.splitlines(keepends=True)
-_code   = "".join(_lines[:886])
+_code   = "".join(_lines[:883])
 
 _globals = {}
 try:
@@ -34,7 +34,7 @@ for _k, _v in _globals.items():
 
 
 # ── helper: build dataframe from result dict ──────────────────────────────────
-def build_table(prefix, opp_type, result, partial_flag):
+def build_table(prefix, opp_type, result):
     rows = []
     for reg, cap in result.items():
         if not reg.startswith(prefix):
@@ -42,13 +42,13 @@ def build_table(prefix, opp_type, result, partial_flag):
         orifice = _globals["orifice_type243"](reg)
         cap_str = f"{cap:,.0f}" if isinstance(cap, (int, float)) else str(cap)
         works   = _globals["will_work"](cap, reg, _globals["orifice_max243"](reg))
-        if opp_type == "IRV" and not partial_flag:
+        if opp_type == "IRV":
             irv = _globals["will_irv_work243"](reg)
             rows.append([orifice, cap_str, works, irv])
         else:
             rows.append([orifice, cap_str, works])
 
-    if opp_type == "IRV" and not partial_flag:
+    if opp_type == "IRV":
         cols = ["Orifice Size", "Calculated Capacity (CFH)", "Will Reg Work?", "Will IRV Work?"]
     else:
         cols = ["Orifice Size", "Calculated Capacity (CFH)", "Will It Work?"]
@@ -81,7 +81,6 @@ with st.sidebar:
     pipesize_input = 0 if pipesize_input_raw == "N/A" else pipesize_input_raw
 
     opp_choice = st.radio("Overpressure protection required?", ["No", "Yes"])
-    partial    = False
     irv_input  = 0.0
     opp_type   = "None"
     opp_pref   = ""
@@ -98,8 +97,7 @@ with st.sidebar:
     else:
         partial_choice = st.radio("If applicable, select regulator with IRV for partial overpressure protection?", ["No", "Yes"])
         if partial_choice == "Yes":
-            partial  = True
-            opp_type = "IRV"
+            opp_type = "Partial"
 
     st.subheader("Load Type & Gas")
     higheff   = st.radio("Feeding a generator or high-efficiency boiler?", ["No", "Yes"])
@@ -175,7 +173,7 @@ if run_btn:
 
                 # mirror script: IRV with outlet > 4.5 psi → sized as Monitor
                 table_opp = opp_type
-                if opp_type == "IRV" and outlet_input243 > 4.5 and not partial:
+                if opp_type == "IRV" and outlet_input243 > 4.5:
                     table_opp = "Monitor"
 
                 # inject globals
@@ -186,7 +184,6 @@ if run_btn:
                     "maop":              maop_psi,
                     "pipesize_input":    pipesize_input,
                     "opp_type":          opp_type,
-                    "partial":           partial,
                     "irv_input":         irv_input,
                     "oversizeby":        oversizeby,
                     "oversize_percent":  oversize_percent,
@@ -199,7 +196,7 @@ if run_btn:
                     inlet_psi, outlet_input243, opp_type)
 
                 # pre-compute table datasets
-                if opp_type == "IRV" and not partial:
+                if opp_type == "IRV":
                     results_irv = _globals["interpolate_capacity"](_globals["stddata243"], inlet_psi, outlet_input243, False, False)
                     # mirror script: IRV monitor fallback switches to hpdata when outlet > 3
                     if outlet_input243 > 3:
@@ -278,11 +275,11 @@ if run_btn:
                     ('Model 243-8HP, 2" Body',      'R243HP02'),
                 ]
 
-                if opp_type == "IRV" and not partial and outlet_input243 <= 4.5:
+                if opp_type == "IRV" and outlet_input243 <= 4.5:
                     # outlet <= 4.5: show IRV tables (std) + Monitor fallback tables
                     st.markdown("**Regulator Sizing Tables with IRV**")
                     for title, prefix in STD_IRV_BODIES:
-                        df = build_table(prefix, "IRV", results_irv, partial)
+                        df = build_table(prefix, "IRV", results_irv)
                         if not df.empty:
                             st.markdown(f"**{title}**")
                             st.dataframe(df, use_container_width=True, hide_index=True)
@@ -290,22 +287,22 @@ if run_btn:
                     st.markdown("**Regulator Sizing Tables with Monitor**")
                     if outlet_input243 > 3:
                         for title, prefix in HP_BODIES:
-                            df = build_table(prefix, "Monitor", result_mon, partial)
+                            df = build_table(prefix, "Monitor", result_mon)
                             if not df.empty:
                                 st.markdown(f"**{title}**")
                                 st.dataframe(df, use_container_width=True, hide_index=True)
                     else:
                         for title, prefix in STD_MON_BODIES:
-                            df = build_table(prefix, "Monitor", result_mon, partial)
+                            df = build_table(prefix, "Monitor", result_mon)
                             if not df.empty:
                                 st.markdown(f"**{title}**")
                                 st.dataframe(df, use_container_width=True, hide_index=True)
 
-                elif outlet_input243 <= 3 or (outlet_input243 <= 5 and opp_type == "IRV" and partial):
+                elif outlet_input243 <= 3 or (outlet_input243 <= 5 and opp_type == "Partial"):
                     label = "**Regulator Sizing Tables with Monitor**" if opp_type == "Monitor" else "**Regulator Sizing Tables**"
                     st.markdown(label)
                     for title, prefix in STD_MON_BODIES:
-                        df = build_table(prefix, table_opp, result243, partial)
+                        df = build_table(prefix, table_opp, result243)
                         if not df.empty:
                             st.markdown(f"**{title}**")
                             st.dataframe(df, use_container_width=True, hide_index=True)
@@ -314,7 +311,7 @@ if run_btn:
                     label = "**Regulator Sizing Tables with Monitor**" if opp_type == "Monitor" else "**Regulator Sizing Tables**"
                     st.markdown(label)
                     for title, prefix in HP_BODIES:
-                        df = build_table(prefix, table_opp, result243, partial)
+                        df = build_table(prefix, table_opp, result243)
                         if not df.empty:
                             st.markdown(f"**{title}**")
                             st.dataframe(df, use_container_width=True, hide_index=True)
@@ -341,7 +338,7 @@ if run_btn:
                     "Requested Pipe Size":               _pipe_options[pipesize_index],
                     "Overpressure Protection Required":  "Yes" if opp_choice == "Yes" else "No",
                 }
-                if partial:
+                if opp_type == "Partial":
                     summary["Select Regulator with IRV"] = "Yes"
                 if opp_choice == "Yes":
                     summary["Protection Type"] = "IRV" if "IRV" in opp_pref else "Monitor"

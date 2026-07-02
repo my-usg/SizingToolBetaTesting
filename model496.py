@@ -19,7 +19,7 @@ except FileNotFoundError as e:
     st.stop()
 
 _lines  = _source.splitlines(keepends=True)
-_code   = "".join(_lines[:423])   # stop before INPUT section
+_code   = "".join(_lines[:425])   # stop before INPUT section
 
 _globals = {}
 try:
@@ -81,20 +81,13 @@ with st.sidebar:
     pipesize_input = 0 if pipesize_input_raw == "N/A" else pipesize_input_raw
 
     opp_choice = st.radio("Overpressure protection required?", ["No", "Yes"])
-    partial    = False
     irv_input  = 0.0
     opp_type   = "None"
-    opp_pref   = ""
 
     if opp_choice == "Yes":
         irv_input = st.number_input("IRV protect downstream pressure to (psi)",
                                     min_value=0.0, max_value=500.0, value=2.0, step=0.1, format="%.1f")
         opp_type = "IRV"
-    else:
-        partial_choice = st.radio("If applicable, select regulator with IRV for partial overpressure protection?", ["No", "Yes"])
-        if partial_choice == "Yes":
-            partial  = True
-            opp_type = "IRV"
 
     st.subheader("Load Type & Gas")
     higheff   = st.radio("Feeding a generator or high-efficiency boiler?", ["No", "Yes"])
@@ -177,7 +170,6 @@ if run_btn:
                     "maop":           maop_psi,
                     "pipesize_input": pipesize_input,
                     "opp_type":       opp_type,
-                    "partial":        partial,
                     "irv_input":      irv_input,
                     "oversizeby":     oversizeby,
                     "oversize_percent": oversize_percent,
@@ -193,8 +185,8 @@ if run_btn:
                 # update result496 in globals for table builder
                 _globals["result496"] = result496
 
-                # table opp_type (partial = no IRV in tables)
-                table_opp = "None" if partial else opp_type
+                # table opp_type
+                table_opp = opp_type
 
                 # ── regulator selection ───────────────────────────────────────
                 if apply496:
@@ -279,8 +271,6 @@ if run_btn:
                     "Requested Pipe Size":               _pipe_options[pipesize_index],
                     "Overpressure Protection Required":  "Yes" if opp_choice == "Yes" else "No",
                 }
-                if partial:
-                    summary["Select Regulator with IRV"] = "Yes"
                 if opp_choice == "Yes":
                     summary["IRV Protect Downstream Pressure To (psi)"] = f"{irv_input:.1f}"
                 summary["% Load Feeding Generator / High-Eff Boiler"] = f"{pload_pct}%" if higheff == "Yes" else "N/A"

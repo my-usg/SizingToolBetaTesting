@@ -19,7 +19,7 @@ except FileNotFoundError as e:
     st.stop()
 
 _lines  = _source.splitlines(keepends=True)
-_code   = "".join(_lines[:997])
+_code   = "".join(_lines[:1000])
 
 _globals = {}
 try:
@@ -164,7 +164,7 @@ if run_btn:
                     "maop":              maop_psi,
                     "pipesize_input":    pipesize_input,
                     "opp_type":          opp_type,
-                    "partial":           False,
+                    "irv_input":         0,
                     "irv_input":         0,
                     "oversizeby":        oversizeby,
                     "oversize_percent":  oversize_percent,

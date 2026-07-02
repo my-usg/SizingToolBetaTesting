@@ -19,7 +19,7 @@ except FileNotFoundError as e:
     st.stop()
 
 _lines  = _source.splitlines(keepends=True)
-_code   = "".join(_lines[:889])
+_code   = "".join(_lines[:914])
 
 _globals = {}
 try:
@@ -136,7 +136,6 @@ if run_btn:
                         st.error("BTUH conversion only supported for Natural Gas or Propane. Use CFH or CMH.")
                         st.stop()
 
-                monitor = opp_type != "None"
                 oversize_percent = 20.0
 
                 # inject globals
@@ -154,17 +153,17 @@ if run_btn:
                 })
 
                 # run sizing
-                std    = _globals["build_standard_table"](inlet_psi, outlet_psi, flow_cfh, min_flow, monitor)
-                vp     = _globals["build_vport_table"](inlet_psi, outlet_psi, flow_cfh, min_flow, monitor)
-                match461 = _globals["calc_regulator_selection"](inlet_psi, outlet_psi, flow_cfh, min_flow, monitor)
+                std      = _globals["build_standard_table"](inlet_psi, outlet_psi, flow_cfh, min_flow, opp_type)
+                vp       = _globals["build_vport_table"](inlet_psi, outlet_psi, flow_cfh, min_flow, opp_type)
+                match461, ok461, warning461 = _globals["calc_regulator_selection"](inlet_psi, outlet_psi, flow_cfh, min_flow, opp_type)
 
                 # ── regulator selection ───────────────────────────────────────
 
-                if match461["model"] == "N/A":
+                if not ok461:
                     st.error("❌  Model 441/461 will not work for this application.")
                 else:
-                    if monitor:
-                        st.warning("Sized for worker/monitor setup.")
+                    if warning461:
+                        st.warning(warning461)
 
                     st.success("✅  Regulator selected!")
 
@@ -201,7 +200,7 @@ if run_btn:
                 st.divider()
                 st.subheader("Regulator Sizing Tables")
 
-                if monitor:
+                if opp_type != "None":
                     st.caption("Capacity reduction due to monitor shown.")
 
                 st.markdown("**Standard Valves**")
@@ -216,7 +215,7 @@ if run_btn:
                 st.divider()
                 st.subheader("Sizing Adjustments")
                 adj = {"Oversized By": f"{oversize_percent:.0f}%"}
-                if match461["model"] != "N/A" and match461.get("opp") == "Monitor":
+                if ok461 and match461.get("opp") == "Monitor":
                     adj["Monitor Regulator"] = "30% capacity reduction applied"
                 if gastypemult != 1:
                     adj["Gas Type Factor"] = f"{gastypemult:.4f}"
