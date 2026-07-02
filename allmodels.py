@@ -131,7 +131,7 @@ def run_tool(
             return result, msgs
 
         # 121 didn't work — fall through to 441/461
-        m461, ok461, w461 = calc_regulator_selection(
+        m461, ok461, w461 = run_regulator_selection461(
             inlet_input, outlet_input, flow_rate, min_flow, opp_type)
         if ok461:
             if w461: msgs.append(w461)
@@ -143,7 +143,7 @@ def run_tool(
         return result, msgs
 
     # ── standard routing: 441/461 before 121/122 ────────────────────────────
-    m461, ok461, w461 = calc_regulator_selection(
+    m461, ok461, w461 = run_regulator_selection461(
         inlet_input, outlet_input, flow_rate, min_flow, opp_type)
     if ok461:
         if w461: msgs.append(w461)

@@ -554,7 +554,7 @@ def find_first(table):
 
 # Computes regulator selection outputs
 # Returns dict with : model, body, orifice, seat, max_capacity
-def calc_regulator_selection(inlet_p, outlet_p, max_flow, min_flow, opp):
+def run_regulator_selection461(inlet_p, outlet_p, max_flow, min_flow, opp):
     
     if opp == "Monitor" or opp == "IRV":
         monitor = True
@@ -1022,7 +1022,7 @@ if min_flow > 0 and min_flow > flow_rate:
 # ------------------------------------------------------------------------------------------------------
 std_table_values = build_standard_table(inlet_input, outlet_input, flow_rate, min_flow, opp_type)
 vp_table_values = build_vport_table(inlet_input, outlet_input, flow_rate, min_flow, opp_type)
-match461, apply461, warning461 = calc_regulator_selection(inlet_input, outlet_input, flow_rate, min_flow, opp_type)
+match461, apply461, warning461 = run_regulator_selection461(inlet_input, outlet_input, flow_rate, min_flow, opp_type)
 
 # Print regulator selection
 if apply461:

@@ -155,7 +155,7 @@ if run_btn:
                 # run sizing
                 std      = _globals["build_standard_table"](inlet_psi, outlet_psi, flow_cfh, min_flow, opp_type)
                 vp       = _globals["build_vport_table"](inlet_psi, outlet_psi, flow_cfh, min_flow, opp_type)
-                match461, ok461, warning461 = _globals["calc_regulator_selection"](inlet_psi, outlet_psi, flow_cfh, min_flow, opp_type)
+                match461, ok461, warning461 = _globals["run_regulator_selection461"](inlet_psi, outlet_psi, flow_cfh, min_flow, opp_type)
 
                 # ── regulator selection ───────────────────────────────────────
 
