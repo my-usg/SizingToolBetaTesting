@@ -22,7 +22,7 @@ with open(_tool_path, "r") as f:
 
 # Split at line 3587 — the print("ULTIMATE SIZING TOOL") line that starts the I/O section
 _lines  = _source.splitlines(keepends=True)
-_code   = "".join(_lines[:3981])
+_code   = "".join(_lines[:3985])
 
 _globals = {}
 exec(compile(_code, _tool_path, "exec"), _globals)

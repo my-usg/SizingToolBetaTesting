@@ -3655,7 +3655,7 @@ def calc_regulator_selection(inlet_p, outlet_p, max_flow, min_flow, opp):
     is_vport = std_match is None
 
     if primary is None:
-        return {
+        match = {
             "model":  "N/A",
             "diap":   "N/A",
             "body":   "N/A",
@@ -3668,6 +3668,10 @@ def calc_regulator_selection(inlet_p, outlet_p, max_flow, min_flow, opp):
             "mon_color": "N/A",
             "mon_range": "N/A",
         }
+
+        apply = False
+        warning = None
+        return match, apply, warning
 
     # Model Selection: resolve ambiguous "or" model strings
     raw_model = primary["model"]
