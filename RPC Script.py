@@ -341,7 +341,65 @@ def spring_RPC(op):
             'range': '(10 - 35 psi)',
         }
 
-    
+
+def body_size_minRPC(body):
+ 
+    if outlet_input < 7/28:
+        maxflow = {
+            '1-1/4"': 9200,
+            '1-1/2"': 14200,
+            '2"': 30000,
+        }
+    elif outlet_input < 14/28:
+        maxflow = {
+            '1-1/4"': 14200,
+            '1-1/2"': 21000,
+            '2"': 41600,
+        }
+    elif outlet_input < 1:
+        maxflow = {
+            '1-1/4"': 19400,
+            '1-1/2"': 29800,
+            '2"': 58200,
+        }
+    elif outlet_input < 2:
+        maxflow = {
+            '1-1/4"': 24600,
+            '1-1/2"': 41600,
+            '2"': 76500,
+        }
+    elif outlet_input < 3:
+        maxflow = {
+            '1-1/4"': 36300,
+            '1-1/2"': 58200,
+            '2"': 76500,
+        }
+    elif outlet_input < 5:
+        maxflow = {
+            '1-1/4"': 41000,
+            '1-1/2"': 76500,
+            '2"': 76500,
+        }
+    elif outlet_input < 7:
+        maxflow = {
+            '1-1/4"': 62500,
+            '1-1/2"': 76500,
+            '2"': 3007650000,
+        }
+    else:
+        maxflow = {
+            '1-1/4"': 76500,
+            '1-1/2"': 76500,
+            '2"': 76500,
+        }
+
+    body_order = ['1-1/4"', '1-1/2"', '2"']
+    for candidate in body_order[body_order.index(body):]:
+        if flow_rate <= maxflow[candidate]:
+            return candidate
+
+    return '3"'
+
 
 # Will Regulator Work Function & Will IRV Work
 # ------------------------------------------------------------------------------------------------------
@@ -678,6 +736,11 @@ if applyRPC:
     # HSC Part Number = add_cart
     add_cart = hsc_pncRPC(matchRPC)
     print(f"HSC P/N:", ', '.join(add_cart) if isinstance(add_cart, (list, set)) else add_cart)
+
+    # 243-RPC has outlet pipe size requirements
+    print("")
+    print(f"Note: Model 243-RPC regulators have outlet pipe sizing requirements, regulator was sized for use with {body_size_minRPC(matchRPC['body'])} outlet pipe.  For capacities with smaller outlet piping, see regulator brochure.")
+
 else:
     if resultRPC == None:
         print("")

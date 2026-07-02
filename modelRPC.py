@@ -19,7 +19,7 @@ except FileNotFoundError as e:
     st.stop()
 
 _lines  = _source.splitlines(keepends=True)
-_code   = "".join(_lines[:552])   # stop before INPUT section
+_code   = "".join(_lines[:610])   # stop before INPUT section
 
 _globals = {}
 try:
@@ -66,7 +66,7 @@ with st.sidebar:
     st.subheader("Design Parameters")
 
     model_choice = st.selectbox("Desired RPC model", ["N/A (any)", "243-RPC", "243-RPC-A", "243-RPC-B"])
-    model_map    = {"N/A (any)": "243-RPC", "243-RPC": "243-RPC", "243-RPC-A": "243-RPC-A", "243-RPC-B": "243-RPC-B"}
+    model_map    = {"N/A (any)": "RPC", "243-RPC": "243-RPC", "243-RPC-A": "243-RPC-A", "243-RPC-B": "243-RPC-B"}
     model_input  = model_map[model_choice]
 
     _pipe_options = ["N/A", '1-1/4"', '1-1/2"', '2"']
@@ -193,6 +193,11 @@ if run_btn:
                             st.markdown(f"**Calculated Capacity (CFH):** {int(round(float(cap))):,}")
                         except Exception:
                             st.markdown(f"**Calculated Capacity (CFH):** {cap}")
+
+                    # RPC outlet pipe size requirement note
+                    pipe_req = _globals["body_size_minRPC"](matchRPC.get("body", ""))
+                    if pipe_req:
+                        st.info(f"ℹ️  Model 243-RPC regulators have outlet pipe sizing requirements. This regulator was sized for use with **{pipe_req}** outlet pipe. For capacities with smaller outlet piping, see regulator brochure.")
 
                     st.subheader("HSC Part Number(s)")
                     pn = _globals["hsc_pncRPC"](matchRPC)
