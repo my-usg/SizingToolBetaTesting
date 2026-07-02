@@ -193,10 +193,10 @@ def will_work(cap, reg, orifice_max):
         else:
             return "No"
 
-def will_irv_work143(reg):
+def will_irv_work143(reg, opp):
 
     # Partial IRV
-    if partial:
+    if opp == "Partial":
         return "Partial"
      
     irvstddata143 = {
@@ -276,8 +276,10 @@ def gen_match143(result, opp):
 
     if outlet_input > 2:
         model = '143-2HP'
+    elif opp == "None":
+        model = '143-1'
     else:
-        model = '143-1' if opp == "None" else '143-2'
+        model = '143-2'
 
     body_labels143 = {
         'R14334': '3/4"',
@@ -302,13 +304,13 @@ def gen_match143(result, opp):
     orifice_order143 = ['58', '12', '38', '56', '14', '36', '18']
 
     # IRV
-    if opp != "None":
+    if opp == "IRV" or opp == "Partial":
         for prefix in ordered_prefixes:
             for orifice in orifice_order143:
                 reg = f"{prefix}_{orifice}"
                 if reg in result:
                     cap = result[reg]
-                    if will_work(cap, reg, orifice_max143(reg)) == "Yes" and will_irv_work143(reg) != "No":
+                    if will_work(cap, reg, orifice_max143(reg)) == "Yes" and will_irv_work143(reg, opp) != "No":
                         match = {
                             'reg' : reg,
                             'model': model,
@@ -342,7 +344,7 @@ def gen_match143(result, opp):
                             'color': spring_143(outlet_input)['color'],
                             'range': spring_143(outlet_input)['range'],
                             'capacity': cap,
-                            'opp': "None",
+                            'opp': "None" if model == '143-1' else "IRV",
                             'mon_color': None,
                             'mon_range': None,
                         }
@@ -350,9 +352,20 @@ def gen_match143(result, opp):
 
 
 def run_regulator_selection143(inlet, outlet, opp):
+    
+    # if opp = IRV, fail if outlet > 2 psi (for 143-2HP)
+    if opp == "IRV" and outlet_input > 2:
+        warning = "Cannot size IRV for outlet pressures > 2 psi"
+        result = None
+        match = None
+        apply = False
+        return result, match, apply, warning
+    
     result = interpolate_capacity(data143, inlet, outlet, False, False)
 
     warning = None
+
+    opp = "IRV" if opp == "Monitor" else opp
 
     if isinstance(result, str):
         warning = result
@@ -363,14 +376,9 @@ def run_regulator_selection143(inlet, outlet, opp):
 
     match = gen_match143(result, opp)
 
-    # if opp = IRV and partial = False, fail if outlet > 2 psi (for 143-2HP)
-
-    if opp == "IRV" and outlet_input > 2 and not partial:
-        apply = False
-        warning = "Cannot size IRV for outlet pressures > 2 psi"
-    elif match:
+    if match:
         apply = True
-        if opp == "IRV" and not partial:
+        if opp == "IRV":
             warning = "Sized for IRV"
     else:
         apply = False
@@ -422,7 +430,7 @@ def print_model_table(title, prefix, opp, result):
     
     if opp == "IRV":
         rows = [
-            [orifice_type143(reg), f"{cap:,.0f}" if isinstance(cap, (int, float)) else cap, will_work(cap, reg, orifice_max143(reg)), will_irv_work143(reg)]
+            [orifice_type143(reg), f"{cap:,.0f}" if isinstance(cap, (int, float)) else cap, will_work(cap, reg, orifice_max143(reg)), will_irv_work143(reg, opp)]
             for reg, cap in result.items()
             if reg.startswith(prefix)
         ]
@@ -491,17 +499,17 @@ elif outlet_units == "bar":
 if inlet_units == "bar":
     inlet_input *= 14.5
 
+# Overpressure Protection Inputs
 opp_input = input("Do you require overpressure protection? (y/n): ").lower()
-partial = False
 irv_input = 0
 if opp_input == "y":
     irv_input = float(input("IRV protect downstream pressure to: "))
     opp_type = "IRV"
 else:
     partial_input = input("If applicable, select regulator with IRV for partial overpressure protection? (y/n): ")
-    partial = True if partial_input == "y" else False
-    opp_type = "IRV" if partial else "None"
+    opp_type = "Partial" if partial_input == "y" else "None"
 
+# Oversize due to high-efficiency equipment function
 higheff_input = input("Is this feeding a generator or high-efficiency boiler? (y/n): ").lower()
 if higheff_input == "y":
     pload = float(input("What percent of the total load is feeding a generator or high-efficiency boiler: "))
@@ -615,8 +623,6 @@ else:
 print("")
 
 # Print capacity table
-
-opp_type = "None" if partial else opp_type
 
 print("REGULATOR SIZING TABLES")
 print_model_table('Model 143, 3/4" Body','R14334', opp_type, result143)

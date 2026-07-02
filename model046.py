@@ -34,7 +34,7 @@ for _k, _v in _globals.items():
 
 
 # ── helper: build dataframe from result dict ──────────────────────────────────
-def build_table(prefix, opp_type, result, irv_input_val, partial_flag):
+def build_table(prefix, opp_type, result, irv_input_val):
     rows = []
     for reg, cap in result.items():
         if not reg.startswith(prefix):
@@ -42,13 +42,13 @@ def build_table(prefix, opp_type, result, irv_input_val, partial_flag):
         orifice = _globals["orifice_typeSMALL"](reg)
         cap_str = f"{cap:,.0f}" if isinstance(cap, (int, float)) else str(cap)
         works   = _globals["will_work"](cap, reg, _globals["orifice_max046"](reg))
-        if opp_type == "IRV" and not partial_flag:
+        if opp_type == "IRV":
             irv = _globals["will_irv_work046"](reg)
             rows.append([orifice, cap_str, works, irv])
         else:
             rows.append([orifice, cap_str, works])
 
-    if opp_type == "IRV" and not partial_flag:
+    if opp_type == "IRV":
         cols = ["Orifice Size", "Calculated Capacity (CFH)", "Will Reg Work?", "Will IRV Work?"]
     else:
         cols = ["Orifice Size", "Calculated Capacity (CFH)", "Will It Work?"]
@@ -81,7 +81,6 @@ with st.sidebar:
     pipesize_input = 0 if pipesize_input_raw == "N/A" else pipesize_input_raw
 
     opp_choice = st.radio("Overpressure protection required?", ["No", "Yes"])
-    partial    = False
     irv_input  = 0.0
     opp_type   = "None"
     opp_pref   = ""
@@ -98,8 +97,7 @@ with st.sidebar:
     else:
         partial_choice = st.radio("If applicable, select regulator with IRV for partial overpressure protection?", ["No", "Yes"])
         if partial_choice == "Yes":
-            partial  = True
-            opp_type = "IRV"
+            opp_type = "Partial"
 
     st.subheader("Load Type & Gas")
     higheff   = st.radio("Feeding a generator or high-efficiency boiler?", ["No", "Yes"])
@@ -181,7 +179,6 @@ if run_btn:
                     "maop":              maop_psi,
                     "pipesize_input":    pipesize_input,
                     "opp_type":          opp_type,
-                    "partial":           partial,
                     "irv_input":         irv_input,
                     "oversizeby":        oversizeby,
                     "oversize_percent":  oversize_percent,
@@ -194,7 +191,7 @@ if run_btn:
                     inlet_psi, outlet_input046, opp_type)
 
                 # for IRV: also compute separate irv/monitor results for tables
-                if opp_type == "IRV" and not partial:
+                if opp_type == "IRV":
                     result_irv = _globals["interpolate_capacity"](_globals["data046"], inlet_psi, outlet_input046, False, False)
                     result_mon = _globals["interpolate_capacity"](_globals["data046"], inlet_psi, outlet_input046, True, False)
                 else:
@@ -249,14 +246,14 @@ if run_btn:
                 st.divider()
                 st.subheader("Regulator Sizing Tables")
 
-                if opp_type == "IRV" and not partial:
+                if opp_type == "IRV":
                     st.markdown("**Regulator Sizing Tables with IRV**")
                     for title, prefix in [
                         ('Model 046-2, 3/4" Body',     'R046234'),
                         ('Model 046-2, 1" Body',        'R046210'),
                         ('Model 046-2, 1-1/4" Body',    'R04621Q'),
                     ]:
-                        df = build_table(prefix, "IRV", result_irv, irv_input, partial)
+                        df = build_table(prefix, "IRV", result_irv, irv_input)
                         if not df.empty:
                             st.markdown(f"**{title}**")
                             st.dataframe(df, use_container_width=True, hide_index=True)
@@ -267,7 +264,19 @@ if run_btn:
                         ('Model 046, 046-M or 046-2M, 1" Body',      'R046110'),
                         ('Model 046, 046-M or 046-2M, 1-1/4" Body',  'R04611Q'),
                     ]:
-                        df = build_table(prefix, "Monitor", result_mon, irv_input, partial)
+                        df = build_table(prefix, "Monitor", result_mon, irv_input)
+                        if not df.empty:
+                            st.markdown(f"**{title}**")
+                            st.dataframe(df, use_container_width=True, hide_index=True)
+
+                elif opp_type == "Partial":
+                    st.markdown("**Regulator Sizing Tables with Partial IRV**")
+                    for title, prefix in [
+                        ('Model 046-2, 3/4" Body',     'R046234'),
+                        ('Model 046-2, 1" Body',        'R046210'),
+                        ('Model 046-2, 1-1/4" Body',    'R04621Q'),
+                    ]:
+                        df = build_table(prefix, "Partial", result046, irv_input)
                         if not df.empty:
                             st.markdown(f"**{title}**")
                             st.dataframe(df, use_container_width=True, hide_index=True)
@@ -279,7 +288,7 @@ if run_btn:
                         ('Model 046, 046-M or 046-2M, 1" Body',      'R046110'),
                         ('Model 046, 046-M or 046-2M, 1-1/4" Body',  'R04611Q'),
                     ]:
-                        df = build_table(prefix, "Monitor", result046, irv_input, partial)
+                        df = build_table(prefix, "Monitor", result046, irv_input)
                         if not df.empty:
                             st.markdown(f"**{title}**")
                             st.dataframe(df, use_container_width=True, hide_index=True)
@@ -290,7 +299,7 @@ if run_btn:
                         ('Model 046, 046-M or 046-2M, 1" Body',      'R046110'),
                         ('Model 046, 046-M or 046-2M, 1-1/4" Body',  'R04611Q'),
                     ]:
-                        df = build_table(prefix, opp_type, result046, irv_input, partial)
+                        df = build_table(prefix, opp_type, result046, irv_input)
                         if not df.empty:
                             st.markdown(f"**{title}**")
                             st.dataframe(df, use_container_width=True, hide_index=True)
@@ -317,7 +326,7 @@ if run_btn:
                     "Requested Pipe Size":               _pipe_options[pipesize_index],
                     "Overpressure Protection Required":  "Yes" if opp_choice == "Yes" else "No",
                 }
-                if partial:
+                if opp_type == "Partial":
                     summary["Select Regulator with IRV"] = "Yes"
                 if opp_choice == "Yes":
                     summary["Protection Type"] = "IRV" if "IRV" in opp_pref else "Monitor"

@@ -384,10 +384,10 @@ def will_work(cap, reg, orifice_max):
         else:
             return "No"
 
-def will_irv_work243(reg):
+def will_irv_work243(reg, opp):
 
     # Partial IRV
-    if partial:
+    if opp == "Partial":
         return "Partial"
 
     # determine orifice size for tables
@@ -559,12 +559,12 @@ def gen_match243(result, opp):
 
     # IRV
     if opp == "IRV":
-        for prefix in ordered_prefixes:
+        for prefix in [p for p in ordered_prefixes if p != 'R24312EX']:
             for orifice in orifice_order:
                 reg = f"{prefix}_{orifice}"
                 if reg in result:
                     cap = result[reg]
-                    if will_work(cap, reg, orifice_max243(reg)) == "Yes" and will_irv_work243(reg) != "No":
+                    if will_work(cap, reg, orifice_max243(reg)) == "Yes" and will_irv_work243(reg, opp) != "No":
                         if prefix.startswith('R24308'):
                             color = spring_243_8(outlet_input)['color']
                             range = spring_243_8(outlet_input)['range']
@@ -583,7 +583,7 @@ def gen_match243(result, opp):
                             'color': color,
                             'range': range,
                             'capacity': cap,
-                            'opp': "None" if partial or prefix == 'R24312EX' else "IRV",
+                            'opp': "IRV",
                             'mon_color': None,
                             'mon_range': None,
                         }
@@ -645,10 +645,10 @@ def run_regulator_selection243(inlet, outlet, opp):
     hp_warning = None
 
     # Correct when user requests IRV but a 243-8HP needs to be used
-    if outlet_input > 5 and opp == "IRV" and not partial:
+    if outlet_input > 5 and (opp == "IRV" or opp == "Partial"):
         hp_warning = "243-HP not available with IRV, sized for worker/monitor setup"
         opp = "Monitor"
-    elif outlet_input > 4.5 and opp == "IRV" and not partial:
+    elif outlet_input > 4.5 and opp == "IRV":
         hp_warning = "243-8-2 with Cadmium spring only available with partial IRV, sized for worker/monitor setup"
         opp = "Monitor"
 
@@ -658,11 +658,8 @@ def run_regulator_selection243(inlet, outlet, opp):
             data_used243 = stddata243
         else:
             data_used243 = hpdata243
-    elif opp == "IRV":
-        if outlet_input <= 4.5 or (outlet_input <= 5 and partial):
-            data_used243 = stddata243
-        else:
-            data_used243 = hpdata243
+    elif opp == "IRV" or opp == "Partial":
+        data_used243 = stddata243
     else:
         if outlet_input <= 5:
             data_used243 = stddata243
@@ -670,7 +667,7 @@ def run_regulator_selection243(inlet, outlet, opp):
             data_used243 = hpdata243
 
 
-    if opp == "IRV" and not partial:
+    if opp == "IRV":
         result = interpolate_capacity(data_used243, inlet, outlet, False, False)
         if isinstance(result, str):
             warning = result
@@ -841,9 +838,9 @@ def hsc_pnc243(match):
 
 def print_model_table(title, prefix, opp, result):
     
-    if opp == "IRV" and not partial:
+    if opp == "IRV":
         rows = [
-            [orifice_type243(reg), f"{cap:,.0f}" if isinstance(cap, (int, float)) else cap, will_work(cap, reg, orifice_max243(reg)), will_irv_work243(reg)]
+            [orifice_type243(reg), f"{cap:,.0f}" if isinstance(cap, (int, float)) else cap, will_work(cap, reg, orifice_max243(reg)), will_irv_work243(reg, opp)]
             for reg, cap in result.items()
             if reg.startswith(prefix)
         ]
@@ -911,8 +908,8 @@ elif outlet_units == "bar":
 if inlet_units == "bar":
     inlet_input *= 14.5
 
+# Overpressure Protection Inputs
 opp_input = input("Do you require overpressure protection? (y/n): ").lower()
-partial = False
 irv_input = 0
 if opp_input == "y":
     opp_pref = input("If applicable should the program prioritize sizing with IRV or default to monitor regulator sizing? (irv/mon) ").lower()
@@ -923,9 +920,9 @@ if opp_input == "y":
         opp_type = "Monitor"
 else:
     partial_input = input("If applicable, select regulator with IRV for partial overpressure protection? (y/n): ")
-    partial = True if partial_input == "y" else False
-    opp_type = "IRV" if partial else "None"
+    opp_type = "Partial" if partial_input == "y" else "None"
 
+# Oversize due to high-efficiency equipment function
 higheff_input = input("Is this feeding a generator or high-efficiency boiler? (y/n): ").lower()
 if higheff_input == "y":
     pload = float(input("What percent of the total load is feeding a generator or high-efficiency boiler: "))
@@ -1036,14 +1033,14 @@ print("")
 # Print Capacity Tables ------------------------------
 
 # Fixes user entered IRV but needs HP data
-if opp_type == "IRV" and outlet_input > 4.5 and not partial:
+if opp_type == "IRV" and outlet_input > 4.5:
     opp_type = "Monitor"
 
 results_irv = interpolate_capacity(stddata243, inlet_input, outlet_input243, False, False)
 result_mon = interpolate_capacity(stddata243, inlet_input, outlet_input243, True, False)
 result_hp_mon = interpolate_capacity(hpdata243, inlet_input, outlet_input243, True, False)
 
-if opp_type == "IRV" and not partial:
+if opp_type == "IRV":
 
     print("REGULATOR SIZING TABLES WITH IRV")
     print_model_table('Model 243-8, 1-1/4" Body','R243081Q', "IRV", results_irv)

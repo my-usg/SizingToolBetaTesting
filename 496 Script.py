@@ -184,10 +184,10 @@ def will_work(cap, reg, orifice_max):
         else:
             return "No"
 
-def will_irv_work496(reg):
+def will_irv_work496(reg, opp):
 
     # Partial IRV
-    if partial:
+    if opp == "Partial":
         return "Partial"
     
     irvdata496 = {
@@ -267,13 +267,13 @@ def gen_match496(result, model, opp):
     orifice_order496 = ['12', '38', '56', '14', '36', '18']
 
     # IRV
-    if opp != "None":
+    if opp == "IRV" or opp == "Partial":
         for prefix in ordered_prefixes:
             for orifice in orifice_order496:
                 reg = f"{prefix}_{orifice}"
                 if reg in result:
                     cap = result[reg]
-                    if will_work(cap, reg, orifice_max496(reg)) == "Yes" and will_irv_work496(reg) != "No":
+                    if will_work(cap, reg, orifice_max496(reg)) == "Yes" and will_irv_work496(reg, opp) != "No":
                         match = {
                             'reg' : reg,
                             'model': model,
@@ -319,6 +319,8 @@ def run_regulator_selection496(inlet, outlet, opp):
 
     warning = None
 
+    opp = "IRV" if opp == "Monitor" else opp
+
     if isinstance(result, str):
         warning = result
         result = None
@@ -330,7 +332,7 @@ def run_regulator_selection496(inlet, outlet, opp):
 
     if match:
         apply = True
-        if opp == "IRV" and not partial:
+        if opp == "IRV":
             warning = "Sized for IRV"
     else:
         apply = False
@@ -379,7 +381,7 @@ def print_model_table(title, prefix, opp, result):
     
     if opp == "IRV":
         rows = [
-            [orifice_typeSMALL(reg), f"{cap:,.0f}" if isinstance(cap, (int, float)) else cap, will_work(cap, reg, orifice_max496(reg)), will_irv_work496(reg)]
+            [orifice_typeSMALL(reg), f"{cap:,.0f}" if isinstance(cap, (int, float)) else cap, will_work(cap, reg, orifice_max496(reg)), will_irv_work496(reg, opp)]
             for reg, cap in result.items()
             if reg.startswith(prefix)
         ]
@@ -448,17 +450,16 @@ elif outlet_units == "bar":
 if inlet_units == "bar":
     inlet_input *= 14.5
 
+# Overpressure Protection Inputs
 opp_input = input("Do you require overpressure protection? (y/n): ").lower()
-partial = False
 irv_input = 0
 if opp_input == "y":
     irv_input = float(input("IRV protect downstream pressure to: "))
     opp_type = "IRV"
 else:
-    partial_input = input("If applicable, select regulator with IRV for partial overpressure protection? (y/n): ")
-    partial = True if partial_input == "y" else False
-    opp_type = "IRV" if partial else "None"
+    opp_type = "None"
 
+# Oversize due to high-efficiency equipment function
 higheff_input = input("Is this feeding a generator or high-efficiency boiler? (y/n): ").lower()
 if higheff_input == "y":
     pload = float(input("What percent of the total load is feeding a generator or high-efficiency boiler: "))
@@ -574,8 +575,6 @@ else:
 print("")
 
 # Print capacity table
-
-opp_type = "None" if partial else opp_type
 
 print("REGULATOR SIZING TABLES")
 print_model_table('Model 496, 3/8" Body','R49638', opp_type, result496)

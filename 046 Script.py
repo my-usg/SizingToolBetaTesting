@@ -342,12 +342,12 @@ def will_work(cap, reg, orifice_max):
         else:
             return "No"
 
-def will_irv_work046(reg):
+def will_irv_work046(reg, opp):
     orif = orifice_typeSMALL(reg)
     spring = spring_046(outlet_input)['color']
 
     # Partial IRV
-    if partial:
+    if opp == "Partial":
         return "Partial"
 
     yellow_curves = {
@@ -524,13 +524,13 @@ def gen_match046(result, opp):
             monset = outlet_input + 3
 
     # IRV sizing
-    if opp == "IRV":
+    if opp == "IRV" or opp == "Partial":
         for prefix in ordered_irv_prefixes:
             for orifice in orifice_order:
                 reg = f"{prefix}_{orifice}"
                 if reg in result:
                     cap = result[reg]
-                    if will_work(cap, reg, orifice_max046(reg)) == "Yes" and will_irv_work046(reg) != "No":
+                    if will_work(cap, reg, orifice_max046(reg)) == "Yes" and will_irv_work046(reg, opp) != "No":
                         match = {
                             'reg' : reg,
                             'model': '046-2',
@@ -574,7 +574,7 @@ def run_regulator_selection046(inlet, outlet, opp):
 
     warning = None
 
-    if opp == "IRV" and not partial:
+    if opp == "IRV":
         result = interpolate_capacity(data046, inlet, outlet, False, False)
 
         if isinstance(result, str):
@@ -689,9 +689,9 @@ def hsc_pnc046(match):
 # ------------------------------------------------------------------------------------------------------
 
 def print_model_table(title, prefix, opp, result):
-    if opp == "IRV" and not partial:
+    if opp == "IRV":
         rows = [
-            [orifice_typeSMALL(reg), f"{cap:,.0f}" if isinstance(cap, (int, float)) else cap, will_work(cap, reg, orifice_max046(reg)), will_irv_work046(reg)]
+            [orifice_typeSMALL(reg), f"{cap:,.0f}" if isinstance(cap, (int, float)) else cap, will_work(cap, reg, orifice_max046(reg)), will_irv_work046(reg, opp)]
             for reg, cap in result.items()
             if reg.startswith(prefix)
         ]
@@ -759,8 +759,8 @@ elif outlet_units == "bar":
 if inlet_units == "bar":
     inlet_input *= 14.5
 
+# Overpressure Protection Inputs
 opp_input = input("Do you require overpressure protection? (y/n): ").lower()
-partial = False
 irv_input = 0
 if opp_input == "y":
     opp_pref = input("If applicable should the program prioritize sizing with IRV or default to monitor regulator sizing? (irv/mon) ").lower()
@@ -771,9 +771,9 @@ if opp_input == "y":
         opp_type = "Monitor"
 else:
     partial_input = input("If applicable, select regulator with IRV for partial overpressure protection? (y/n): ")
-    partial = True if partial_input == "y" else False
-    opp_type = "IRV" if partial else "None"
+    opp_type = "Partial" if partial_input == "y" else "None"
 
+# Oversize due to high-efficiency equipment function
 higheff_input = input("Is this feeding a generator or high-efficiency boiler? (y/n): ").lower()
 if higheff_input == "y":
     pload = float(input("What percent of the total load is feeding a generator or high-efficiency boiler: "))
@@ -883,7 +883,7 @@ else:
 print("")
 
 # Print Capacity Tables
-if opp_type == "IRV" and not partial:
+if opp_type == "IRV":
 
     # IRV result
     result_irv = interpolate_capacity(data046, inlet_input, outlet_input046, False, False)
@@ -900,6 +900,11 @@ if opp_type == "IRV" and not partial:
     print_model_table('Model 046, 046-M or 046-2M, 3/4" Body','R046134', "Monitor", result_mon)
     print_model_table('Model 046, 046-M or 046-2M, 1" Body','R046110', "Monitor", result_mon)
     print_model_table('Model 046, 046-M or 046-2M, 1-1/4" Body','R04611Q', "Monitor", result_mon)
+elif opp_type == "Partial":
+    print("REGULATOR SIZING TABLES WITH IRV")
+    print_model_table('Model 046-2, 3/4" Body','R046234', opp_type, result046)
+    print_model_table('Model 046-2, 1" Body','R046210', opp_type, result046)
+    print_model_table('Model 046-2, 1-1/4" Body','R04621Q', opp_type, result046)
 elif opp_type == "Monitor":
     print("REGULATOR SIZING TABLES WITH MONITOR")
     print_model_table('Model 046, 046-M or 046-2M, 3/4" Body','R046134', opp_type, result046)

@@ -458,7 +458,7 @@ def applicable(model_str, qmax, qmin, max_flow, min_flow):
 # Capacity Table Function
 # ------------------------------------------------------------------------------------------------------
 
-def build_standard_table(inlet_p, outlet_p, max_flow, min_flow, monitor):
+def build_standard_table(inlet_p, outlet_p, max_flow, min_flow, opp):
     rows = [
         # (body,   orifice,         K,      model_fn)
         ('2"',  '11/16" single',   650,   model_461_single(inlet_p, outlet_p)),
@@ -478,6 +478,13 @@ def build_standard_table(inlet_p, outlet_p, max_flow, min_flow, monitor):
         ('6"',  '4-1/4"',        33000,   model_441_6(inlet_p, outlet_p, max_pressure=150)),
     ]
 
+    if opp == "Monitor" or opp == "IRV":
+        monitor = True
+        opp = "Monitor"
+    else:
+        monitor = False
+        opp = "None"
+
     table = []
     for body, orifice, K, model in rows:
         qmax = calc_qmax(K, inlet_p, outlet_p, monitor)
@@ -494,7 +501,7 @@ def build_standard_table(inlet_p, outlet_p, max_flow, min_flow, monitor):
     return table
 
 
-def build_vport_table(inlet_p, outlet_p, max_flow, min_flow, monitor):
+def build_vport_table(inlet_p, outlet_p, max_flow, min_flow, opp):
     rows = [
         # (body,   orifice,         K,      model_fn)
         ('2"',  '1" single',      975,   model_461_single(inlet_p, outlet_p)),
@@ -511,6 +518,13 @@ def build_vport_table(inlet_p, outlet_p, max_flow, min_flow, monitor):
         ('6"',  '3"',            14430,   model_441_6(inlet_p, outlet_p, max_pressure=300)),
         ('6"',  '4-1/4"',        25500,   model_441_6(inlet_p, outlet_p, max_pressure=150)),
     ]
+
+    if opp == "Monitor" or opp == "IRV":
+        monitor = True
+        opp = "Monitor"
+    else:
+        monitor = False
+        opp = "None"
 
     table = []
     for body, orifice, K, model in rows:
@@ -540,10 +554,19 @@ def find_first(table):
 
 # Computes regulator selection outputs
 # Returns dict with : model, body, orifice, seat, max_capacity
-def calc_regulator_selection(inlet_p, outlet_p, max_flow, min_flow, monitor):
+def calc_regulator_selection(inlet_p, outlet_p, max_flow, min_flow, opp):
+    
+    if opp == "Monitor" or opp == "IRV":
+        monitor = True
+        opp = "Monitor"
+        warning = "Sized for worker/monitor setup"
+    else:
+        monitor = False
+        opp = "None"
+        warning = None
 
-    std = build_standard_table(inlet_p, outlet_p, max_flow, min_flow, monitor)
-    vp  = build_vport_table(inlet_p, outlet_p, max_flow, min_flow, monitor)
+    std = build_standard_table(inlet_p, outlet_p, max_flow, min_flow, opp)
+    vp  = build_vport_table(inlet_p, outlet_p, max_flow, min_flow, opp)
 
     std_match = find_first(std)
     vp_match  = find_first(vp)
@@ -690,12 +713,7 @@ def calc_regulator_selection(inlet_p, outlet_p, max_flow, min_flow, monitor):
     else:
         diap = None
 
-    if monitor:
-        opp = "Monitor"
-    else:
-        opp = "None"
-
-    return {
+    match = {
         "model":   model,
         "diap":   diap,
         "body":    body,
@@ -708,6 +726,13 @@ def calc_regulator_selection(inlet_p, outlet_p, max_flow, min_flow, monitor):
         "mon_color": mon_color,
         "mon_range": mon_range,
     }
+
+    if match['model'] != "N/A":
+        apply = True
+    else:
+        apply = False
+
+    return match, apply, warning
 
 
 # Part Number Configurator
@@ -913,12 +938,15 @@ elif outlet_units == "bar":
 if inlet_units == "bar":
     inlet_input *= 14.5
 
+# Overpressure Protection Inputs
 opp_input = input("Do you require overpressure protection? (y/n): ").lower()
+irv_input = 0
 if opp_input == "y":
     opp_type = "Monitor"
 else:
     opp_type = "None"
 
+# Standardize oversize at 20%
 oversize_percent = 20
 
 # Other Gasses
@@ -988,31 +1016,35 @@ if min_flow > 0 and min_flow > flow_rate:
 
 # Run Sizing Tool
 # ------------------------------------------------------------------------------------------------------
-std = build_standard_table(inlet_input, outlet_input, flow_rate, min_flow, opp_type != "None")
-vp = build_vport_table(inlet_input, outlet_input, flow_rate, min_flow, opp_type != "None")
-match461 = calc_regulator_selection(inlet_input, outlet_input, flow_rate, min_flow, opp_type != "None")
+std_table_values = build_standard_table(inlet_input, outlet_input, flow_rate, min_flow, opp_type)
+vp_table_values = build_vport_table(inlet_input, outlet_input, flow_rate, min_flow, opp_type)
+match461, apply461, warning461 = calc_regulator_selection(inlet_input, outlet_input, flow_rate, min_flow, opp_type)
 
-if match461['model'] == "N/A":
-    print("Model 441 or 461 will not work for your application")
+# Print regulator selection
+if apply461:
+    if warning461:
+        print("")
+        print(warning461)
     print("")
-else:
-    if opp_type != "None":
-        print("")
-        print("Sized for worker/monitor setup")
-        print("")
     print_regulator_selection(match461)
     print("")
     
     # HSC Part Number = add_cart
     add_cart = hsc_pnc461(match461)
     print(f"HSC P/N:", ', '.join(add_cart) if isinstance(add_cart, (list, set)) else add_cart)
-
+    
+else:
+    print("")
+    print("Model 121-122 will not work for your application.")
 print("")
-print_441461_table("STANDARD VALVES TABLE", std)
-if opp_type != "None":
+
+# Print capacity table
+print("")
+print_441461_table("STANDARD VALVES TABLE", std_table_values)
+if opp_type == "Monitor":
     print("Capacity Reduction due to Monitor shown")
 print("")
-print_441461_table("V-PORT VALVES TABLE", vp)
+print_441461_table("V-PORT VALVES TABLE", vp_table_values)
 print("")
 
 # END

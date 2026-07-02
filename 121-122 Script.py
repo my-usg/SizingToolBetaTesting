@@ -625,6 +625,7 @@ def gen_match121(result121, result122, vp, opp):
     match = None
 
     # monset is the monitor setpoint, will be 0 unless we are sizing for a monitor regulator
+    # also set opp type
     monset = 0
     if opp == "Monitor":
         if outlet_input <= 0.5:
@@ -662,7 +663,7 @@ def gen_match121(result121, result122, vp, opp):
                         cap = result121[reg]
                         if will_work_vp(cap, reg, vp) == "Yes":
                             mon_color = spring_121_122(monset, reg)['color'] if opp == "Monitor" else None
-                            if opp != "Monitor" or (opp == "Monitor" and mon_color != None):
+                            if opp == "None" or (opp == "Monitor" and mon_color != None):
                                 match = {
                                     'reg': reg,
                                     'model': model_labels_121[prefix],
@@ -686,7 +687,7 @@ def gen_match121(result121, result122, vp, opp):
                     cap = result121[reg]
                     if will_work_vp(cap, reg, vp) == "Yes":
                         mon_color = spring_121_122(monset, reg)['color'] if opp == "Monitor" else None
-                        if opp != "Monitor" or (opp == "Monitor" and mon_color != None):
+                        if opp == "None" or (opp == "Monitor" and mon_color != None):
                             match = {
                                 'reg': reg,
                                 'model': '121-8-HP',
@@ -736,7 +737,7 @@ def gen_match121(result121, result122, vp, opp):
 
         # -------- 121 or 122 Standard --------
         # 122 is used up to 2 psi or 1 psi with monitor
-        if ((outlet_input <= 2 and opp != "Monitor") or (outlet_input <= 1 and opp == "Monitor")) and isinstance(result122, str) == False:
+        if ((outlet_input <= 2 and opp == "None") or (outlet_input <= 1 and opp == "Monitor")) and isinstance(result122, str) == False:
 
             for prefix, label in model_labels_121122.items():
                 res = result121 if prefix.startswith('R121') else result122
@@ -746,7 +747,7 @@ def gen_match121(result121, result122, vp, opp):
                         cap = res[reg]
                         if will_work_vp(cap, reg, vp) == "Yes":
                             mon_color = spring_121_122(monset, reg)['color'] if opp == "Monitor" else None
-                            if opp != "Monitor" or (opp == "Monitor" and mon_color != None):
+                            if opp == "None" or (opp == "Monitor" and mon_color != None):
                                 match = {
                                     'reg': reg,
                                     'model': model_labels_121122[prefix],
@@ -773,7 +774,7 @@ def gen_match121(result121, result122, vp, opp):
                         cap = result121[reg]
                         if will_work_vp(cap, reg, vp) == "Yes":
                             mon_color = spring_121_122(monset, reg)['color'] if opp == "Monitor" else None
-                            if opp != "Monitor" or (opp == "Monitor" and mon_color != None):
+                            if opp == "None" or (opp == "Monitor" and mon_color != None):
                                 match = {
                                     'reg': reg,
                                     'model': model_labels_121[prefix],
@@ -797,7 +798,7 @@ def gen_match121(result121, result122, vp, opp):
                     cap = result121[reg]
                     if will_work_vp(cap, reg, vp) == "Yes":
                         mon_color = spring_121_122(monset, reg)['color'] if opp == "Monitor" else None
-                        if opp != "Monitor" or (opp == "Monitor" and mon_color != None):
+                        if opp == "None" or (opp == "Monitor" and mon_color != None):
                             match = {
                                 'reg': reg,
                                 'model': '121-8-HP',
@@ -822,10 +823,12 @@ def run_regulator_selection121(inlet, outlet, opp):
     else:
         data_used121 = hpdata121
 
-    if opp == "Monitor":
+    if opp == "Monitor" or opp == "IRV":
+        opp = "Monitor"
         monitor = True
         warning = "Sized for worker/monitor setup"
     else:
+        opp = "None"
         monitor = False
         warning = None
 
@@ -1024,12 +1027,15 @@ elif outlet_units == "bar":
 if inlet_units == "bar":
     inlet_input *= 14.5
 
+# Overpressure Protection Inputs
 opp_input = input("Do you require overpressure protection? (y/n): ").lower()
+irv_input = 0
 if opp_input == "y":
     opp_type = "Monitor"
 else:
     opp_type = "None"
 
+# Oversize due to high-efficiency equipment function
 higheff_input = input("Is this feeding a generator or high-efficiency boiler? (y/n): ").lower()
 if higheff_input == "y":
     pload = float(input("What percent of the total load is feeding a generator or high-efficiency boiler: "))
@@ -1153,8 +1159,8 @@ else:
 print("")
 
 # Print capacity table
-if ((outlet_input <= 2 and opp_type != "Monitor") or (outlet_input <= 1 and opp_type == "Monitor")) and isinstance(result122, str) == False:
-    print("REGULATOR SIZING TABLES WITH MONITOR") if opp_type != "None" else print("REGULATOR SIZING TABLES")
+if ((outlet_input <= 2 and opp_type == "None") or (outlet_input <= 1 and opp_type == "Monitor")) and isinstance(result122, str) == False:
+    print("REGULATOR SIZING TABLES WITH MONITOR") if opp_type == "Monitor" else print("REGULATOR SIZING TABLES")
     print("STANDARD VALVES")
     print_model_table121('Model 121-8','R12108', result121, False)
     print_model_table121('Model 121-12','R12112', result121, False)
@@ -1166,7 +1172,7 @@ if ((outlet_input <= 2 and opp_type != "Monitor") or (outlet_input <= 1 and opp_
     print_model_table121('Model 121-8','R12108', result121_VP, True)
     print_model_table121('Model 121-12','R12112', result121_VP, True)
 elif outlet_input <= 3:
-    print("REGULATOR SIZING TABLES WITH MONITOR") if opp_type != "None" else print("REGULATOR SIZING TABLES")
+    print("REGULATOR SIZING TABLES WITH MONITOR") if opp_type == "Monitor" else print("REGULATOR SIZING TABLES")
     print("STANDARD VALVES")
     print_model_table121('Model 121-8','R12108', result121, False)
     print_model_table121('Model 121-12','R12112', result121, False)
@@ -1176,7 +1182,7 @@ elif outlet_input <= 3:
     print_model_table121('Model 121-8','R12108', result121_VP, True)
     print_model_table121('Model 121-12','R12112', result121_VP, True)
 else:
-    print("REGULATOR SIZING TABLES WITH MONITOR") if opp_type != "None" else print("REGULATOR SIZING TABLES")
+    print("REGULATOR SIZING TABLES WITH MONITOR") if opp_type == "Monitor" else print("REGULATOR SIZING TABLES")
     print("STANDARD VALVES")
     print_model_table121('Model 121-8-HP','R121HP', result121, False)
     print("")
