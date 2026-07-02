@@ -338,9 +338,11 @@ if run_btn:
                     cap = match.get("capacity")
                     if cap and cap != "N/A":
                         try:
-                            st.markdown(f"**Calculated Capacity (CFH):** {int(round(float(cap))):,}")
+                            cap_str = f"{int(round(float(cap))):,}"
                         except Exception:
-                            st.markdown(f"**Calculated Capacity (CFH):** {cap}")
+                            cap_str = str(cap)
+                        st.markdown("**Calculated Capacity (CFH)**")
+                        st.code(cap_str, language=None)
 
                     st.subheader("HSC Part Number(s)")
                     if isinstance(pn, list):
