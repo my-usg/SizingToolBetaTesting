@@ -43,7 +43,7 @@ def build_table(prefix, opp_type, result143):
         cap_str = f"{cap:,.0f}" if isinstance(cap, (int, float)) else str(cap)
         works   = _globals["will_work"](cap, reg, _globals["orifice_max143"](reg))
         if opp_type == "IRV":
-            irv = _globals["will_irv_work143"](reg)
+            irv = _globals["will_irv_work143"](reg, opp_type)
             rows.append([orifice, cap_str, works, irv])
         else:
             rows.append([orifice, cap_str, works])
