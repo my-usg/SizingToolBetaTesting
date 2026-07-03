@@ -1456,13 +1456,6 @@ def will_irv_work243(reg, opp):
 
     # determine 243-8 or 243-12
     pre = reg[:6]
-    # "R24308" or "R24312"
-    # if pre == "R24308":
-    #     diap = "8"
-    # elif pre == "R24312":
-    #     diap = "12"
-    # else:
-    #     return "No"
 
     irv12data243 = {
         0: {'1-1/4"': 0.25, '1"': 0.25, '3/4"': 0.25, '1/2"': 0.25, '3/8"': 0.25, '1/4"': 0.25},
