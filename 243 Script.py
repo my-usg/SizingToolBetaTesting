@@ -801,7 +801,7 @@ def hsc_pnc243(match):
     elif model == '243-12-1':
         return f"R.243-12-1.STD.{body}.12-1.INT.{orifice}.STD.{spring}.ALU"
     
-    elif model == '243-12-1M with External Control Line' and opp == "Monitor":
+    elif model == '243-12-1 with External Control Line' and opp == "Monitor":
         return [
                 f"R.243-12-1M.STD.{body}.12-1.EXT.{orifice}.STD.{monitor_spring}.ALU",
                 f"R.243-12-1M.STD.{body}.12-1.EXT.{orifice}.STD.{spring}.ALU",
