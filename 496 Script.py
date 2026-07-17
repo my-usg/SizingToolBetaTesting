@@ -436,7 +436,7 @@ outlet_input = float(input("Enter outlet pressure: "))
 flowrate_units = input("Gas Load units (CFH, BTUH, CMH): ")
 flow_rate = float(input("Enter gas load/flow rate: "))
 
-maop = float(input("MAOP (psi): "))
+maop = float(input("Maximum Inlet Pressure/MAOP (psi): "))
 maop = inlet_input if maop == 0 else maop
 
 pipesize_input = (input('Enter desired pipe size (enter N/A, 3/4", 1", 1-1/4", ect.): '))
@@ -454,7 +454,7 @@ if inlet_units == "bar":
 opp_input = input("Do you require overpressure protection? (y/n): ").lower()
 irv_input = 0
 if opp_input == "y":
-    irv_input = float(input("IRV protect downstream pressure to: "))
+    irv_input = float(input("Internal relief valve protect downstream pressure to: "))
     opp_type = "IRV"
 else:
     opp_type = "None"

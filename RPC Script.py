@@ -621,7 +621,7 @@ outlet_input = float(input("Enter outlet pressure: "))
 flowrate_units = input("Gas Load units (CFH, BTUH, CMH): ")
 flow_rate = float(input("Enter gas load/flow rate: "))
 
-maop = float(input("MAOP (psi): "))
+maop = float(input("Maximum Inlet Pressure / MAOP (psi): "))
 maop = inlet_input if maop == 0 else maop
 
 model_input = input('Enter desired RPC model (enter "N/A", "243-RPC", "243-RPC-A" or "243-RPC-B"): ')

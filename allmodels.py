@@ -177,7 +177,7 @@ with st.sidebar:
     outlet_units = st.selectbox("Outlet pressure units", ["psi", "in wc", "bar"])
     outlet_input = st.number_input("Outlet pressure", min_value=0.0, max_value=1000.0,  value=0.0,  step=0.1,  format="%.1f")
 
-    flowrate_units = st.selectbox("Flow rate units", ["CFH", "CMH", "BTUH"])
+    flowrate_units = st.selectbox("Gas load / flow rate units", ["CFH", "CMH", "BTUH"])
     flow_rate    = st.number_input("Max gas load / flow rate", min_value=0, max_value=10000000000, value=0, step=1, format="%d")
     min_flow_raw = st.number_input("Min gas load / flow rate (enter 0 to use max flow)", min_value=0, max_value=10000000000, value=0, step=1, format="%d")
     min_flow     = flow_rate if min_flow_raw == 0 else min_flow_raw
@@ -199,15 +199,15 @@ with st.sidebar:
     opp_pref   = ""
 
     if opp_choice == "Yes":
-        opp_pref = st.radio("If applicable should the program prioritize sizing with IRV or default to monitor regulator sizing?", ["IRV (Internal Relief Valve)", "Monitor regulator"])
+        opp_pref = st.radio("If applicable should the program prioritize sizing with an internal relief valve or default to monitor regulator sizing?", ["IRV (Internal Relief Valve)", "Monitor regulator"])
         if "IRV" in opp_pref:
-            irv_input = st.number_input("IRV protect downstream pressure to (psi)",
+            irv_input = st.number_input("Internal relief valve should protect downstream pressure to (psi)",
                                         min_value=0.0, max_value=500.0, value=2.0, step=0.1, format="%.1f")
             opp_type = "IRV"
         else:
             opp_type = "Monitor"
     else:
-        partial_choice = st.radio("Select regulator with IRV for partial overpressure protection?", ["No", "Yes"])
+        partial_choice = st.radio("Select regulator with an internal relief valve for partial overpressure protection?", ["No", "Yes"])
         if partial_choice == "Yes":
             opp_type = "Partial"
 

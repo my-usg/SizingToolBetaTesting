@@ -67,7 +67,7 @@ with st.sidebar:
     outlet_units = st.selectbox("Outlet pressure units", ["psi", "in wc", "bar"])
     outlet_input = st.number_input("Outlet pressure", min_value=0.0, max_value=10000.0, value=0.0, step=0.1, format="%.1f")
 
-    flowrate_units = st.selectbox("Flow rate units", ["CFH", "CMH", "BTUH"])
+    flowrate_units = st.selectbox("Gas load / flow rate units", ["CFH", "CMH", "BTUH"])
     flow_rate    = st.number_input("Gas load / flow rate", min_value=0, max_value=500000000, value=0, step=50, format="%d")
 
     maop = st.number_input("Max inlet pressure / MAOP (psi)", min_value=0, max_value=1000, value=0, step=1, format="%d",
@@ -86,11 +86,11 @@ with st.sidebar:
     opp_pref   = ""
 
     if opp_choice == "Yes":
-        irv_input = st.number_input("IRV protect downstream pressure to (psi)",
+        irv_input = st.number_input("Internal relief valve should protect downstream pressure to (psi)",
                                     min_value=0.0, max_value=500.0, value=2.0, step=0.1, format="%.1f")
         opp_type = "IRV"
     else:
-        partial_choice = st.radio("If applicable, select regulator with IRV for partial overpressure protection?", ["No", "Yes"])
+        partial_choice = st.radio("If applicable, select regulator with an internal relief valve for partial overpressure protection?", ["No", "Yes"])
         if partial_choice == "Yes":
             opp_type = "Partial"
 

@@ -3978,7 +3978,7 @@ flow_rate = float(input("Enter gas load/flow rate: "))
 min_flow = float(input("Enter minimum gas load/flow rate: "))
 min_flow = flow_rate if min_flow == 0 else min_flow
 
-maop = float(input("MAOP (psi): "))
+maop = float(input("Maximum Inlet Pressure/MAOP (psi): "))
 maop = inlet_input if maop == 0 else maop
 
 pipesize_input = (input('Enter desired pipe size (enter N/A, 3/4", 1", 1-1/4", ect.): '))
@@ -3996,14 +3996,14 @@ if inlet_units == "bar":
 opp_input = input("Do you require overpressure protection? (y/n): ").lower()
 irv_input = 0
 if opp_input == "y":
-    opp_pref = input("If applicable should the program prioritize sizing with IRV or default to monitor regulator sizing? (irv/mon) ").lower()
+    opp_pref = input("If applicable should the program prioritize sizing with an internal relief valve or default to monitor regulator sizing? (irv/mon) ").lower()
     if opp_pref == "irv":
-        irv_input = float(input("IRV protect downstream pressure to: "))
+        irv_input = float(input("Internal relief valve protect downstream pressure to: "))
         opp_type = "IRV"
     else:
         opp_type = "Monitor"
 else:
-    partial_input = input("If applicable, select regulator with IRV for partial overpressure protection? (y/n): ")
+    partial_input = input("If applicable, select regulator with an internal relief valve for partial overpressure protection? (y/n): ")
     opp_type = "Partial" if partial_input == "y" else "None"
 
 # Oversize due to high-efficiency equipment function

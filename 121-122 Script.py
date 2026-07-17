@@ -1013,7 +1013,7 @@ flow_rate = float(input("Enter gas load/flow rate: "))
 min_flow = float(input("Enter minimum gas load/flow rate: "))
 min_flow = flow_rate if min_flow == 0 else min_flow
 
-maop = float(input("MAOP (psi): "))
+maop = float(input("Maximum Inlet Pressure/MAOP (psi): "))
 maop = inlet_input if maop == 0 else maop
 
 pipesize_input = (input('Enter desired pipe size (enter N/A, 3/4", 1", 1-1/4", ect.): '))
