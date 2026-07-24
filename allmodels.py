@@ -456,7 +456,7 @@ if run_btn:
                     if gastypemult != 1:
                         adj["Gas Type Factor"] = f"{gastypemult:.4f}"
                     if Patm < 14.4:
-                        adj = {"Elevation capacity reduction": f"{elevation_reduction:.0f}%"}
+                        adj["Elevation capacity reduction"] = f"{elevation_reduction:.0f}%"
                     import pandas as pd
                     df_adj = pd.DataFrame(adj.items(), columns=["Adjustment", "Value"])
                     st.dataframe(df_adj, use_container_width=True, hide_index=True)
