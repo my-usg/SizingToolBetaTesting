@@ -644,7 +644,7 @@ def gen_match121(result121, result122, vp, opp):
         elif outlet_input == 1:
             monset = 2
         elif outlet_input <= 3:
-            monset = outlet_input + 1.5
+            monset = outlet_input + 1.25
         elif outlet_input <= 8:
             monset = outlet_input + 2
         else:
