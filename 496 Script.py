@@ -426,9 +426,11 @@ def print_regulator_selection(match):
 
     print("")
     print("Sizing Adjustments")
-    if match['opp'] == "Monitor":
-        print("Monitor regulator: 30% Capacity reduction")
     print(f"Oversized by {oversize_percent:.0f}%")
+    if match['opp'] == "Monitor":
+        print("Monitor capacity reduction: 30%")
+    if Patm < 14.4:
+        print(f"Elevation capacity reduction: {elevation_reduction:.0f}%")
     if gastypemult != 1:
         print(f"Multiplier for other gas: {gastypemult}")
 
@@ -520,6 +522,16 @@ if elevation == "y":
     Patm = float(input("Atmospheric Pressure: "))
 else:
     Patm = 14.4
+
+# Elevation Reduction Calculation
+if Patm < 14.4:
+    ratio = (inlet_input + Patm)/(outlet_input + Patm)
+    if ratio < 1.894:
+        elevation_reduction = 100 * (1 - (((outlet_input+Patm)*((inlet_input+Patm)-(outlet_input+Patm)))**0.5) / (((outlet_input+14.65)*((inlet_input+14.65)-(outlet_input+14.65)))**0.5))
+    else:
+        elevation_reduction = 100 * (1 - (inlet_input+Patm)/(inlet_input+14.65))
+else:
+    elevation_reduction = 0
 
 
 # Validation
