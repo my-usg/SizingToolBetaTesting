@@ -324,6 +324,17 @@ if run_btn:
                     pn    = result["pn"]
 
                     oversize_percent = (oversizeby - 1) * 100
+
+                    # Elevation Reduction Calculation
+                    if Patm < 14.4:
+                        ratio = (inlet_input + Patm)/(outlet_input + Patm)
+                        if ratio < 1.894:
+                            elevation_reduction = (((outlet_input+Patm)*((inlet_input+Patm)-(outlet_input+Patm)))**0.5) / (((outlet_input+14.65)*((inlet_input+14.65)-(outlet_input+14.65)))**0.5)
+                        else:
+                            elevation_reduction = (inlet_input+Patm)/(inlet_input+14.65)
+                    else:
+                        elevation_reduction = 0
+
                     st.success("✅  Regulator selected!")
 
                     # ── result card ─────────────────────────────────────────
@@ -444,6 +455,8 @@ if run_btn:
                         adj["Monitor Regulator"] = "30% capacity reduction applied"
                     if gastypemult != 1:
                         adj["Gas Type Factor"] = f"{gastypemult:.4f}"
+                    if Patm < 14.4:
+                        adj = {"Elevation capacity reduction": f"{elevation_reduction:.0f}%"}
                     import pandas as pd
                     df_adj = pd.DataFrame(adj.items(), columns=["Adjustment", "Value"])
                     st.dataframe(df_adj, use_container_width=True, hide_index=True)
