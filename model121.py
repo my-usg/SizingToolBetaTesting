@@ -332,7 +332,7 @@ if run_btn:
                 st.subheader("Sizing Adjustments")
                 adj = {"Oversized By": f"{oversize_percent:.0f}%"}
                 if match121 and match121.get("opp") == "Monitor":
-                    adj["Monitor Regulator"] = "30% capacity reduction applied"
+                    adj["Monitor Capacity Reduction"] = "30%"
                 if gastypemult != 1:
                     adj["Gas Type Factor"] = f"{gastypemult:.4f}"
                 if Patm < 14.4:
