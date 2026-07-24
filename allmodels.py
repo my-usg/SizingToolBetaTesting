@@ -235,11 +235,10 @@ with st.sidebar:
         st.info("Contact USG for regulator compatibility with gases other than methane or propane.")
 
     # Altitude
-    elevation = st.selectbox("Altitude above 3,000 feet or atmospheric pressure below 13 psi", ["Yes", "No"])
+    elevation = st.radio("Altitude above 3,000 feet or atmospheric pressure below 13 psi", ["No", "Yes"])
+    Patm = 14.4
     if elevation == "Yes":
-        Patm  = st.number_input("Atmospheric Pressure (psi)",   min_value=8.80, max_value=14.73, value=0.0,   step=0.01,  format="%.1f")
-    else:
-        Patm = 14.4
+        Patm  = st.number_input("Atmospheric Pressure (psi)",   min_value=8.80, max_value=14.73, value=14.40,   step=0.01,  format="%.1f")
 
     run_btn = st.button("▶  Run Sizing", type="primary", use_container_width=True)
 
