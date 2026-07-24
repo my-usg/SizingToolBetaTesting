@@ -85,7 +85,7 @@ with st.sidebar:
     opp_type   = "None"
 
     if opp_choice == "Yes":
-        irv_input = st.number_input("Internal relief valve should protect downstream pressure to (psi)",
+        irv_input = st.number_input("Internal relief valve should limit downstream pressure buildup to (psi)",
                                     min_value=0.0, max_value=500.0, value=2.0, step=0.1, format="%.1f")
         opp_type = "IRV"
 

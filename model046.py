@@ -89,7 +89,7 @@ with st.sidebar:
         opp_pref = st.radio("If applicable should the program prioritize sizing with an internal relief valve or default to monitor regulator sizing?",
                             ["IRV (Internal Relief Valve)", "Monitor regulator"])
         if "IRV" in opp_pref:
-            irv_input = st.number_input("Snternal relief valve should protect downstream pressure to (psi)",
+            irv_input = st.number_input("Internal relief valve should limit downstream pressure buildup to (psi)",
                                         min_value=0.0, max_value=500.0, value=2.0, step=0.1, format="%.1f")
             opp_type = "IRV"
         else:

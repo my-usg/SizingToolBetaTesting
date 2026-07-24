@@ -934,7 +934,7 @@ irv_input = 0
 if opp_input == "y":
     opp_pref = input("If applicable should the program prioritize sizing with an internal relief valve or default to monitor regulator sizing? (irv/mon) ").lower()
     if opp_pref == "irv":
-        irv_input = float(input("Internal relief valve protect downstream pressure to: "))
+        irv_input = float(input("Internal relief valve should limit downstream pressure buildup to: "))
         opp_type = "IRV"
     else:
         opp_type = "Monitor"
