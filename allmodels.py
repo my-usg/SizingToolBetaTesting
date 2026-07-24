@@ -329,9 +329,9 @@ if run_btn:
                     if Patm < 14.4:
                         ratio = (inlet_input + Patm)/(outlet_input + Patm)
                         if ratio < 1.894:
-                            elevation_reduction = (((outlet_input+Patm)*((inlet_input+Patm)-(outlet_input+Patm)))**0.5) / (((outlet_input+14.65)*((inlet_input+14.65)-(outlet_input+14.65)))**0.5)
+                            elevation_reduction = 100 * (((outlet_input+Patm)*((inlet_input+Patm)-(outlet_input+Patm)))**0.5) / (((outlet_input+14.65)*((inlet_input+14.65)-(outlet_input+14.65)))**0.5)
                         else:
-                            elevation_reduction = (inlet_input+Patm)/(inlet_input+14.65)
+                            elevation_reduction = 100 * (inlet_input+Patm)/(inlet_input+14.65)
                     else:
                         elevation_reduction = 0
 
