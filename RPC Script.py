@@ -256,6 +256,17 @@ def interpolate_capacity(data, inlet, outlet, monitor_used, vp):
 
         interpolated *= gastypemult
 
+        # Adjustment for altitude
+        if Patm < 14.4:
+            ratio = (inlet + Patm)/(outlet + Patm)
+            if ratio < 1.894:
+                alt_adj = (((outlet+Patm)*((inlet+Patm)-(outlet+Patm)))**0.5) / (((outlet+14.65)*((inlet+14.65)-(outlet+14.65)))**0.5)
+            else:
+                alt_adj = (inlet+Patm)/(inlet+14.65)
+            
+            if alt_adj < 1:
+                interpolated *= alt_adj
+
         capacities[reg] = int(round(interpolated))
 
     return capacities
@@ -438,16 +449,22 @@ def gen_matchRPC(result, opp):
     # monset is the monitor setpoint, will be 0 unless we are sizing for a monitor regulator
     monset = 0
     if opp == "Monitor":
-        if outlet_input == 0.25:
-            monset = 1
-        elif outlet_input < 3:
-            monset = outlet_input + 1
-        elif outlet_input < 5:
+        if outlet_input < 1:
+            monset = outlet_input + 0.5
+        elif outlet_input == 1:
+            monset = 2
+        elif outlet_input <= 2:
+            monset = outlet_input + 1.5
+        elif outlet_input <= 5:
             monset = outlet_input + 2
         elif outlet_input <= 32:
             monset = outlet_input + 3
         else:
             monset = 35
+
+    if irv_input in globals():
+        if monset > irv_input:
+            monset = irv_input
 
     for prefix in ordered_prefixes:
         for orifice in orifice_orderRPC:
@@ -658,7 +675,7 @@ if higheff_input == "y":
     pload *= 0.01
 else:
     pload = 0
-oversizeby = 1.2 + (0.8 * pload)
+oversizeby = 1.25 + (0.75 * pload)
 oversize_percent = (oversizeby - 1) * 100
 
 # Other Gasses
@@ -687,6 +704,15 @@ elif flowrate_units == "BTUH":
     else:
         print("Enter gas load/flow rate in CFH or CMH when using other gasses")
         exit()
+
+
+# Altitude
+# -----------------------------
+elevation = input("Altitude above 3,000 feet or atmospheric pressure below 13 psi (y/n) ")
+if elevation == "y":
+    Patm = float(input("Atmospheric Pressure: "))
+else:
+    Patm = 14.4
 
 
 # Validation

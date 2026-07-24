@@ -96,7 +96,7 @@ with st.sidebar:
     if higheff == "Yes":
         pload_pct = st.slider("% of total load feeding generator / high-eff boiler", 0, 100, 50)
         pload = pload_pct / 100.0
-    oversizeby      = 1.2 + (0.8 * pload)
+    oversizeby      = 1.25 + (0.75 * pload)
     oversize_percent = (oversizeby - 1) * 100
 
     gastype_input = st.selectbox("Gas type", ["Natural Gas", "Propane", "Other"])
@@ -107,6 +107,13 @@ with st.sidebar:
         sg = st.number_input("Specific gravity", min_value=0.01, max_value=10.0, value=0.6, step=0.01, format="%.2f")
         gastypemult = min(1.0, (0.6 / sg) ** 0.5)
         st.info("Contact USG for regulator compatibility with gases other than methane or propane.")
+
+    # Altitude
+    elevation = st.selectbox("Altitude above 3,000 feet or atmospheric pressure below 13 psi", ["Yes", "No"])
+    if elevation == "Yes":
+        Patm  = st.number_input("Atmospheric Pressure (psi)",   min_value=8.80, max_value=14.73, value=0.0,   step=0.01,  format="%.1f")
+    else:
+        Patm = 14.4
 
     run_btn = st.button("▶  Run Sizing", type="primary", use_container_width=True)
 
@@ -175,6 +182,7 @@ if run_btn:
                     "oversize_percent": oversize_percent,
                     "gastypemult":    gastypemult,
                     "pload":          pload,
+                    "Patm":           Patm,
                     "result496":      {},
                 })
 

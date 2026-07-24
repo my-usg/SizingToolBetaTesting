@@ -70,13 +70,13 @@ data143 = {
         125: {'R14334_58': None, 'R14334_12': None, 'R14334_38': None, 'R14334_56': None, 'R14334_14': None, 'R14334_36': 1900, 'R14334_18': 1800, 'R14310_58': None, 'R14310_12': None, 'R14310_38': None, 'R14310_56': None, 'R14310_14': None, 'R14310_36': 2100, 'R14310_18': 2100, 'R1431Q_58': None, 'R1431Q_12': None, 'R1431Q_38': None, 'R1431Q_56': None, 'R1431Q_14': None, 'R1431Q_36': 2400, 'R1431Q_18': 2250},
     },
 	2.0: {	
-        5: {'R14334_58': 1075, 'R14334_12': 925, 'R14334_38': 700, 'R14334_56': 600, 'R14334_14': 470, 'R14334_36': 370, 'R14334_18': 220, 'R14310_58': 1150, 'R14310_12': 975, 'R14310_38': 725, 'R14310_56': 600, 'R14310_14': 500, 'R14310_36': 370, 'R14310_18': 220, 'R1431Q_58': 1175, 'R1431Q_12': 1050, 'R1431Q_38': 750, 'R1431Q_56': 600, 'R1431Q_14': 500, 'R1431Q_36': 380, 'R1431Q_18': 220},
-        10: {'R14334_58': 1575, 'R14334_12': 1350, 'R14334_38': 1075, 'R14334_56': 1000, 'R14334_14': 800, 'R14334_36': 600, 'R14334_18': 325, 'R14310_58': 1625, 'R14310_12': 1550, 'R14310_38': 1175, 'R14310_56': 1050, 'R14310_14': 850, 'R14310_36': 625, 'R14310_18': 325, 'R1431Q_58': 1750, 'R1431Q_12': 1700, 'R1431Q_38': 1175, 'R1431Q_56': 1050, 'R1431Q_14': 850, 'R1431Q_36': 650, 'R1431Q_18': 330},
-        20: {'R14334_58': None, 'R14334_12': 1800, 'R14334_38': 1450, 'R14334_56': 1400, 'R14334_14': 1150, 'R14334_36': 975, 'R14334_18': 525, 'R14310_58': None, 'R14310_12': 2100, 'R14310_38': 1700, 'R14310_56': 1575, 'R14310_14': 1375, 'R14310_36': 1050, 'R14310_18': 525, 'R1431Q_58': None, 'R1431Q_12': 2350, 'R1431Q_38': 1700, 'R1431Q_56': 1575, 'R1431Q_14': 1375, 'R1431Q_36': 1100, 'R1431Q_18': 525},
-        40: {'R14334_58': None, 'R14334_12': None, 'R14334_38': 1800, 'R14334_56': 1700, 'R14334_14': 1450, 'R14334_36': 1150, 'R14334_18': 850, 'R14310_58': None, 'R14310_12': None, 'R14310_38': 2450, 'R14310_56': 2325, 'R14310_14': 2125, 'R14310_36': 1425, 'R14310_18': 850, 'R1431Q_58': None, 'R1431Q_12': None, 'R1431Q_38': 2450, 'R1431Q_56': 2325, 'R1431Q_14': 2125, 'R1431Q_36': 1850, 'R1431Q_18': 850},
-        60: {'R14334_58': None, 'R14334_12': None, 'R14334_38': None, 'R14334_56': None, 'R14334_14': 1825, 'R14334_36': 1550, 'R14334_18': 1050, 'R14310_58': None, 'R14310_12': None, 'R14310_38': None, 'R14310_56': None, 'R14310_14': 2400, 'R14310_36': 1950, 'R14310_18': 1050, 'R1431Q_58': None, 'R1431Q_12': None, 'R1431Q_38': None, 'R1431Q_56': None, 'R1431Q_14': 2400, 'R1431Q_36': 1950, 'R1431Q_18': 1050},
-        100: {'R14334_58': None, 'R14334_12': None, 'R14334_38': None, 'R14334_56': None, 'R14334_14': None, 'R14334_36': 2200, 'R14334_18': 1450, 'R14310_58': None, 'R14310_12': None, 'R14310_38': None, 'R14310_56': None, 'R14310_14': None, 'R14310_36': 2600, 'R14310_18': 1750, 'R1431Q_58': None, 'R1431Q_12': None, 'R1431Q_38': None, 'R1431Q_56': None, 'R1431Q_14': None, 'R1431Q_36': 2600, 'R1431Q_18': 1750},
-        125: {'R14334_58': None, 'R14334_12': None, 'R14334_38': None, 'R14334_56': None, 'R14334_14': None, 'R14334_36': 2200, 'R14334_18': 1850, 'R14310_58': None, 'R14310_12': None, 'R14310_38': None, 'R14310_56': None, 'R14310_14': None, 'R14310_36': 2600, 'R14310_18': 2075, 'R1431Q_58': None, 'R1431Q_12': None, 'R1431Q_38': None, 'R1431Q_56': None, 'R1431Q_14': None, 'R1431Q_36': 2600, 'R1431Q_18': 2075},
+        5: {'R14334_58': 1100, 'R14334_12': 925, 'R14334_38': 700, 'R14334_56': 600, 'R14334_14': 470, 'R14334_36': 370, 'R14334_18': 220, 'R14310_58': 1150, 'R14310_12': 975, 'R14310_38': 725, 'R14310_56': 600, 'R14310_14': 500, 'R14310_36': 380, 'R14310_18': 220, 'R1431Q_58': 1175, 'R1431Q_12': 1050, 'R1431Q_38': 750, 'R1431Q_56': 600, 'R1431Q_14': 500, 'R1431Q_36': 380, 'R1431Q_18': 220},
+        10: {'R14334_58': 1600, 'R14334_12': 1350, 'R14334_38': 1100, 'R14334_56': 1000, 'R14334_14': 800, 'R14334_36': 600, 'R14334_18': 325, 'R14310_58': 1650, 'R14310_12': 1550, 'R14310_38': 1250, 'R14310_56': 1050, 'R14310_14': 850, 'R14310_36': 625, 'R14310_18': 325, 'R1431Q_58': 1750, 'R1431Q_12': 1700, 'R1431Q_38': 1350, 'R1431Q_56': 1050, 'R1431Q_14': 850, 'R1431Q_36': 675, 'R1431Q_18': 250},
+        20: {'R14334_58': None, 'R14334_12': 1800, 'R14334_38': 1500, 'R14334_56': 1400, 'R14334_14': 1150, 'R14334_36': 975, 'R14334_18': 550, 'R14310_58': None, 'R14310_12': 2100, 'R14310_38': 2050, 'R14310_56': 1800, 'R14310_14': 1475, 'R14310_36': 1100, 'R14310_18': 550, 'R1431Q_58': None, 'R1431Q_12': 2400, 'R1431Q_38': 2200, 'R1431Q_56': 1950, 'R1431Q_14': 1700, 'R1431Q_36': 1100, 'R1431Q_18': 550},
+        40: {'R14334_58': None, 'R14334_12': None, 'R14334_38': 1850, 'R14334_56': 1700, 'R14334_14': 1450, 'R14334_36': 1200, 'R14334_18': 900, 'R14310_58': None, 'R14310_12': None, 'R14310_38': 2500, 'R14310_56': 2200, 'R14310_14': 2200, 'R14310_36': 1500, 'R14310_18': 900, 'R1431Q_58': None, 'R1431Q_12': None, 'R1431Q_38': 2600, 'R1431Q_56': 2400, 'R1431Q_14': 2600, 'R1431Q_36': 1950, 'R1431Q_18': 900},
+        60: {'R14334_58': None, 'R14334_12': None, 'R14334_38': None, 'R14334_56': None, 'R14334_14': 1825, 'R14334_36': 1650, 'R14334_18': 1100, 'R14310_58': None, 'R14310_12': None, 'R14310_38': None, 'R14310_56': None, 'R14310_14': 2500, 'R14310_36': 2050, 'R14310_18': 1125, 'R1431Q_58': None, 'R1431Q_12': None, 'R1431Q_38': None, 'R1431Q_56': None, 'R1431Q_14': 2600, 'R1431Q_36': 2600, 'R1431Q_18': 1125},
+        100: {'R14334_58': None, 'R14334_12': None, 'R14334_38': None, 'R14334_56': None, 'R14334_14': None, 'R14334_36': 2200, 'R14334_18': 1550, 'R14310_58': None, 'R14310_12': None, 'R14310_38': None, 'R14310_56': None, 'R14310_14': None, 'R14310_36': 2600, 'R14310_18': 1850, 'R1431Q_58': None, 'R1431Q_12': None, 'R1431Q_38': None, 'R1431Q_56': None, 'R1431Q_14': None, 'R1431Q_36': 2600, 'R1431Q_18': 1850},
+        125: {'R14334_58': None, 'R14334_12': None, 'R14334_38': None, 'R14334_56': None, 'R14334_14': None, 'R14334_36': 2200, 'R14334_18': 1850, 'R14310_58': None, 'R14310_12': None, 'R14310_38': None, 'R14310_56': None, 'R14310_14': None, 'R14310_36': 2600, 'R14310_18': 2150, 'R1431Q_58': None, 'R1431Q_12': None, 'R1431Q_38': None, 'R1431Q_56': None, 'R1431Q_14': None, 'R1431Q_36': 2600, 'R1431Q_18': 2150},
     },
 }
 
@@ -627,6 +627,17 @@ def interpolate_capacity(data, inlet, outlet, monitor_used, vp):
 
         interpolated *= gastypemult
 
+        # Adjustment for altitude
+        if Patm < 14.4:
+            ratio = (inlet + Patm)/(outlet + Patm)
+            if ratio < 1.894:
+                alt_adj = (((outlet+Patm)*((inlet+Patm)-(outlet+Patm)))**0.5) / (((outlet+14.65)*((inlet+14.65)-(outlet+14.65)))**0.5)
+            else:
+                alt_adj = (inlet+Patm)/(inlet+14.65)
+            
+            if alt_adj < 1:
+                interpolated *= alt_adj
+
         capacities[reg] = int(round(interpolated))
 
     return capacities
@@ -1027,24 +1038,27 @@ def will_irv_work143(reg, opp):
     }
 
     irvhpdata143 = {
-        2: {'18': 0.6, '36': 0.8, '14': 0.8, '56': 0.8, '38': 0.8, '12': 0.8, '58': 0.8},
-        10: {'18': 0.8, '36': 0.8, '14': 1, '56': 1.3, '38': 1.6, '12': 2.1, '58': 2.9},
-        13: {'18': 0.8, '36': 0.9, '14': 1.2, '56': 1.5, '38': 1.9, '12': 2.8, '58': 4},
-        18: {'18': 0.8, '36': 0.9, '14': 1.3, '56': 1.8, '38': 2.5, '12': 4, '58': None},
-        20: {'18': 0.8, '36': 1, '14': 1.4, '56': 2, '38': 2.7, '12': None, '58': None},
-        30: {'18': 0.9, '36': 1.1, '14': 1.8, '56': 2.7, '38': 4, '12': None, '58': None},
-        40: {'18': 1, '36': 1.3, '14': 2.2, '56': 3.6, '38': None, '12': None, '58': None},
-        45: {'18': 1, '36': 1.4, '14': 2.4, '56': 4, '38': None, '12': None, '58': None},
-        50: {'18': 1, '36': 1.4, '14': 2.6, '56': None, '38': None, '12': None, '58': None},
-        60: {'18': 1, '36': 1.6, '14': 3.1, '56': None, '38': None, '12': None, '58': None},
-        70: {'18': 1.1, '36': 1.8, '14': 3.6, '56': None, '38': None, '12': None, '58': None},
-        76: {'18': 1.1, '36': 2, '14': 4, '56': None, '38': None, '12': None, '58': None},
+        3: {'18': 0, '36': 0, '14': 0.4, '56': 0.8, '38': 0.8, '12': 0.8, '58': 0.8},
+        4: {'18': 0.2, '36': 0.8, '14': 0.8, '56': 0.8, '38': 1, '12': 1, '58': 1},
+        5: {'18': 0.6, '36': 0.9, '14': 0.9, '56': 0.9, '38': 1.1, '12': 1.3, '58': 1.4},
+        6: {'18': 0.8, '36': 0.9, '14': 0.9, '56': 1, '38': 1.2, '12': 1.4, '58': 1.6},
+        10: {'18': 0.8, '36': 0.9, '14': 1, '56': 1.2, '38': 1.6, '12': 2, '58': 2.8},
+        14: {'18': 0.9, '36': 0.9, '14': 1.2, '56': 1.5, '38': 2, '12': 3, '58': 4},
+        18: {'18': 0.9, '36': 1, '14': 1.3, '56': 1.8, '38': 2.6, '12': 4, '58': None},
+        20: {'18': 0.9, '36': 1, '14': 1.3, '56': 1.9, '38': 2.7, '12': None, '58': None},
+        30: {'18': 0.9, '36': 1.2, '14': 1.7, '56': 2.6, '38': 4, '12': None, '58': None},
+        40: {'18': 1, '36': 1.3, '14': 2, '56': 3.4, '38': None, '12': None, '58': None},
+        46: {'18': 1, '36': 1.4, '14': 2.3, '56': 4, '38': None, '12': None, '58': None},
+        50: {'18': 1, '36': 1.4, '14': 2.5, '56': None, '38': None, '12': None, '58': None},
+        60: {'18': 1.1, '36': 1.6, '14': 3, '56': None, '38': None, '12': None, '58': None},
+        70: {'18': 1.2, '36': 1.9, '14': 3.5, '56': None, '38': None, '12': None, '58': None},
+        78: {'18': 1.2, '36': 2.1, '14': 4, '56': None, '38': None, '12': None, '58': None},
         80: {'18': 1.2, '36': 2.1, '14': None, '56': None, '38': None, '12': None, '58': None},
-        90: {'18': 1.2, '36': 2.3, '14': None, '56': None, '38': None, '12': None, '58': None},
-        100: {'18': 1.2, '36': 2.6, '14': None, '56': None, '38': None, '12': None, '58': None},
-        110: {'18': 1.3, '36': 2.9, '14': None, '56': None, '38': None, '12': None, '58': None},
-        120: {'18': 1.4, '36': 3.1, '14': None, '56': None, '38': None, '12': None, '58': None},
-        125: {'18': 1.5, '36': 3.3, '14': None, '56': None, '38': None, '12': None, '58': None},
+        90: {'18': 1.3, '36': 2.3, '14': None, '56': None, '38': None, '12': None, '58': None},
+        100: {'18': 1.4, '36': 2.6, '14': None, '56': None, '38': None, '12': None, '58': None},
+        110: {'18': 1.4, '36': 2.8, '14': None, '56': None, '38': None, '12': None, '58': None},
+        120: {'18': 1.5, '36': 3, '14': None, '56': None, '38': None, '12': None, '58': None},
+        125: {'18': 1.6, '36': 3.2, '14': None, '56': None, '38': None, '12': None, '58': None},
     }
 
     # Linear Interpolaton Algorithm to determine the outlet pressure buildup for a given inlet pressure and orifice
@@ -1577,14 +1591,22 @@ def gen_match243(result, opp):
     # monset is the monitor setpoint, will be 0 unless we are sizing for a monitor regulator
     monset = 0
     if opp == "Monitor":
-        if outlet_input == 0.25:
-            monset = 0.5
-        elif outlet_input <= 0.5:
+        if outlet_input < 1:
             monset = outlet_input + 0.5
-        elif outlet_input < 3:
-            monset = outlet_input + 1
-        else:
+        elif outlet_input == 1:
+            monset = 2
+        elif outlet_input <= 2:
+            monset = outlet_input + 1.5
+        elif outlet_input <= 5:
             monset = outlet_input + 2
+        elif outlet_input <= 7:
+            monset = outlet_input + 3
+        else:
+            monset = 10
+
+    if irv_input in globals():
+        if monset > irv_input:
+            monset = irv_input
 
 
     # IRV
@@ -2160,10 +2182,22 @@ def gen_match046(result, opp):
     if opp == "Monitor":
         if outlet_input <= 5:
             monset = outlet_input + 2
-        elif outlet_input > 197:
-            monset = 200
-        else:
+        elif outlet_input <= 10:
             monset = outlet_input + 3
+        elif outlet_input <= 20:
+            monset = outlet_input + 4
+        elif outlet_input <= 50:
+            monset = outlet_input + 5
+        elif outlet_input <= 100:
+            monset = outlet_input + 7
+        elif outlet_input <= 190:
+            monset = outlet_input + 10
+        else:
+            monset = 200
+
+    if irv_input in globals():
+        if monset > irv_input:
+            monset = irv_input
 
     # IRV sizing
     if opp == "IRV" or opp == "Partial":
@@ -2730,12 +2764,20 @@ def gen_match121(result121, result122, vp, opp):
     # also set opp type
     monset = 0
     if opp == "Monitor":
-        if outlet_input <= 0.5:
-            monset = 1
-        elif outlet_input < 3:
-            monset = outlet_input + 1
-        else:
+        if outlet_input < 1:
+            monset = 0.5
+        elif outlet_input == 1:
+            monset = 2
+        elif outlet_input <= 3:
+            monset = outlet_input + 1.5
+        elif outlet_input <= 8:
             monset = outlet_input + 2
+        else:
+            monset = 10
+
+    if irv_input in globals():
+        if monset > irv_input:
+            monset = irv_input
 
     if vp:
 
@@ -3483,9 +3525,8 @@ def spring_X57(op):
 # ------------------------------------------------------------------------------------------------------
 
 def calc_qmax(K, inlet_p, outlet_p, monitor):
-    atm_p = 14.65
-    P1 = inlet_p + atm_p
-    P2 = outlet_p + atm_p
+    P1 = inlet_p + Patm
+    P2 = outlet_p + Patm
     ratio = P1 / P2
 
     if ratio < 1.894:
@@ -3507,7 +3548,7 @@ def calc_qmax(K, inlet_p, outlet_p, monitor):
 def applicable(model_str, qmax, qmin, max_flow, min_flow):
     if model_str == "N/A":
         return "N"
-    if max_flow * 1.2 <= qmax and min_flow >= qmin:
+    if (max_flow * oversizeby) <= qmax and min_flow >= qmin:
         return "Y"
     return "N"
 
@@ -3720,14 +3761,32 @@ def run_regulator_selection461(inlet_p, outlet_p, max_flow, min_flow, opp):
     # Monitor Pressure Setpoint
     monset = 0
     if monitor:
-        if outlet_input <= 0.5:
-            monset = 1
-        elif outlet_input < 3:
-            monset = outlet_input + 1
-        elif outlet_input <= 5:
+        if outlet_input < 1:
+            monset = 0.5
+        elif outlet_input == 1:
+            monset = 2
+        elif outlet_input <= 2:
+            monset = outlet_input + 1.5
+        elif outlet_input <= 3:
             monset = outlet_input + 2
-        else:
+        elif outlet_input <= 10:
             monset = outlet_input + 3
+        elif outlet_input <= 50:
+            monset = outlet_input + 4
+        elif outlet_input <= 75:
+            monset = outlet_input + 5
+        elif outlet_input <= 100:
+            monset = outlet_input + 15
+        elif outlet_input <= 150:
+            monset = outlet_input + 20
+        elif outlet_input <= 225:
+            monset = outlet_input + 25
+        else:
+            monset = 250
+
+    if irv_input in globals():
+        if monset > irv_input:
+            monset = irv_input
 
     mon_color = None
     mon_range = None
@@ -4018,7 +4077,7 @@ if higheff_input == "y":
     pload *= 0.01
 else:
     pload = 0
-oversizeby = 1.2 + (0.8 * pload)
+oversizeby = 1.25 + (0.75 * pload)
 oversize_percent = (oversizeby - 1) * 100
 
 combust_pref = input("If applicable, combustion regulator (Model 121-122) preferred? ")
@@ -4053,6 +4112,15 @@ elif flowrate_units == "BTUH":
     else:
         print("Enter gas load/flow rate in CFH or CMH when using other gasses")
         exit()
+
+
+# Altitude
+# -----------------------------
+elevation = input("Altitude above 3,000 feet or atmospheric pressure below 13 psi (y/n) ")
+if elevation == "y":
+    Patm = float(input("Atmospheric Pressure: "))
+else:
+    Patm = 14.4
 
 
 # ------------------------------------------------------------------------------------------------------

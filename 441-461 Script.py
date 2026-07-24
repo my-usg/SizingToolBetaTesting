@@ -426,9 +426,8 @@ def spring_X57(op):
 # ------------------------------------------------------------------------------------------------------
 
 def calc_qmax(K, inlet_p, outlet_p, monitor):
-    atm_p = 14.65
-    P1 = inlet_p + atm_p
-    P2 = outlet_p + atm_p
+    P1 = inlet_p + Patm
+    P2 = outlet_p + Patm
     ratio = P1 / P2
 
     if ratio < 1.894:
@@ -450,7 +449,7 @@ def calc_qmax(K, inlet_p, outlet_p, monitor):
 def applicable(model_str, qmax, qmin, max_flow, min_flow):
     if model_str == "N/A":
         return "N"
-    if max_flow * 1.2 <= qmax and min_flow >= qmin:
+    if (max_flow * oversizeby) <= qmax and min_flow >= qmin:
         return "Y"
     return "N"
 
@@ -663,14 +662,32 @@ def run_regulator_selection461(inlet_p, outlet_p, max_flow, min_flow, opp):
     # Monitor Pressure Setpoint
     monset = 0
     if monitor:
-        if outlet_input <= 0.5:
-            monset = 1
-        elif outlet_input < 3:
-            monset = outlet_input + 1
-        elif outlet_input <= 5:
+        if outlet_input < 1:
+            monset = 0.5
+        elif outlet_input == 1:
+            monset = 2
+        elif outlet_input <= 2:
+            monset = outlet_input + 1.5
+        elif outlet_input <= 3:
             monset = outlet_input + 2
-        else:
+        elif outlet_input <= 10:
             monset = outlet_input + 3
+        elif outlet_input <= 50:
+            monset = outlet_input + 4
+        elif outlet_input <= 75:
+            monset = outlet_input + 5
+        elif outlet_input <= 100:
+            monset = outlet_input + 15
+        elif outlet_input <= 150:
+            monset = outlet_input + 20
+        elif outlet_input <= 225:
+            monset = outlet_input + 25
+        else:
+            monset = 250
+
+    if irv_input in globals():
+        if monset > irv_input:
+            monset = irv_input
 
     mon_color = None
     mon_range = None
@@ -950,8 +967,21 @@ if opp_input == "y":
 else:
     opp_type = "None"
 
-# Standardize oversize at 20%
-oversize_percent = 20
+# Oversize due to high-efficiency equipment function
+higheff_input = input("Is this feeding a generator or high-efficiency boiler? (y/n): ").lower()
+if higheff_input == "y":
+    pload = float(input("What percent of the total load is feeding a generator or high-efficiency boiler: "))
+    if pload < 0 or pload > 100:
+        print("")
+        print("Error: Percentage must be between 0-100")
+        print("")
+        exit()
+    pload *= 0.01
+else:
+    pload = 0
+oversizeby = 1.25 + (0.75 * pload)
+oversize_percent = (oversizeby - 1) * 100
+
 
 # Other Gasses
 # -----------------------------
@@ -982,6 +1012,15 @@ elif flowrate_units == "BTUH":
     else:
         print("Enter gas load/flow rate in CFH or CMH when using other gasses")
         exit()
+
+
+# Altitude
+# -----------------------------
+elevation = input("Altitude above 3,000 feet or atmospheric pressure below 13 psi (y/n) ")
+if elevation == "y":
+    Patm = float(input("Atmospheric Pressure: "))
+else:
+    Patm = 14.4
 
 
 # Validation
