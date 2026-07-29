@@ -640,7 +640,7 @@ def gen_match121(result121, result122, vp, opp):
     monset = 0
     if opp == "Monitor":
         if outlet_input < 1:
-            monset = 0.5
+            monset = outlet_input + 0.5
         elif outlet_input == 1:
             monset = 2
         elif outlet_input <= 3:
