@@ -463,7 +463,7 @@ def gen_matchRPC(result, opp):
             monset = 35
 
     if 'irv_input' in globals():
-        if monset > irv_input:
+        if irv_input != 0 and monset > irv_input:
             monset = irv_input
 
     for prefix in ordered_prefixes:

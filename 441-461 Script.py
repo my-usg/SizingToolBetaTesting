@@ -686,7 +686,7 @@ def run_regulator_selection461(inlet_p, outlet_p, max_flow, min_flow, opp):
             monset = 250
 
     if 'irv_input' in globals():
-        if monset > irv_input:
+        if irv_input != 0 and monset > irv_input:
             monset = irv_input
 
     mon_color = None

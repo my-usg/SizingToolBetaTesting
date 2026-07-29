@@ -543,7 +543,7 @@ def gen_match046(result, opp):
             monset = 200
 
     if 'irv_input' in globals():
-        if monset > irv_input:
+        if irv_input != 0 and monset > irv_input:
             monset = irv_input
 
     # IRV sizing
