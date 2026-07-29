@@ -808,7 +808,7 @@ def hsc_pnc243(match):
     monitor_spring = spring_map.get(match['mon_color'])
 
     if model == '243-12-2':
-        return f"R.243-12-2.STD.{body}.12-2.INT.{orifice}.STD.{spring}.ALU"
+        return f"R.243-12-2.IRV.{body}.12-2.INT.{orifice}.STD.{spring}.ALU"
     
     elif model == '243-12-1' and opp == "Monitor":
         return [
