@@ -571,7 +571,7 @@ def gen_match243(result, opp):
         else:
             monset = 10
 
-    if irv_input in globals():
+    if 'irv_input' in globals():
         if monset > irv_input:
             monset = irv_input
 

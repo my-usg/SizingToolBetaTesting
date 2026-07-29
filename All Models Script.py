@@ -1604,7 +1604,7 @@ def gen_match243(result, opp):
         else:
             monset = 10
 
-    if irv_input in globals():
+    if 'irv_input' in globals():
         if monset > irv_input:
             monset = irv_input
 
@@ -2195,7 +2195,7 @@ def gen_match046(result, opp):
         else:
             monset = 200
 
-    if irv_input in globals():
+    if 'irv_input' in globals():
         if monset > irv_input:
             monset = irv_input
 
@@ -2775,7 +2775,7 @@ def gen_match121(result121, result122, vp, opp):
         else:
             monset = 10
 
-    if irv_input in globals():
+    if 'irv_input' in globals():
         if monset > irv_input:
             monset = irv_input
 
@@ -3784,7 +3784,7 @@ def run_regulator_selection461(inlet_p, outlet_p, max_flow, min_flow, opp):
         else:
             monset = 250
 
-    if irv_input in globals():
+    if 'irv_input' in globals():
         if monset > irv_input:
             monset = irv_input
 

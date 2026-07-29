@@ -462,7 +462,7 @@ def gen_matchRPC(result, opp):
         else:
             monset = 35
 
-    if irv_input in globals():
+    if 'irv_input' in globals():
         if monset > irv_input:
             monset = irv_input
 
