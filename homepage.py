@@ -187,11 +187,6 @@ html, body, [data-testid="stAppViewContainer"] {
     <span class="card-arrow">→</span>
 </a>
             
-<a class="tool-card" href="https://configurator-usg.streamlit.app/" target="_blank">
-    <div class="card-title">Part Number Configurator <span class="beta-badge">Beta</span></div>
-    <span class="card-arrow">→</span>
-</a>
-            
 <a class="tool-card" href="https://model461-usg.streamlit.app/" target="_blank">
     <div class="card-title">Model 441/461 <span class="beta-badge">Beta</span></div>
     <span class="card-arrow">→</span>
@@ -224,6 +219,11 @@ html, body, [data-testid="stAppViewContainer"] {
             
 <a class="tool-card" href="https://modelrpc-usg.streamlit.app/" target="_blank">
     <div class="card-title">Model 243-RPC <span class="beta-badge">Beta</span></div>
+    <span class="card-arrow">→</span>
+</a>
+
+<a class="tool-card" href="https://configurator-usg.streamlit.app/" target="_blank">
+    <div class="card-title">Part Number Configurator <span class="beta-badge">Beta</span></div>
     <span class="card-arrow">→</span>
 </a>
 
