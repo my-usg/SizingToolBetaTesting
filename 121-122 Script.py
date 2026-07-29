@@ -476,7 +476,7 @@ def spring_121_122(op, reg):
                 'range': None,
             }
     elif reg == 'R122121H' or reg == 'R1221220' or reg == 'R122122H':
-        if op >= 1.5/28 and op <= 3.5:
+        if op >= 1.5/28 and op <= 3.5/28:
             return {
                 'color': 'Red with Red-Black counter',
                 'range': '(1.5 - 3.5)',
