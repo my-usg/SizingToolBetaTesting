@@ -404,8 +404,8 @@ if run_btn:
         with st.spinner("Sizing regulator…"):
             try:
                 # ── unit conversions (mirror the original script) ────────────
-                inlet_psi   = inlet_input
-                outlet_psi  = outlet_input
+                inlet_psi   = _inlet_psi_check
+                outlet_psi  = _outlet_psi_check
                 flow_cfh    = flow_rate
                 minflow_cfh = min_flow
 
