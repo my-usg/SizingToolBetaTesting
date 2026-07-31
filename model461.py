@@ -80,6 +80,7 @@ with st.sidebar:
         pload_pct = st.slider("% of total load feeding generator / high-eff boiler", 0, 100, 50)
         pload = pload_pct / 100.0
     oversizeby = 1.25 + (0.75 * pload)
+    oversize_percent = (oversizeby - 1) * 100
 
     st.subheader("Gas")
     gastype_input = st.selectbox("Gas type", ["Natural Gas", "Propane", "Other"])
@@ -279,8 +280,6 @@ if run_btn:
                     else:
                         st.error("BTUH conversion only supported for Natural Gas or Propane. Use CFH or CMH.")
                         st.stop()
-
-                oversize_percent = 20.0
 
                 # inject globals
                 _globals.update({
