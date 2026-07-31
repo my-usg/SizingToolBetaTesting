@@ -493,79 +493,6 @@ if run_btn:
                         else:
                             st.info("ℹ️  Model 121 regulators have outlet pipe sizing requirements — see brochure.")
 
-                    # ── excel download ───────────────────────────────────────
-                    st.divider()
-                    st.subheader("Download Summary")
-                    try:
-                        _tmpl_path = os.path.join(_script_dir, "Regulator Sizing Examples.xlsx")
-                        wb = load_workbook(_tmpl_path)
-                        ws = wb.active
-
-                        # ── inputs ──
-                        ws["B2"]  = inlet_units
-                        ws["B3"]  = inlet_input
-                        ws["B4"]  = outlet_units
-                        ws["B5"]  = outlet_input
-                        ws["B6"]  = flowrate_units
-                        ws["B7"]  = flow_rate
-                        ws["B8"]  = min_flow_raw if min_flow_raw > 0 else 0
-                        ws["B9"]  = int(maop)
-                        ws["B10"] = _pipe_options[pipesize_index]
-                        ws["B11"] = "Yes" if opp_choice == "Yes" else "No"
-                        if opp_choice == "Yes":
-                            ws["B12"] = "IRV" if "IRV" in opp_pref else "Monitor"
-                            ws["B13"] = irv_input if "IRV" in opp_pref else ""
-                            ws["B14"] = ""
-                        else:
-                            ws["B12"] = ""
-                            ws["B13"] = ""
-                            ws["B14"] = "Yes" if opp_type == "Partial" else "No"
-                        ws["B15"] = "Yes" if higheff == "Yes" else "No"
-                        ws["B16"] = f"{pload_pct}%" if higheff == "Yes" else ""
-                        ws["B17"] = "Yes" if combust_pref else "No"
-                        ws["B18"] = gastype_input
-                        ws["B19"] = sg if gastype_input == "Other" else ""
-
-                        # ── outputs ──
-                        ws["B21"] = match.get("model", "")
-                        ws["B22"] = match.get("diap", "") or ""
-                        ws["B23"] = match.get("body", "") or ""
-                        ws["B24"] = match.get("orifice", "") or ""
-                        ws["B25"] = match.get("seat", "") or ""
-                        spring_str = f"{match.get('color','')} {match.get('range','')}".strip()
-                        ws["B26"] = spring_str
-                        mon_color = match.get("mon_color")
-                        mon_range = match.get("mon_range")
-                        if mon_color not in (None, "N/A"):
-                            ws["B27"] = f"{mon_color} {mon_range}".strip()
-                        else:
-                            ws["B27"] = ""
-                        cap = match.get("capacity")
-                        try:
-                            ws["B28"] = int(round(float(cap))) if cap and cap != "N/A" else ""
-                        except Exception:
-                            ws["B28"] = cap or ""
-                        pn_list = pn if isinstance(pn, list) else [pn]
-                        ws["B29"] = pn_list[0] if len(pn_list) > 0 else ""
-                        ws["B30"] = pn_list[1] if len(pn_list) > 1 else ""
-                        warn_list = [m for m in msgs if m]
-                        ws["B31"] = warn_list[0] if len(warn_list) > 0 else ""
-                        ws["B32"] = warn_list[1] if len(warn_list) > 1 else ""
-
-                        buf = io.BytesIO()
-                        wb.save(buf)
-                        buf.seek(0)
-                        st.download_button(
-                            label="⬇️  Download Excel Summary",
-                            data=buf,
-                            file_name="regulator_sizing_summary.xlsx",
-                            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                        )
-                    except FileNotFoundError:
-                        st.info("Template file not found — add 'Regulator Sizing Examples.xlsx' to the app directory to enable Excel download.")
-                    except Exception as _ex:
-                        st.warning(f"Could not generate Excel: {_ex}")
-
                     # ── sizing adjustments ───────────────────────────────────
                     st.divider()
                     st.subheader("Sizing Adjustments")
@@ -630,6 +557,89 @@ if run_btn:
                     except Exception as _pex:
                         st.warning(f"Could not generate PDF: {_pex}")
 
+                    # ─────────────────────────────────────────────────────────────
+                    # EXCEL / SPREADSHEET DOWNLOAD — DISABLED
+                    # The full working code is preserved below, commented out.
+                    # To turn it back on, remove the leading "# " from each line
+                    # of the block below (and make sure openpyxl is in requirements.txt
+                    # and 'Regulator Sizing Examples.xlsx' is in the app directory).
+                    # ─────────────────────────────────────────────────────────────
+#                     # ── excel download (moved to very bottom; elevation added) ─
+#                     st.divider()
+#                     st.subheader("Download Summary")
+#                     try:
+#                         _tmpl_path = os.path.join(_script_dir, "Regulator Sizing Examples.xlsx")
+#                         wb = load_workbook(_tmpl_path)
+#                         ws = wb.active
+#
+#                         # ── inputs ──
+#                         ws["B2"]  = inlet_units
+#                         ws["B3"]  = inlet_input
+#                         ws["B4"]  = outlet_units
+#                         ws["B5"]  = outlet_input
+#                         ws["B6"]  = flowrate_units
+#                         ws["B7"]  = flow_rate
+#                         ws["B8"]  = min_flow_raw if min_flow_raw > 0 else 0
+#                         ws["B9"]  = int(maop)
+#                         ws["B10"] = _pipe_options[pipesize_index]
+#                         ws["B11"] = "Yes" if opp_choice == "Yes" else "No"
+#                         if opp_choice == "Yes":
+#                             ws["B12"] = "IRV" if "IRV" in opp_pref else "Monitor"
+#                             ws["B13"] = irv_input if "IRV" in opp_pref else ""
+#                             ws["B14"] = ""
+#                         else:
+#                             ws["B12"] = ""
+#                             ws["B13"] = ""
+#                             ws["B14"] = "Yes" if opp_type == "Partial" else "No"
+#                         ws["B15"] = "Yes" if higheff == "Yes" else "No"
+#                         ws["B16"] = f"{pload_pct}%" if higheff == "Yes" else ""
+#                         ws["B17"] = "Yes" if combust_pref else "No"
+#                         ws["B18"] = gastype_input
+#                         ws["B19"] = sg if gastype_input == "Other" else ""
+#                         # elevation
+#                         ws["B20"] = "Yes" if elevation == "Yes" else "No"
+#                         ws["B21"] = Patm if elevation == "Yes" else ""
+#
+#                         # ── outputs (shifted down 2 rows for the elevation rows) ──
+#                         ws["B23"] = match.get("model", "")
+#                         ws["B24"] = match.get("diap", "") or ""
+#                         ws["B25"] = match.get("body", "") or ""
+#                         ws["B26"] = match.get("orifice", "") or ""
+#                         ws["B27"] = match.get("seat", "") or ""
+#                         spring_str = f"{match.get('color','')} {match.get('range','')}".strip()
+#                         ws["B28"] = spring_str
+#                         mon_color = match.get("mon_color")
+#                         mon_range = match.get("mon_range")
+#                         if mon_color not in (None, "N/A"):
+#                             ws["B29"] = f"{mon_color} {mon_range}".strip()
+#                         else:
+#                             ws["B29"] = ""
+#                         cap = match.get("capacity")
+#                         try:
+#                             ws["B30"] = int(round(float(cap))) if cap and cap != "N/A" else ""
+#                         except Exception:
+#                             ws["B30"] = cap or ""
+#                         pn_list = pn if isinstance(pn, list) else [pn]
+#                         ws["B31"] = pn_list[0] if len(pn_list) > 0 else ""
+#                         ws["B32"] = pn_list[1] if len(pn_list) > 1 else ""
+#                         warn_list = [m for m in msgs if m]
+#                         ws["B33"] = warn_list[0] if len(warn_list) > 0 else ""
+#                         ws["B34"] = warn_list[1] if len(warn_list) > 1 else ""
+#
+#                         buf = io.BytesIO()
+#                         wb.save(buf)
+#                         buf.seek(0)
+#                         st.download_button(
+#                             label="⬇️  Download Excel Summary",
+#                             data=buf,
+#                             file_name="regulator_sizing_summary.xlsx",
+#                             mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+#                         )
+#                     except FileNotFoundError:
+#                         st.info("Template file not found — add 'Regulator Sizing Examples.xlsx' to the app directory to enable Excel download.")
+#                     except Exception as _ex:
+#                         st.warning(f"Could not generate Excel: {_ex}")
+#
             except Exception as ex:
                 st.error(f"Error during sizing: {ex}")
                 import traceback; st.code(traceback.format_exc())
