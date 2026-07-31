@@ -503,7 +503,7 @@ if outlet_units == "in wc":
 elif outlet_units == "bar":
     outlet_input *= 14.5
 elif outlet_units == "oz":
-    outlet_input *= 1.73/28
+    outlet_input *= 1/16
 if inlet_units == "bar":
     inlet_input *= 14.5
 

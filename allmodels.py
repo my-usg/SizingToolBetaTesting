@@ -366,7 +366,7 @@ with st.sidebar:
 def _to_psi(val, units):
     if units == "in wc": return val * (1/28)
     if units == "bar":   return val * 14.5
-    if units == "oz":    return val * 1.73/28
+    if units == "oz":    return val / 16
     return val
 
 _inlet_psi_check  = _to_psi(inlet_input, inlet_units)
