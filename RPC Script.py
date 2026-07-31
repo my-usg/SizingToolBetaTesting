@@ -272,6 +272,19 @@ def interpolate_capacity(data, inlet, outlet, monitor_used, vp):
     return capacities
 
 
+# Will Regulator Work
+# ------------------------------------------------------------------------------------------------------
+
+def will_work(cap, reg, orifice_max):
+    if cap == "N/A":
+        return "No"
+    else:
+        if cap >= (flow_rate * oversizeby) and orifice_max >= maop:
+            return "Yes"
+        else:
+            return "No"
+
+
 # Orifice Types & MAOP Function
 # ------------------------------------------------------------------------------------------------------
 
@@ -410,20 +423,6 @@ def body_size_minRPC(body):
             return candidate
 
     return '3"'
-
-
-# Will Regulator Work Function & Will IRV Work
-# ------------------------------------------------------------------------------------------------------
-
-def will_work(cap, reg, orifice_max):
-    if cap == "N/A":
-        return "No"
-    else:
-        if cap >= (flow_rate * oversizeby) and orifice_max >= maop:
-            return "Yes"
-        else:
-            return "No"
-
 
 
 # Regulator Match Functions
@@ -634,7 +633,7 @@ print("Model 243-RPC Sizing Tool")
 inlet_units = input("Inlet Pressure units (psi, bar): ")
 inlet_input = float(input("Enter inlet pressure: "))
 
-outlet_units = input("Outlet Pressure units (in wc, psi, bar): ")
+outlet_units = input("Outlet Pressure units (in wc, psi, bar, oz): ")
 outlet_input = float(input("Enter outlet pressure: "))
 
 flowrate_units = input("Gas Load units (CFH, BTUH, CMH): ")
@@ -654,6 +653,8 @@ if outlet_units == "in wc":
     outlet_input *= 1/28
 elif outlet_units == "bar":
     outlet_input *= 14.5
+elif outlet_units == "oz":
+    outlet_input *= 1.73/28
 if inlet_units == "bar":
     inlet_input *= 14.5
 

@@ -517,7 +517,7 @@ def spring_121_122(op, reg):
     }
 
 
-# Will Regulator Work Function
+# Will Regulator Work with V-Port
 # ------------------------------------------------------------------------------------------------------
 
 def will_work_vp(cap, reg, vp):
@@ -1026,7 +1026,7 @@ print("Model 121 and 122 Sizing Tool")
 inlet_units = input("Inlet Pressure units (psi, bar): ")
 inlet_input = float(input("Enter inlet pressure: "))
 
-outlet_units = input("Outlet Pressure units (in wc, psi, bar): ")
+outlet_units = input("Outlet Pressure units (in wc, psi, bar, oz): ")
 outlet_input = float(input("Enter outlet pressure: "))
 
 flowrate_units = input("Gas Load units (CFH, BTUH, CMH): ")
@@ -1045,6 +1045,8 @@ if outlet_units == "in wc":
     outlet_input *= 1/28
 elif outlet_units == "bar":
     outlet_input *= 14.5
+elif outlet_units == "oz":
+    outlet_input *= 1.73/28
 if inlet_units == "bar":
     inlet_input *= 14.5
 

@@ -238,10 +238,23 @@ def interpolate_capacity(data, inlet, outlet, monitor_used, vp):
     return capacities
 
 
+# Will Regulator Work
+# ------------------------------------------------------------------------------------------------------
+
+def will_work(cap, reg, orifice_max):
+    if cap == "N/A":
+        return "No"
+    else:
+        if cap >= (flow_rate * oversizeby) and orifice_max >= maop:
+            return "Yes"
+        else:
+            return "No"
+
+
 # Orifice Types & MAOP Function
 # ------------------------------------------------------------------------------------------------------
 
-def orifice_typeSMALL(reg):
+def orifice_type046(reg):
     suf = reg[-2:]
     if suf == "18":
         return '1/8"'
@@ -341,20 +354,11 @@ def spring_046(op):
         }
 
 
-# Will Regulator Work & Will IRV Work Functions
+# Will IRV Work
 # ------------------------------------------------------------------------------------------------------
 
-def will_work(cap, reg, orifice_max):
-    if cap == "N/A":
-        return "No"
-    else:
-        if cap >= (flow_rate * oversizeby) and orifice_max >= maop:
-            return "Yes"
-        else:
-            return "No"
-
 def will_irv_work046(reg, opp):
-    orif = orifice_typeSMALL(reg)
+    orif = orifice_type046(reg)
     spring = spring_046(outlet_input)['color']
 
     # Partial IRV
@@ -559,7 +563,7 @@ def gen_match046(result, opp):
                             'model': '046-2',
                             'diap': None,
                             'body': irv_body_labels046[prefix],
-                            'orifice': orifice_typeSMALL(reg),
+                            'orifice': orifice_type046(reg),
                             'seat': seat,
                             'color': spring_046(outlet_input)['color'],
                             'range': spring_046(outlet_input)['range'],
@@ -582,7 +586,7 @@ def gen_match046(result, opp):
                             'model': '046',
                             'diap': None,
                             'body': std_body_labels046[prefix],
-                            'orifice': orifice_typeSMALL(reg),
+                            'orifice': orifice_type046(reg),
                             'seat': seat,
                             'color': spring_046(outlet_input)['color'],
                             'range': spring_046(outlet_input)['range'],
@@ -714,7 +718,7 @@ def hsc_pnc046(match):
 def print_model_table(title, prefix, opp, result):
     if opp == "IRV":
         rows = [
-            [orifice_typeSMALL(reg), f"{cap:,.0f}" if isinstance(cap, (int, float)) else cap, will_work(cap, reg, orifice_max046(reg)), will_irv_work046(reg, opp)]
+            [orifice_type046(reg), f"{cap:,.0f}" if isinstance(cap, (int, float)) else cap, will_work(cap, reg, orifice_max046(reg)), will_irv_work046(reg, opp)]
             for reg, cap in result.items()
             if reg.startswith(prefix)
         ]
@@ -722,7 +726,7 @@ def print_model_table(title, prefix, opp, result):
         print(tabulate(rows, headers=["Orifice Size", "Calculated Capacity (CFH)", "Will Reg Work?", "Will IRV Work?"], tablefmt="simple_grid"))
     else:
         rows = [
-            [orifice_typeSMALL(reg), f"{cap:,.0f}" if isinstance(cap, (int, float)) else cap, will_work(cap, reg, orifice_max046(reg))]
+            [orifice_type046(reg), f"{cap:,.0f}" if isinstance(cap, (int, float)) else cap, will_work(cap, reg, orifice_max046(reg))]
             for reg, cap in result.items()
             if reg.startswith(prefix)
         ]
@@ -764,7 +768,7 @@ print("Model 046 Sizing Tool")
 inlet_units = input("Inlet Pressure units (psi, bar): ")
 inlet_input = float(input("Enter inlet pressure: "))
 
-outlet_units = input("Outlet Pressure units (in wc, psi, bar): ")
+outlet_units = input("Outlet Pressure units (in wc, psi, bar, oz): ")
 outlet_input = float(input("Enter outlet pressure: "))
 
 flowrate_units = input("Gas Load units (CFH, BTUH, CMH): ")
@@ -781,6 +785,8 @@ if outlet_units == "in wc":
     outlet_input *= 1/28
 elif outlet_units == "bar":
     outlet_input *= 14.5
+elif outlet_units == "oz":
+    outlet_input *= 1.73/28
 if inlet_units == "bar":
     inlet_input *= 14.5
 

@@ -5,9 +5,9 @@ import io
 from openpyxl import load_workbook
 
 # ── page config ──────────────────────────────────────────────────────────────
-st.set_page_config(page_title="General Sizing Tool - All Models", page_icon="⚙️", layout="wide")
+st.set_page_config(page_title="General Sizing Tool - All Models", page_icon="⚙️", layout="wide", initial_sidebar_state="expanded")
 
-st.markdown("<style>.beta-badge{display:inline-block;font-size:.6rem;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:#e85d26;border:1.5px solid #e85d26;border-radius:2px;padding:.1rem .35rem;margin-left:.5rem;vertical-align:middle;position:relative;top:-4px;font-family:sans-serif}</style><h1>⚙️ Regulator Sizing Tool - All Models <span class='beta-badge'>Beta</span></h1>", unsafe_allow_html=True)
+st.markdown("<style>.beta-badge{display:inline-block;font-size:.6rem;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:#e85d26;border:1.5px solid #e85d26;border-radius:2px;padding:.1rem .35rem;margin-left:.5rem;vertical-align:middle;position:relative;top:-4px;font-family:sans-serif}[data-testid='stSidebarCollapseButton'],[data-testid='stSidebarCollapsedControl'],[data-testid='collapsedControl']{display:none}</style><h1>⚙️ Regulator Sizing Tool - All Models <span class='beta-badge'>Beta</span></h1>", unsafe_allow_html=True)
 st.markdown("Fill in the inputs on the left and click **Run Sizing**.")
 
 # ── inject all the data + logic from the original script ────────────────────
@@ -22,7 +22,7 @@ with open(_tool_path, "r") as f:
 
 # Split at line 3587 — the print("ULTIMATE SIZING TOOL") line that starts the I/O section
 _lines  = _source.splitlines(keepends=True)
-_code   = "".join(_lines[:4024])
+_code   = "".join(_lines[:4001])
 
 _globals = {}
 exec(compile(_code, _tool_path, "exec"), _globals)
@@ -175,7 +175,7 @@ with st.sidebar:
     inlet_units  = st.selectbox("Inlet pressure units",  ["psi", "bar"])
     inlet_input  = st.number_input("Inlet pressure",   min_value=0.0, max_value=1000.0, value=0.0,   step=0.1,  format="%.1f")
 
-    outlet_units = st.selectbox("Outlet pressure units", ["psi", "in wc", "bar"])
+    outlet_units = st.selectbox("Outlet pressure units", ["psi", "in wc", "bar", "oz"])
     outlet_input = st.number_input("Outlet pressure", min_value=0.0, max_value=1000.0,  value=0.0,  step=0.1,  format="%.1f")
 
     flowrate_units = st.selectbox("Gas load / flow rate units", ["CFH", "CMH", "BTUH"])
@@ -248,10 +248,21 @@ with st.sidebar:
 def _to_psi(val, units):
     if units == "in wc": return val * (1/28)
     if units == "bar":   return val * 14.5
+    if units == "oz":    return val * 1.73/28
     return val
 
-_inlet_psi_check  = inlet_input * 14.5 if inlet_units == "bar" else inlet_input
+_inlet_psi_check  = _to_psi(inlet_input, inlet_units)
 _outlet_psi_check = _to_psi(outlet_input, outlet_units)
+
+# Elevation Reduction Calculation
+if Patm < 14.4:
+    ratio = (inlet_input + Patm)/(outlet_input + Patm)
+    if ratio < 1.894:
+        elevation_reduction = 100 * (1 - (((outlet_input+Patm)*((inlet_input+Patm)-(outlet_input+Patm)))**0.5) / (((outlet_input+14.65)*((inlet_input+14.65)-(outlet_input+14.65)))**0.5))
+    else:
+        elevation_reduction = 100 * (1 - (inlet_input+Patm)/(inlet_input+14.65))
+else:
+    elevation_reduction = 0
 
 errors = []
 if _inlet_psi_check > 1000 or _inlet_psi_check < 0.25:
@@ -324,16 +335,6 @@ if run_btn:
                     pn    = result["pn"]
 
                     oversize_percent = (oversizeby - 1) * 100
-
-                    # Elevation Reduction Calculation
-                    if Patm < 14.4:
-                        ratio = (inlet_input + Patm)/(outlet_input + Patm)
-                        if ratio < 1.894:
-                            elevation_reduction = 100 * (1 - (((outlet_input+Patm)*((inlet_input+Patm)-(outlet_input+Patm)))**0.5) / (((outlet_input+14.65)*((inlet_input+14.65)-(outlet_input+14.65)))**0.5))
-                        else:
-                            elevation_reduction = 100 * (1 - (inlet_input+Patm)/(inlet_input+14.65))
-                    else:
-                        elevation_reduction = 0
 
                     st.success("✅  Regulator selected!")
 
