@@ -1,0 +1,45 @@
+name: Keep sizing tools awake
+
+# Streamlit Community Cloud sleeps any app after 12 hours without traffic, which
+# would show customers a "this app has gone to sleep" screen on the website pages
+# that embed these tools. This visits all eight apps every 6 hours.
+#
+# Runs on a public repository, so GitHub Actions minutes are free and unlimited.
+
+on:
+  schedule:
+    # Every 6 hours. Cron here is UTC and GitHub may delay runs during peak load,
+    # so 6 hours leaves comfortable margin under the 12-hour sleep threshold.
+    - cron: '0 */6 * * *'
+  workflow_dispatch:        # lets you run it on demand from the Actions tab
+
+# Prevent two runs overlapping if one is slow waking an app.
+concurrency:
+  group: keep-apps-awake
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  ping:
+    name: Visit all eight apps
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Playwright with Chromium
+        run: |
+          npm install --no-save playwright@latest
+          npx playwright install --with-deps chromium
+
+      - name: Visit each sizing tool app
+        run: node .github/scripts/ping-apps.mjs
