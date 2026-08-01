@@ -5,7 +5,7 @@ import pandas as pd
 # ── page config ───────────────────────────────────────────────────────────────
 st.set_page_config(page_title="Model 243 Sizing Tool", page_icon="⚙️", layout="wide", initial_sidebar_state="expanded")
 
-st.markdown("<style>.beta-badge{display:inline-block;font-size:.6rem;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:#e85d26;border:1.5px solid #e85d26;border-radius:2px;padding:.1rem .35rem;margin-left:.5rem;vertical-align:middle;position:relative;top:-4px;font-family:sans-serif}[data-testid='stSidebarCollapseButton'],[data-testid='stSidebarCollapsedControl'],[data-testid='collapsedControl']{display:none}</style><h1>⚙️ Model 243 Sizing Tool <span class='beta-badge'>Beta</span></h1>", unsafe_allow_html=True)
+st.markdown("<style>[data-testid='stSidebarCollapseButton'],[data-testid='stSidebarCollapsedControl'],[data-testid='collapsedControl']{display:none}</style><h1>⚙️ Model 243 Sizing Tool</h1>", unsafe_allow_html=True)
 st.markdown("Fill in the inputs on the left and click **Run Sizing**.")
 
 # ── load script logic ─────────────────────────────────────────────────────────
@@ -482,7 +482,7 @@ if run_btn:
                         summary["IRV Protect Downstream Pressure To (psi)"] = f"{irv_input:.1f}"
                 summary["% Load Feeding Generator / High-Eff Boiler"] = f"{pload_pct}%" if higheff == "Yes" else "N/A"
                 summary["Gas Type"]             = gastype_input
-
+                summary["Atmospheric Pressure (psi)"] = f"{Patm:.1f}" if Patm < 14.4 else "14.4"
                 df_summary = pd.DataFrame(summary.items(), columns=["Parameter", "Value"])
                 st.dataframe(df_summary, use_container_width=True, hide_index=True)
 

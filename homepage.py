@@ -142,23 +142,6 @@ html, body, [data-testid="stAppViewContainer"] {
     transform: translateY(-50%) translateX(3px);
 }
 
-.beta-badge {
-    display: inline-block;
-    font-family: 'Barlow', sans-serif;
-    font-size: 0.65rem;
-    font-weight: 500;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: #e85d26;
-    border: 1px solid #e85d26;
-    border-radius: 2px;
-    padding: 0.1rem 0.4rem;
-    margin-left: 0.6rem;
-    vertical-align: middle;
-    position: relative;
-    top: -2px;
-}
-
 .footer {
     font-family: 'Barlow', sans-serif;
     font-size: 0.75rem;
@@ -171,53 +154,53 @@ html, body, [data-testid="stAppViewContainer"] {
 </style>
 
 <div style="padding: 2rem 0 1rem 0;">
-    <div class="main-title">Sizing Tool <span class="beta-badge">Beta</span></div>
+    <div class="main-title">Sizing Tool</div>
     </div>
 
 <hr class="divider">
 
 <div style="font-family: 'Barlow', sans-serif; font-size: 0.875rem; color: #6b7280; line-height: 1.8; margin-bottom: 2rem;">
-    <div style="margin-bottom: 0.4rem;">· Use the <strong style="color: #111827;">General Sizing Tool - All Models</strong> sizing tool if you have the inlet pressure, outlet pressure, and gas load or flow rate and don't know what regulator model you need.</div>
-    <div>· Use the <strong style="color: #111827;">individual model sizing tools</strong> if you want to size a specific model and you have the inlet pressure, outlet pressure, and gas load or flow rate.</div>
+    <div style="margin-bottom: 0.4rem;">· Use the <strong style="color: #111827;">General Sizing Tool - All Models</strong> if you do not know what regulator you need.</div>
+    <div>· Use the <strong style="color: #111827;">individual model sizing tools</strong> if you know what model you need or have a regulator in the field you want to check.</div>
 </div>
 
 <a class="tool-card featured" href="https://allmodels-usg.streamlit.app/" target="_blank">
-    <div class="card-title featured-title">General Sizing Tool - All Models <span class="beta-badge">Beta</span></div>
+    <div class="card-title featured-title">General Sizing Tool - All Models</div>
     <span class="card-arrow">→</span>
 </a>
             
 <a class="tool-card" href="https://model461-usg.streamlit.app/" target="_blank">
-    <div class="card-title">Model 441/461 <span class="beta-badge">Beta</span></div>
+    <div class="card-title">Model 441/461</div>
     <span class="card-arrow">→</span>
 </a>
             
 <a class="tool-card" href="https://model243-usg.streamlit.app/" target="_blank">
-    <div class="card-title">Model 243 <span class="beta-badge">Beta</span></div>
+    <div class="card-title">Model 243</div>
     <span class="card-arrow">→</span>
 </a>
 
 <a class="tool-card" href="https://model046-usg.streamlit.app/" target="_blank">
-    <div class="card-title">Model 046 <span class="beta-badge">Beta</span></div>
+    <div class="card-title">Model 046</div>
     <span class="card-arrow">→</span>
 </a>
             
 <a class="tool-card" href="https://model143-usg.streamlit.app/" target="_blank">
-    <div class="card-title">Model 143 <span class="beta-badge">Beta</span></div>
+    <div class="card-title">Model 143</div>
     <span class="card-arrow">→</span>
 </a>
             
 <a class="tool-card" href="https://model496-usg.streamlit.app/" target="_blank">
-    <div class="card-title">Model 496 <span class="beta-badge">Beta</span></div>
+    <div class="card-title">Model 496</div>
     <span class="card-arrow">→</span>
 </a>
 
 <a class="tool-card" href="https://model121-usg.streamlit.app/" target="_blank">
-    <div class="card-title">Model 121/122 <span class="beta-badge">Beta</span></div>
+    <div class="card-title">Model 121/122</div>
     <span class="card-arrow">→</span>
 </a>
             
 <a class="tool-card" href="https://modelrpc-usg.streamlit.app/" target="_blank">
-    <div class="card-title">Model 243-RPC <span class="beta-badge">Beta</span></div>
+    <div class="card-title">Model 243-RPC</div>
     <span class="card-arrow">→</span>
 </a>
 
