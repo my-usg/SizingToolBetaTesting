@@ -252,27 +252,27 @@ def to_psi(val, units):
     if units == "oz":    return val / 16
     return val
 
-_inlet_psi_check  = to_psi(inlet_input, inlet_units)
-_outlet_psi_check = to_psi(outlet_input, outlet_units)
+inlet_psi  = to_psi(inlet_input, inlet_units)
+outlet_psi = to_psi(outlet_input, outlet_units)
 
 # Elevation Reduction Calculation
 if Patm < 14.4:
-    ratio = (inlet_input + Patm)/(outlet_input + Patm)
+    ratio = (inlet_psi + Patm)/(outlet_psi + Patm)
     if ratio < 1.894:
-        elevation_reduction = 100 * (1 - (((outlet_input+Patm)*((inlet_input+Patm)-(outlet_input+Patm)))**0.5) / (((outlet_input+14.65)*((inlet_input+14.65)-(outlet_input+14.65)))**0.5))
+        elevation_reduction = 100 * (1 - (((outlet_psi+Patm)*((inlet_psi+Patm)-(outlet_psi+Patm)))**0.5) / (((outlet_psi+14.65)*((inlet_psi+14.65)-(outlet_psi+14.65)))**0.5))
     else:
-        elevation_reduction = 100 * (1 - (inlet_input+Patm)/(inlet_input+14.65))
+        elevation_reduction = 100 * (1 - (inlet_psi+Patm)/(inlet_psi+14.65))
 else:
     elevation_reduction = 0
 
 errors = []
-if inlet_input > 0 and (_inlet_psi_check > 125 or _inlet_psi_check < 0.5):
+if inlet_input > 0 and (inlet_psi > 125 or inlet_psi < 0.5):
     errors.append("Inlet pressure must be between 0.5 and 125 psi.")
-if outlet_input > 0 and (_outlet_psi_check < 3.5/28 or _outlet_psi_check > 10):
+if outlet_input > 0 and (outlet_psi < 3.5/28 or outlet_psi > 10):
     errors.append("Outlet pressure must be between 3.5\" wc and 10 psi.")
-if inlet_input > 0 and outlet_input > 0 and _outlet_psi_check >= _inlet_psi_check:
+if inlet_input > 0 and outlet_input > 0 and outlet_psi >= inlet_psi:
     errors.append("Outlet pressure must be less than inlet pressure.")
-if int(maop) != 0 and maop < _inlet_psi_check:
+if int(maop) != 0 and maop < inlet_psi:
     errors.append("MAOP must be ≥ inlet pressure.")
 if flow_rate == 0:
     errors.append("Please enter a gas load / flow rate.")
@@ -287,8 +287,6 @@ if run_btn:
         with st.spinner("Sizing regulator…"):
             try:
                 # unit conversions
-                inlet_psi  = _inlet_psi_check
-                outlet_psi = _outlet_psi_check
                 flow_cfh   = float(flow_rate)
                 maop_psi   = inlet_psi if maop == 0 else float(maop)
 

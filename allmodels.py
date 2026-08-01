@@ -363,37 +363,37 @@ with st.sidebar:
 
 # ── MAIN AREA: validation then results ──────────────────────────────────────
 # Convert inputs to psi for validation (mirrors the conversion done before run_tool)
-def _to_psi(val, units):
+def to_psi(val, units):
     if units == "in wc": return val * (1/28)
     if units == "bar":   return val * 14.5
     if units == "oz":    return val / 16
     return val
 
-_inlet_psi_check  = _to_psi(inlet_input, inlet_units)
-_outlet_psi_check = _to_psi(outlet_input, outlet_units)
+inlet_psi  = to_psi(inlet_input, inlet_units)
+outlet_psi = to_psi(outlet_input, outlet_units)
 
 # Elevation Reduction Calculation
 if Patm < 14.4:
-    ratio = (inlet_input + Patm)/(outlet_input + Patm)
+    ratio = (inlet_psi + Patm)/(outlet_psi + Patm)
     if ratio < 1.894:
-        elevation_reduction = 100 * (1 - (((outlet_input+Patm)*((inlet_input+Patm)-(outlet_input+Patm)))**0.5) / (((outlet_input+14.65)*((inlet_input+14.65)-(outlet_input+14.65)))**0.5))
+        elevation_reduction = 100 * (1 - (((outlet_psi+Patm)*((inlet_psi+Patm)-(outlet_psi+Patm)))**0.5) / (((outlet_psi+14.65)*((inlet_psi+14.65)-(outlet_psi+14.65)))**0.5))
     else:
-        elevation_reduction = 100 * (1 - (inlet_input+Patm)/(inlet_input+14.65))
+        elevation_reduction = 100 * (1 - (inlet_psi+Patm)/(inlet_psi+14.65))
 else:
     elevation_reduction = 0
 
 errors = []
-if _inlet_psi_check > 1000 or _inlet_psi_check < 0.25:
+if inlet_psi > 1000 or inlet_psi < 0.25:
     errors.append("Inlet pressure must be between 7\" wc (0.25 psi / 0.017 bar) and 1,000 psi.")
-if _outlet_psi_check < 1.5/28 or _outlet_psi_check > 250:
+if outlet_psi < 1.5/28 or outlet_psi > 250:
     errors.append("Outlet pressure must be between 1.5\" wc and 250 psi.")
-if _outlet_psi_check >= _inlet_psi_check:
+if outlet_psi >= inlet_psi:
     errors.append("Outlet pressure must be less than inlet pressure.")
-if int(maop) != 0 and maop < _inlet_psi_check:
+if int(maop) != 0 and maop < inlet_psi:
     errors.append("MAOP must be ≥ inlet pressure.")
 if min_flow > flow_rate:
     errors.append("Minimum flow must be ≤ maximum flow rate.")
-if _inlet_psi_check > 175 and _outlet_psi_check < 3:
+if inlet_psi > 175 and outlet_psi < 3:
     errors.append("Pressure differential too large — consider two pressure cuts.")
 
 if run_btn:
@@ -404,19 +404,11 @@ if run_btn:
         with st.spinner("Sizing regulator…"):
             try:
                 # ── unit conversions (mirror the original script) ────────────
-                inlet_psi   = _inlet_psi_check
-                outlet_psi  = _outlet_psi_check
                 flow_cfh    = flow_rate
                 minflow_cfh = min_flow
 
-                if inlet_units == "bar":
-                    inlet_psi = inlet_input * 14.5
-                # inlet psi is default (in wc not supported for inlet)
-
-                if outlet_units == "in wc":
-                    outlet_psi = outlet_input * (1/28)
-                elif outlet_units == "bar":
-                    outlet_psi = outlet_input * 14.5
+                # maop defaults to inlet pressure if 0
+                maop_psi = inlet_psi if maop == 0 else maop
 
                 if flowrate_units == "CMH":
                     flow_cfh    = flow_rate * 35.3147
@@ -430,10 +422,7 @@ if run_btn:
                         minflow_cfh = min_flow  / 2516
                     else:
                         st.error("BTUH conversion is only supported for Natural Gas or Propane. Please enter flow rate in CFH or CMH.")
-                        st.stop()
-
-                # maop defaults to inlet pressure if 0
-                maop_psi = inlet_psi if maop == 0 else maop
+                        st.stop()              
 
                 result, msgs = run_tool(
                     inlet_psi, outlet_psi, flow_cfh, minflow_cfh, maop_psi,
