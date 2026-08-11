@@ -7,7 +7,7 @@ from openpyxl import load_workbook
 # ── page config ──────────────────────────────────────────────────────────────
 st.set_page_config(page_title="General Sizing Tool - All Models", page_icon="⚙️", layout="wide", initial_sidebar_state="expanded")
 
-st.markdown("<style>[data-testid='stSidebarCollapseButton'],[data-testid='stSidebarCollapsedControl'],[data-testid='collapsedControl']{display:none}</style><h1>⚙️ Regulator Sizing Tool - All Models</h1>", unsafe_allow_html=True)
+st.markdown("<style>[data-testid='stSidebarCollapseButton'],[data-testid='stSidebarCollapsedControl'],[data-testid='collapsedControl']{display:none}</style><h1>General Sizing Tool - All Models</h1>", unsafe_allow_html=True)
 st.markdown("Fill in the inputs on the left and click **Run Sizing**.")
 
 # ── inject all the data + logic from the original script ────────────────────
@@ -290,17 +290,17 @@ with st.sidebar:
     st.header("📋 Inputs")
 
     st.subheader("Pressures & Flow")
-    inlet_units  = st.selectbox("Inlet pressure units",  ["psi", "bar"])
-    inlet_input  = st.number_input("Inlet pressure",   min_value=0.0, max_value=1000.0, value=0.0,   step=0.1,  format="%.1f")
+    inlet_units  = st.selectbox("Inlet pressure units",  ["psi", "bar"], help="Required")
+    inlet_input  = st.number_input("Inlet pressure",   min_value=0.0, max_value=1000.0, value=0.0,   step=0.1,  format="%.1f", help="Required")
 
-    outlet_units = st.selectbox("Outlet pressure units", ["psi", "in wc", "bar", "oz"])
-    outlet_input = st.number_input("Outlet pressure", min_value=0.0, max_value=1000.0,  value=0.0,  step=0.1,  format="%.1f")
+    outlet_units = st.selectbox("Outlet pressure units", ["psi", "in wc", "bar", "oz"], help="Required")
+    outlet_input = st.number_input("Outlet pressure", min_value=0.0, max_value=1000.0,  value=0.0,  step=0.1,  format="%.1f", help="Required")
 
-    flowrate_units = st.selectbox("Gas load / flow rate units", ["CFH", "CMH", "BTUH"])
-    flow_rate    = st.number_input("Max gas load / flow rate", min_value=0, max_value=10000000000, value=0, step=1, format="%d")
-    min_flow_raw = st.number_input("Min gas load / flow rate (enter 0 to use max flow)", min_value=0, max_value=10000000000, value=0, step=1, format="%d")
+    flowrate_units = st.selectbox("Gas load / flow rate units", ["CFH", "CMH", "BTUH"], help="Required")
+    flow_rate    = st.number_input("Max gas load / flow rate", min_value=0, max_value=10000000000, value=0, step=1, format="%d", help="Required")
+    min_flow_raw = st.number_input("Min gas load / flow rate (enter 0 to use max flow)", min_value=0, max_value=10000000000, value=0, step=1, format="%d", help="Not required: default 0")
     min_flow     = flow_rate if min_flow_raw == 0 else min_flow_raw
-    maop         = st.number_input("Max inlet pressure / MAOP (psi)", min_value=0, max_value=1000, value=0, step=1, format="%d")
+    maop         = st.number_input("Max inlet pressure / MAOP (psi)", min_value=0, max_value=1000, value=0, step=1, format="%d", help="Not required: default 0.  Regulator sized based on inlet pressure, however program will ensure configuration can handle this max inlet pressure/MAOP.")
 
     # pipe size: display value (fraction string) → actual value passed to tool
     _pipe_options = ["N/A", '3/8"', '1/2"', '3/4"', '1"', '1-1/4"', '1-1/2"', '2"', '2-1/2"', '3"']
@@ -335,11 +335,11 @@ with st.sidebar:
     pload     = 0.0
     pload_pct = 0
     if higheff == "Yes":
-        pload_pct = st.slider("% of total load feeding generator / high-eff boiler", 0, 100, 50)
+        pload_pct = st.slider("% of total load feeding generator / high-eff boiler", 0, 100, 50, help="Program will select a regulator that has capacity for double the load feeding high-efficiency equipment")
         pload = pload_pct / 100.0
     oversizeby = 1.25 + (0.75 * pload)
 
-    combust_pref_choice = st.radio("Prefer combustion regulator (Model 121/122) sizing?", ["No", "Yes"])
+    combust_pref_choice = st.radio("Prefer combustion regulator (Model 121/122) sizing?", ["No", "Yes"], help="If Yes is selected, the program will attempt to select a Model 121 or 122 regulator before a Model 461 or 441 regulator.")
     combust_pref = combust_pref_choice == "Yes"
 
     gastype_input = st.selectbox("Gas type", ["Natural Gas", "Propane", "Other"])
@@ -383,17 +383,23 @@ else:
     elevation_reduction = 0
 
 errors = []
-if inlet_psi > 1000 or inlet_psi < 0.25:
+if inlet_input == 0:
+    errors.append("Inlet pressure is required.")
+if outlet_input == 0:
+    errors.append("Outlet pressure is required.")
+if flow_rate == 0:
+    errors.append("Please enter a max gas load / flow rate.")
+if inlet_input > 0 and (inlet_psi > 1000 or inlet_psi < 0.25):
     errors.append("Inlet pressure must be between 7\" wc (0.25 psi / 0.017 bar) and 1,000 psi.")
-if outlet_psi < 1.5/28 or outlet_psi > 250:
+if outlet_input > 0 and (outlet_psi < 1.5/28 or outlet_psi > 250):
     errors.append("Outlet pressure must be between 1.5\" wc and 250 psi.")
-if outlet_psi >= inlet_psi:
+if inlet_input > 0 and outlet_input > 0 and outlet_psi >= inlet_psi:
     errors.append("Outlet pressure must be less than inlet pressure.")
 if int(maop) != 0 and maop < inlet_psi:
     errors.append("MAOP must be ≥ inlet pressure.")
 if min_flow > flow_rate:
     errors.append("Minimum flow must be ≤ maximum flow rate.")
-if inlet_psi > 175 and outlet_psi < 3:
+if inlet_input > 0 and outlet_input > 0 and inlet_psi > 175 and outlet_psi < 3:
     errors.append("Pressure differential too large — consider two pressure cuts.")
 
 if run_btn:

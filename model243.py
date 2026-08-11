@@ -5,7 +5,7 @@ import pandas as pd
 # ── page config ───────────────────────────────────────────────────────────────
 st.set_page_config(page_title="Model 243 Sizing Tool", page_icon="⚙️", layout="wide", initial_sidebar_state="expanded")
 
-st.markdown("<style>[data-testid='stSidebarCollapseButton'],[data-testid='stSidebarCollapsedControl'],[data-testid='collapsedControl']{display:none}</style><h1>⚙️ Model 243 Sizing Tool</h1>", unsafe_allow_html=True)
+st.markdown("<style>[data-testid='stSidebarCollapseButton'],[data-testid='stSidebarCollapsedControl'],[data-testid='collapsedControl']{display:none}</style><h1>Model 243 Sizing Tool</h1>", unsafe_allow_html=True)
 st.markdown("Fill in the inputs on the left and click **Run Sizing**.")
 
 # ── load script logic ─────────────────────────────────────────────────────────
@@ -61,17 +61,17 @@ with st.sidebar:
     st.header("📋 Inputs")
 
     st.subheader("Pressures & Flow")
-    inlet_units  = st.selectbox("Inlet pressure units",  ["psi", "bar"])
-    inlet_input  = st.number_input("Inlet pressure", min_value=0.0, max_value=100000.0, value=0.0, step=0.1, format="%.1f")
+    inlet_units  = st.selectbox("Inlet pressure units",  ["psi", "bar"], help="Required")
+    inlet_input  = st.number_input("Inlet pressure", min_value=0.0, max_value=100000.0, value=0.0, step=0.1, format="%.1f", help="Required")
 
-    outlet_units = st.selectbox("Outlet pressure units", ["psi", "in wc", "bar", "oz"])
-    outlet_input = st.number_input("Outlet pressure", min_value=0.0, max_value=10000.0, value=0.0, step=0.1, format="%.1f")
+    outlet_units = st.selectbox("Outlet pressure units", ["psi", "in wc", "bar", "oz"], help="Required")
+    outlet_input = st.number_input("Outlet pressure", min_value=0.0, max_value=10000.0, value=0.0, step=0.1, format="%.1f", help="Required")
 
-    flowrate_units = st.selectbox("Gas load / flow rate units", ["CFH", "CMH", "BTUH"])
-    flow_rate    = st.number_input("Gas load / flow rate", min_value=0, max_value=500000000, value=0, step=50, format="%d")
+    flowrate_units = st.selectbox("Gas load / flow rate units", ["CFH", "CMH", "BTUH"], help="Required")
+    flow_rate    = st.number_input("Gas load / flow rate", min_value=0, max_value=500000000, value=0, step=50, format="%d", help="Required")
 
     maop = st.number_input("Max inlet pressure / MAOP (psi)", min_value=0, max_value=1000, value=0, step=1, format="%d",
-                           help="MAOP is always entered in psi. Enter 0 to use inlet pressure.")
+                           help="Not required: default 0.  Regulator sized based on inlet pressure, however program will ensure configuration can handle this max inlet pressure/MAOP.")
 
     st.subheader("Design Parameters")
     _pipe_options = ["N/A", '3/8"', '1/2"', '3/4"', '1"', '1-1/4"', '1-1/2"', '2"', '2-1/2"', '3"']
@@ -104,7 +104,7 @@ with st.sidebar:
     pload     = 0.0
     pload_pct = 0
     if higheff == "Yes":
-        pload_pct = st.slider("% of total load feeding generator / high-eff boiler", 0, 100, 50)
+        pload_pct = st.slider("% of total load feeding generator / high-eff boiler", 0, 100, 50, help="Program will select a regulator that has capacity for double the load feeding high-efficiency equipment")
         pload = pload_pct / 100.0
     oversizeby       = 1.25 + (0.75 * pload)
     oversize_percent = (oversizeby - 1) * 100
@@ -274,6 +274,10 @@ if inlet_input > 0 and outlet_input > 0 and outlet_psi >= inlet_psi:
     errors.append("Outlet pressure must be less than inlet pressure.")
 if int(maop) != 0 and maop < inlet_psi:
     errors.append("MAOP must be ≥ inlet pressure.")
+if inlet_input == 0:
+    errors.append("Inlet pressure is required.")
+if outlet_input == 0:
+    errors.append("Outlet pressure is required.")
 if flow_rate == 0:
     errors.append("Please enter a gas load / flow rate.")
 
