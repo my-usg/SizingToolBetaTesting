@@ -666,13 +666,11 @@ def run_regulator_selection243(inlet, outlet, opp):
     warning = None
     hp_warning = None
 
-    # Correct when user requests IRV but a 243-8HP needs to be used
-    if outlet_input > 5 and (opp == "IRV" or opp == "Partial"):
-        hp_warning = "243-HP not available with IRV, sized for worker/monitor setup"
+    # Correct when user requests IRV but a monitor needs to be used
+    if outlet_input > 2 and opp == "IRV":
+        hp_warning = "IRV cannot be sized for your application, sized for worker/monitor setup"
         opp = "Monitor"
-    elif outlet_input > 4.5 and opp == "IRV":
-        hp_warning = "243-8-2 with Cadmium spring only available with partial IRV, sized for worker/monitor setup"
-        opp = "Monitor"
+    
 
     # Select data - standard or hp
     if opp == "Monitor":
@@ -680,7 +678,7 @@ def run_regulator_selection243(inlet, outlet, opp):
             data_used243 = stddata243
         else:
             data_used243 = hpdata243
-    elif opp == "IRV" or opp == "Partial":
+    elif opp == "IRV":
         data_used243 = stddata243
     else:
         if outlet_input <= 5:

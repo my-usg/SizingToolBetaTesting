@@ -19,7 +19,7 @@ except FileNotFoundError as e:
     st.stop()
 
 _lines  = _source.splitlines(keepends=True)
-_code   = "".join(_lines[:907])
+_code   = "".join(_lines[:905])
 
 _globals = {}
 try:
