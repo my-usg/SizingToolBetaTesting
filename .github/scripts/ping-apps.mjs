@@ -19,6 +19,7 @@ const APPS = [
   { name: 'Model 496',            url: 'https://model496-usg.streamlit.app/' },
   { name: 'Model 121/122',        url: 'https://model121-usg.streamlit.app/' },
   { name: 'Model 243-RPC',        url: 'https://modelrpc-usg.streamlit.app/' },
+  { name: 'Homepage',             url: 'https://sizingtool-usg.streamlit.app/'},
 ];
 
 const WAKE_TEXT  = /get this app back up/i;
