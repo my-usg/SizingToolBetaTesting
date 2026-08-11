@@ -47,18 +47,23 @@ def build_table(prefix, result):
 
 
 # ── SIDEBAR: inputs ───────────────────────────────────────────────────────────
+def _req_label(key, text):
+    """Red label with a ! while a required field is empty; normal once filled."""
+    return f":red[{text}] ❗" if not st.session_state.get(key) else text
+
+
 with st.sidebar:
     st.header("📋 Inputs")
 
     st.subheader("Pressures & Flow")
-    inlet_units  = st.selectbox("Inlet pressure units",  ["psi", "bar"], help="Required")
-    inlet_input  = st.number_input("Inlet pressure", min_value=0.0, max_value=100000.0, value=0.0, step=0.1, format="%.1f", help="Required")
+    inlet_units  = st.selectbox("Inlet pressure units",  ["psi", "bar"])
+    inlet_input  = st.number_input(_req_label("k_inlet", "Inlet pressure"), min_value=0.0, max_value=100000.0, value=0.0, step=0.1, format="%.1f", key="k_inlet")
 
-    outlet_units = st.selectbox("Outlet pressure units", ["psi", "in wc", "bar", "oz"], help="Required")
-    outlet_input = st.number_input("Outlet pressure", min_value=0.0, max_value=10000.0, value=0.0, step=0.1, format="%.1f", help="Required")
+    outlet_units = st.selectbox("Outlet pressure units", ["psi", "in wc", "bar", "oz"])
+    outlet_input = st.number_input(_req_label("k_outlet", "Outlet pressure"), min_value=0.0, max_value=10000.0, value=0.0, step=0.1, format="%.1f", key="k_outlet")
 
-    flowrate_units = st.selectbox("Gas load / flow rate units", ["CFH", "CMH", "BTUH"], help="Required")
-    flow_rate    = st.number_input("Gas load / flow rate", min_value=0, max_value=500000000, value=0, step=50, format="%d", help="Required")
+    flowrate_units = st.selectbox("Gas load / flow rate units", ["CFH", "CMH", "BTUH"])
+    flow_rate    = st.number_input(_req_label("k_flow", "Gas load / flow rate"), min_value=0, max_value=500000000, value=0, step=50, format="%d", key="k_flow")
 
     maop = st.number_input("MAOP (psi)", min_value=0, max_value=1000, value=0, step=1, format="%d",
                            help="Not required: default 0.  Regulator sized based on inlet pressure, however program will ensure configuration can handle this max inlet pressure/MAOP.")
