@@ -340,7 +340,7 @@ with st.sidebar:
     pload     = 0.0
     pload_pct = 0
     if higheff == "Yes":
-        pload_pct = st.slider("% of total load feeding generator / high-eff boiler", 0, 100, 50, help="Program will select a regulator that has capacity for double the load feeding high-efficiency equipment")
+        pload_pct = st.slider("% of total load feeding high-efficiency appliances", 0, 100, 50, help="Program will select a regulator that has capacity for double the load feeding high-efficiency equipment")
         pload = pload_pct / 100.0
     oversizeby = 1.25 + (0.75 * pload)
 
@@ -507,9 +507,9 @@ if run_btn:
                     df_adj = pd.DataFrame(adj.items(), columns=["Adjustment", "Value"])
                     st.dataframe(df_adj, use_container_width=True, hide_index=True)
 
-                    # ── input summary ─────────────────────────────────────────
-                    st.divider()
-                    st.subheader("Input Summary")
+                    # # ── input summary ─────────────────────────────────────────
+                    # st.divider()
+                    # st.subheader("Input Summary")
                     summary = {
                         f"Inlet Pressure ({inlet_units})":   inlet_input,
                         f"Outlet Pressure ({outlet_units})": outlet_input,
@@ -529,8 +529,8 @@ if run_btn:
                     summary["Combustion Regulator Preferred"] = "Yes" if combust_pref else "No"
                     summary["Gas Type"] = gastype_input
                     summary["Atmospheric Pressure (psi)"] = f"{Patm:.1f}" if Patm < 14.4 else "14.4"                       
-                    df = pd.DataFrame(summary.items(), columns=["Parameter", "Value"])
-                    st.dataframe(df, use_container_width=True, hide_index=True)
+                    # df = pd.DataFrame(summary.items(), columns=["Parameter", "Value"])
+                    # st.dataframe(df, use_container_width=True, hide_index=True)
 
                     # ── PDF summary download ──────────────────────────────────
                     st.divider()

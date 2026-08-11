@@ -60,14 +60,14 @@ with st.sidebar:
 
     st.subheader("Pressures & Flow")
     inlet_units  = st.selectbox("Inlet pressure units",  ["psi", "bar"])
-    inlet_input  = st.number_input(_req_label("k_inlet", "Inlet pressure"), min_value=0.0, max_value=100000.0, value=0.0, step=0.1, format="%.1f", key="k_inlet")
+    inlet_input  = st.number_input(_req_label("k_inlet", "Inlet pressure"), min_value=0.0, max_value=1000.0, value=0.0, step=0.1, format="%.1f", key="k_inlet")
 
     outlet_units = st.selectbox("Outlet pressure units", ["psi", "in wc", "bar", "oz"])
-    outlet_input = st.number_input(_req_label("k_outlet", "Outlet pressure"), min_value=0.0, max_value=10000.0, value=0.0, step=0.1, format="%.1f", key="k_outlet")
+    outlet_input = st.number_input(_req_label("k_outlet", "Outlet pressure"), min_value=0.0, max_value=1000.0, value=0.0, step=0.1, format="%.1f", key="k_outlet")
 
     flowrate_units = st.selectbox("Gas load / flow rate units", ["CFH", "CMH", "BTUH"])
-    flow_rate    = st.number_input(_req_label("k_flow", "Max gas load / flow rate"), min_value=0, max_value=500000000, value=0, step=50, format="%d", key="k_flow")
-    min_flow_raw = st.number_input("Min gas load / flow rate (enter 0 to use max flow)", min_value=0, max_value=500000000, value=0, step=50, format="%d", help="Not required: default 0")
+    flow_rate    = st.number_input(_req_label("k_flow", "Max gas load / flow rate"), min_value=0, max_value=10000000000, value=0, step=50, format="%d", key="k_flow")
+    min_flow_raw = st.number_input("Min gas load / flow rate (enter 0 to use max flow)", min_value=0, max_value=10000000000, value=0, step=50, format="%d", help="Not required: default 0")
 
     maop = st.number_input("MAOP (psi)", min_value=0, max_value=1000, value=0, step=1, format="%d",
                            help="Not required: default 0.  Regulator sized based on inlet pressure, however program will ensure configuration can handle this max inlet pressure/MAOP.")
@@ -82,7 +82,7 @@ with st.sidebar:
     pload     = 0.0
     pload_pct = 0
     if higheff == "Yes":
-        pload_pct = st.slider("% of total load feeding generator / high-eff boiler", 0, 100, 50, help="Program will select a regulator that has capacity for double the load feeding high-efficiency equipment")
+        pload_pct = st.slider("% of total load feeding high-efficiency appliances", 0, 100, 50, help="Program will select a regulator that has capacity for double the load feeding high-efficiency equipment")
         pload = pload_pct / 100.0
     oversizeby = 1.25 + (0.75 * pload)
     oversize_percent = (oversizeby - 1) * 100
@@ -375,8 +375,8 @@ if run_btn:
                 st.dataframe(df_adj, use_container_width=True, hide_index=True)
 
                 # ── input summary ─────────────────────────────────────────────
-                st.divider()
-                st.subheader("Input Summary")
+                # st.divider()
+                # st.subheader("Input Summary")
                 summary = {
                     f"Inlet Pressure ({inlet_units})":   inlet_input,
                     f"Outlet Pressure ({outlet_units})": outlet_input,
@@ -388,8 +388,8 @@ if run_btn:
                 }
                 summary["% Load Feeding Generator / High-Eff Boiler"] = f"{pload_pct}%" if higheff == "Yes" else "N/A"
                 summary["Atmospheric Pressure (psi)"] = f"{Patm:.1f}" if Patm < 14.4 else "14.4" 
-                df_summary = pd.DataFrame(summary.items(), columns=["Parameter", "Value"])
-                st.dataframe(df_summary, use_container_width=True, hide_index=True)
+                # df_summary = pd.DataFrame(summary.items(), columns=["Parameter", "Value"])
+                # st.dataframe(df_summary, use_container_width=True, hide_index=True)
 
                 # ── PDF summary download ──────────────────────────────────────
                 if ok461:
