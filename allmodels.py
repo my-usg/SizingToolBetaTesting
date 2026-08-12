@@ -296,31 +296,42 @@ st.subheader("Inputs")
 
 _pipe_options = ["N/A", '3/8"', '1/2"', '3/4"', '1"', '1-1/4"', '1-1/2"', '2"', '2-1/2"', '3"']
 
+# Pressures & Flow — values on top row, units/MAOP on the row beneath (aligned grid)
 st.markdown("**Pressures & Flow**")
-_pc1, _pc2, _pc3, _pc4 = st.columns(4)
-with _pc1:
-    inlet_units  = st.selectbox("Inlet pressure units",  ["psi", "bar", "kPa"])
-    inlet_input  = st.number_input(_req_label("k_inlet", "Inlet pressure"),   min_value=0.0, max_value=1000.0, value=0.0,   step=0.1,  format="%.1f", key="k_inlet")
-with _pc2:
-    outlet_units = st.selectbox("Outlet pressure units", ["psi", "in wc", "oz", "bar", "kPa"])
-    outlet_input = st.number_input(_req_label("k_outlet", "Outlet pressure"), min_value=0.0, max_value=1000.0,  value=0.0,  step=0.1,  format="%.1f", key="k_outlet")
-with _pc3:
-    flowrate_units = st.selectbox("Gas load / flow rate units", ["CFH", "CMH", "BTUH"])
+_v1, _v2, _v3, _v4 = st.columns(4)
+with _v1:
+    inlet_input  = st.number_input(_req_label("k_inlet", "Inlet pressure"),   min_value=0.0, max_value=1000.0, value=0.0, step=0.1, format="%.1f", key="k_inlet")
+with _v2:
+    outlet_input = st.number_input(_req_label("k_outlet", "Outlet pressure"), min_value=0.0, max_value=1000.0, value=0.0, step=0.1, format="%.1f", key="k_outlet")
+with _v3:
     flow_rate    = st.number_input(_req_label("k_flow", "Max gas load / flow rate"), min_value=0, max_value=10000000000, value=0, step=1, format="%d", key="k_flow")
-with _pc4:
-    min_flow_raw = st.number_input("Min gas load / flow rate (enter 0 to use max flow)", min_value=0, max_value=10000000000, value=0, step=1, format="%d", help="Not required: default 0")
+with _v4:
+    min_flow_raw = st.number_input("Min gas load / flow rate", min_value=0, max_value=10000000000, value=0, step=1, format="%d", help="Not required: default 0 (enter 0 to use max flow)")
+
+_u1, _u2, _u3, _u4 = st.columns(4)
+with _u1:
+    inlet_units  = st.selectbox("Inlet pressure units",  ["psi", "bar", "kPa"])
+with _u2:
+    outlet_units = st.selectbox("Outlet pressure units", ["psi", "in wc", "oz", "bar", "kPa"])
+with _u3:
+    flowrate_units = st.selectbox("Gas load / flow rate units", ["CFH", "CMH", "BTUH"])
+with _u4:
     maop         = st.number_input("Max inlet pressure / MAOP (psi)", min_value=0, max_value=1000, value=0, step=1, format="%d", help="Not required: default 0.  Regulator sized based on inlet pressure, however program will ensure configuration can handle this max inlet pressure/MAOP.")
 min_flow     = flow_rate if min_flow_raw == 0 else min_flow_raw
 
-st.markdown("**Design Parameters**")
-_dc1, _dc2 = st.columns(2)
-with _dc1:
-    pipesize_index = st.selectbox("Desired pipe size", range(len(_pipe_options)),
-        index=0,
-        format_func=lambda i: _pipe_options[i])
+# Design Parameters (left)  |  Load Type & Gas (right)
+_design, _loadgas = st.columns(2)
+
+with _design:
+    st.markdown("**Design Parameters**")
+    _sz, _ = st.columns([1, 1])          # keep the pipe-size box compact
+    with _sz:
+        pipesize_index = st.selectbox("Desired pipe size", range(len(_pipe_options)),
+            index=0,
+            format_func=lambda i: _pipe_options[i])
     pipesize_input_raw = _pipe_options[pipesize_index]
     pipesize_input = 0 if pipesize_input_raw == "N/A" else pipesize_input_raw
-with _dc2:
+
     opp_choice = st.radio("Overpressure protection required?", ["No", "Yes"])
     irv_input  = 0.0
     opp_type   = "None"
@@ -338,9 +349,8 @@ with _dc2:
         if partial_choice == "Yes":
             opp_type = "Partial"
 
-st.markdown("**Load Type & Gas**")
-_lc1, _lc2, _lc3 = st.columns(3)
-with _lc1:
+with _loadgas:
+    st.markdown("**Load Type & Gas**")
     higheff   = st.radio("Feeding a generator or high-efficiency boiler?", ["No", "Yes"])
     pload     = 0.0
     pload_pct = 0
@@ -354,7 +364,7 @@ with _lc1:
         oversizeby = st.slider("Oversize regulator by:", 0, 100, 25, help="Recommended to oversize regulator by 20-30%")
         oversizeby = 1 + (oversizeby / 100)
         oversize_percent = (oversizeby - 1) * 100
-with _lc2:
+
     combust_pref_choice = st.radio("Prefer combustion regulator (Model 121/122) sizing?", ["No", "Yes"], help="If Yes is selected, the program will attempt to select a Model 121 or 122 regulator before a Model 461 or 441 regulator.")
     combust_pref = combust_pref_choice == "Yes"
 
@@ -367,7 +377,7 @@ with _lc2:
         sg = st.number_input("Specific gravity", min_value=0.01, max_value=10.0, value=0.6, step=0.01, format="%.2f")
         gastypemult = min(1.0, (0.6 / sg) ** 0.5)
         st.info("Contact USG for regulator compatibility with gases other than methane or propane.")
-with _lc3:
+
     elevation = st.radio("Altitude above 3,000 feet or atmospheric pressure below 13 psi", ["No", "Yes"])
     Patm = 14.4
     if elevation == "Yes":
