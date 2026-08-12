@@ -154,7 +154,7 @@ def build_summary_pdf(inputs, selection, capacity, part_numbers, warnings, adjus
     from reportlab.lib.units import inch
     from reportlab.lib import colors
     from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-    from reportlab.platypus import (SimpleDocTemplate, Paragraph, Table, TableStyle)
+    from reportlab.platypus import (BaseDocTemplate, Frame, PageTemplate, Paragraph, Table, TableStyle)
 
     ORANGE    = colors.HexColor("#e85d26")
     DARK      = colors.HexColor("#111827")
@@ -237,10 +237,13 @@ def build_summary_pdf(inputs, selection, capacity, part_numbers, warnings, adjus
         story.append(kv_table(list(adjustments.items())) if adjustments else Paragraph("None", cell_style))
 
         buf = BytesIO()
-        doc = SimpleDocTemplate(buf, pagesize=letter,
-                                topMargin=margin_y, bottomMargin=margin_y,
-                                leftMargin=margin_x, rightMargin=margin_x,
-                                title="USG Sizing Tool")
+        doc = BaseDocTemplate(buf, pagesize=letter,
+                              topMargin=margin_y, bottomMargin=margin_y,
+                              leftMargin=margin_x, rightMargin=margin_x,
+                              title="USG Sizing Tool")
+        _frame = Frame(doc.leftMargin, doc.bottomMargin, doc.width, doc.height,
+                       leftPadding=0, rightPadding=0, topPadding=0, bottomPadding=0, id="body")
+        doc.addPageTemplates([PageTemplate(id="main", frames=[_frame])])
         doc.build(story)
         buf.seek(0)
         return buf, doc.page
@@ -423,12 +426,13 @@ if run_btn:
                     "Requested Pipe Size":               _pipe_options[pipesize_index],
                     "Overpressure Protection Required":  "Yes" if opp_choice == "Yes" else "No",
                 }
-                if opp_type == "Partial":
-                    summary["Select Regulator with IRV"] = "Yes"
+                if opp_choice == "No":
+                    summary["Select Regulator with IRV"] = "Yes" if opp_type == "Partial" else "No"
                 if opp_choice == "Yes":
                     summary["IRV Protect Downstream Pressure To (psi)"] = f"{irv_input:.1f}"
-                summary["% Load Feeding Generator / High-Eff Boiler"] = f"{pload_pct}%" if higheff == "Yes" else "N/A"
+                summary["Percent Load Feeding High-Efficiency Appliance"] = f"{pload_pct}%" if higheff == "Yes" else "N/A"
                 summary["Gas Type"]             = gastype_input
+                summary["Override Oversize %"] = f"{(oversizeby - 1) * 100:.0f}%" if override_oversize == "Yes" else "No"
                 summary["Atmospheric Pressure (psi)"] = f"{Patm:.1f}" if Patm < 14.4 else "14.4"
                 # df_summary = pd.DataFrame(summary.items(), columns=["Parameter", "Value"])
                 # st.dataframe(df_summary, use_container_width=True, hide_index=True)
