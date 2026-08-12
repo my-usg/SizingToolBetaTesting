@@ -126,18 +126,10 @@ st.divider()
 
 
 # ── validation ────────────────────────────────────────────────────────────────
-def build_summary_pdf(inputs, selection, capacity, part_numbers, warnings, adjustments):
-    """Build the 'USG Sizing Tool Output' PDF summary and return a BytesIO buffer.
+def build_summary_pdf(inputs, selection, capacity, part_numbers, warnings, adjustments, tool_name="USG Sizing Tool"):
+    """Build the PDF summary and return a BytesIO buffer.
 
-    The layout is compact and auto-scales down until the whole summary fits on a
-    single page.
-
-    inputs       : dict of Parameter -> Value
-    selection    : list of (label, value) tuples for the chosen regulator
-    capacity     : pre-formatted capacity string (or "")
-    part_numbers : list or str of HSC part number(s)
-    warnings     : list of warning strings
-    adjustments  : dict of Adjustment -> Value
+    Auto-scales down until the whole summary fits on a single page.
     """
     from io import BytesIO
     from datetime import datetime
@@ -148,14 +140,14 @@ def build_summary_pdf(inputs, selection, capacity, part_numbers, warnings, adjus
     from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
     from reportlab.platypus import (SimpleDocTemplate, Paragraph, Table, TableStyle)
 
-    ORANGE = colors.HexColor("#e85d26")
-    DARK   = colors.HexColor("#111827")
-    GREY   = colors.HexColor("#6b7280")
-    LINE   = colors.HexColor("#e5e7eb")
+    ORANGE    = colors.HexColor("#e85d26")
+    DARK      = colors.HexColor("#111827")
+    DARK_BLUE = colors.HexColor("#1F3864")
+    GREY      = colors.HexColor("#6b7280")
+    LINE      = colors.HexColor("#e5e7eb")
 
     PAGE_W, PAGE_H = letter
 
-    # normalise the section data once
     sel_pairs = [(lbl, val) for lbl, val in selection if val]
     if capacity:
         sel_pairs.append(("Calculated Capacity (CFH)", capacity))
@@ -164,15 +156,18 @@ def build_summary_pdf(inputs, selection, capacity, part_numbers, warnings, adjus
     warns = [w for w in (warnings or []) if w]
 
     def _render(scale):
-        """Render the whole summary at a given scale; return (buffer, page_count)."""
         base = getSampleStyleSheet()
-        title_style = ParagraphStyle("USGTitle", parent=base["Title"], textColor=DARK,
-                                     fontSize=18 * scale, leading=20 * scale, spaceAfter=1 * scale, alignment=0)
-        sub_style   = ParagraphStyle("USGSub", parent=base["Normal"], textColor=GREY,
-                                     fontSize=7.5 * scale, leading=9 * scale, spaceAfter=8 * scale)
+        title_style = ParagraphStyle("USGTitle", parent=base["Title"], textColor=DARK_BLUE,
+                                     fontSize=20 * scale, leading=22 * scale, spaceAfter=1 * scale,
+                                     alignment=0, leftIndent=0)
+        tool_style  = ParagraphStyle("USGTool", parent=base["Normal"], textColor=DARK,
+                                     fontSize=11 * scale, leading=13 * scale, spaceAfter=1 * scale, leftIndent=0)
+        gen_style   = ParagraphStyle("USGGen", parent=base["Normal"], textColor=GREY,
+                                     fontSize=7.5 * scale, leading=9 * scale, spaceAfter=8 * scale, leftIndent=0)
         sec_style   = ParagraphStyle("USGSection", parent=base["Heading2"], textColor=ORANGE,
                                      fontSize=10.5 * scale, leading=12 * scale,
-                                     spaceBefore=7 * scale, spaceAfter=2 * scale)
+                                     spaceBefore=7 * scale, spaceAfter=2 * scale,
+                                     leftIndent=0, firstLineIndent=0)
         cell_style  = ParagraphStyle("USGCell", parent=base["Normal"],
                                      fontSize=8 * scale, leading=9.5 * scale, textColor=DARK)
         label_style = ParagraphStyle("USGLabel", parent=cell_style, fontName="Helvetica-Bold")
@@ -206,10 +201,9 @@ def build_summary_pdf(inputs, selection, capacity, part_numbers, warnings, adjus
             return t
 
         story = []
-        story.append(Paragraph("USG Sizing Tool Output", title_style))
-        story.append(Paragraph(
-            "United Sales Group \u00b7 Regulator Sizing Platform \u00b7 Generated "
-            + datetime.now().strftime("%b %d, %Y  %I:%M %p"), sub_style))
+        story.append(Paragraph("USG Sizing Tool", title_style))
+        story.append(Paragraph(escape(str(tool_name)), tool_style))
+        story.append(Paragraph("Generated " + datetime.now().strftime("%b %d, %Y  %I:%M %p"), gen_style))
 
         story.append(Paragraph("Inputs", sec_style))
         story.append(kv_table(list(inputs.items())) if inputs else Paragraph("None", cell_style))
@@ -230,12 +224,11 @@ def build_summary_pdf(inputs, selection, capacity, part_numbers, warnings, adjus
         doc = SimpleDocTemplate(buf, pagesize=letter,
                                 topMargin=margin_y, bottomMargin=margin_y,
                                 leftMargin=margin_x, rightMargin=margin_x,
-                                title="USG Sizing Tool Output")
+                                title="USG Sizing Tool")
         doc.build(story)
         buf.seek(0)
         return buf, doc.page
 
-    # Shrink until it fits on one page (or we hit the readability floor).
     buf = None
     for scale in (1.0, 0.95, 0.9, 0.85, 0.8, 0.75, 0.7, 0.65, 0.6):
         buf, pages = _render(scale)
@@ -438,6 +431,7 @@ if run_btn:
                             part_numbers=pn,
                             warnings=[warningRPC] if warningRPC else [],
                             adjustments=adj,
+                            tool_name="Model 243-RPC Sizing Tool",
                         )
                         st.download_button(
                             label="⬇️  Download PDF Summary",
