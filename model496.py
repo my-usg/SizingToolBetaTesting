@@ -39,7 +39,7 @@ def build_table(prefix, opp_type, result496):
     for reg, cap in result496.items():
         if not reg.startswith(prefix):
             continue
-        orifice  = _globals["orifice_typeSMALL"](reg)
+        orifice  = _globals["orifice_type496"](reg)
         cap_str  = f"{cap:,.0f}" if isinstance(cap, (int, float)) else str(cap)
         works    = _globals["will_work"](cap, reg, _globals["orifice_max496"](reg))
         if opp_type == "IRV":
