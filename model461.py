@@ -76,7 +76,7 @@ with _u2:
 with _u3:
     flowrate_units = st.selectbox("Gas load / flow rate units", ["CFH", "CMH", "BTUH"])
 with _u4:
-    maop = st.number_input("MAOP (psi)", min_value=0, max_value=1000, value=0, step=1, format="%d", help="Not required: default 0.  Regulator sized based on inlet pressure, however program will ensure configuration can handle this max inlet pressure/MAOP.")
+    maop = st.number_input("Max Allowable Inlet Pressure (psi)", min_value=0, max_value=1000, value=0, step=1, format="%d", help="Not required: default 0.  Regulator sized based on inlet pressure, however program will ensure configuration can handle this max inlet pressure/MAOP.")
 
 _design, _loadgas = st.columns(2)
 with _design:
@@ -265,7 +265,7 @@ if outlet_input > 0 and (outlet_psi < 2/28 or outlet_psi > 250):
 if inlet_input > 0 and outlet_input > 0 and outlet_psi >= inlet_psi:
     errors.append("Outlet pressure must be less than inlet pressure.")
 if int(maop) != 0 and maop < inlet_psi:
-    errors.append("MAOP must be ≥ inlet pressure.")
+    errors.append("MAIP must be >= inlet pressure.")
 if inlet_input == 0:
     errors.append("Inlet pressure is required.")
 if outlet_input == 0:
@@ -396,7 +396,7 @@ if run_btn:
                     f"Outlet Pressure ({outlet_units})": outlet_input,
                     f"Max Gas Load ({flowrate_units})":  f"{flow_rate:,}",
                     f"Min Gas Load ({flowrate_units})":  f"{min_flow_raw:,}" if min_flow_raw > 0 else "Same as max",
-                    "MAOP (psi)":                        f"{int(maop)}",
+                    "Max Allowable Inlet Pressure (psi)":                        f"{int(maop)}",
                     "Overpressure Protection Required":  "Yes" if opp_choice == "Yes" else "No",
                     "Gas Type":                          gastype_input,
                 }

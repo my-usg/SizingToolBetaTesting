@@ -292,7 +292,7 @@ def _req_label(key, text):
 
 
 # ── INPUTS (top of page, always visible) ────────────────────────────────────
-st.subheader("Inputs")
+st.subheader("📋 Inputs")
 
 _pipe_options = ["N/A", '3/8"', '1/2"', '3/4"', '1"', '1-1/4"', '1-1/2"', '2"', '2-1/2"', '3"']
 
@@ -316,7 +316,7 @@ with _u2:
 with _u3:
     flowrate_units = st.selectbox("Gas load / flow rate units", ["CFH", "CMH", "BTUH"])
 with _u4:
-    maop         = st.number_input("Max inlet pressure / MAOP (psi)", min_value=0, max_value=1000, value=0, step=1, format="%d", help="Not required: default 0.  Regulator sized based on inlet pressure, however program will ensure configuration can handle this max inlet pressure/MAOP.")
+    maop         = st.number_input("Max Allowable Inlet Pressure (psi)", min_value=0, max_value=1000, value=0, step=1, format="%d", help="Not required: default 0.  Regulator sized based on inlet pressure, however program will ensure configuration can handle this max inlet pressure/MAOP.")
 min_flow     = flow_rate if min_flow_raw == 0 else min_flow_raw
 
 # Design Parameters (left)  |  Load Type & Gas (right)
@@ -423,7 +423,7 @@ if outlet_input > 0 and (outlet_psi < 1.5/28 or outlet_psi > 250):
 if inlet_input > 0 and outlet_input > 0 and outlet_psi >= inlet_psi:
     errors.append("Outlet pressure must be less than inlet pressure.")
 if int(maop) != 0 and maop < inlet_psi:
-    errors.append("MAOP must be ≥ inlet pressure.")
+    errors.append("MAIP must be >= inlet pressure.")
 if min_flow > flow_rate:
     errors.append("Minimum flow must be ≤ maximum flow rate.")
 if inlet_input > 0 and outlet_input > 0 and inlet_psi > 175 and outlet_psi < 3:
@@ -537,7 +537,7 @@ if run_btn:
                         f"Outlet Pressure ({outlet_units})": outlet_input,
                         f"Max Flow Rate ({flowrate_units})": f"{flow_rate:,}",
                         f"Min Flow Rate ({flowrate_units})": f"{min_flow:,}",
-                        "MAOP (psi)": f"{int(maop)}",
+                        "Max Allowable Inlet Pressure (psi)": f"{int(maop)}",
                         "Requested Pipe Size": _pipe_options[pipesize_index],
                         "Overpressure Protection Required": "Yes" if opp_choice == "Yes" else "No",
                     }

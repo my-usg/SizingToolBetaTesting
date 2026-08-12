@@ -64,7 +64,7 @@ with _v2:
 with _v3:
     flow_rate    = st.number_input(_req_label("k_flow", "Gas load / flow rate"), min_value=0, max_value=10000000000, value=0, step=50, format="%d", key="k_flow")
 with _v4:
-    maop = st.number_input("MAOP (psi)", min_value=0, max_value=1000, value=0, step=1, format="%d", help="Not required: default 0.  Regulator sized based on inlet pressure, however program will ensure configuration can handle this max inlet pressure/MAOP.")
+    maop = st.number_input("Max Allowable Inlet Pressure (psi)", min_value=0, max_value=1000, value=0, step=1, format="%d", help="Not required: default 0.  Regulator sized based on inlet pressure, however program will ensure configuration can handle this max inlet pressure/MAOP.")
 _u1, _u2, _u3, _u4 = st.columns(4)
 with _u1:
     inlet_units  = st.selectbox("Inlet pressure units",  ["psi", "bar", "kPa"])
@@ -272,7 +272,7 @@ if outlet_input > 0 and (outlet_psi < 3.5/28 or outlet_psi > 35):
 if inlet_input > 0 and outlet_input > 0 and outlet_psi >= inlet_psi:
     errors.append("Outlet pressure must be less than inlet pressure.")
 if int(maop) != 0 and maop < inlet_psi:
-    errors.append("MAOP must be ≥ inlet pressure.")
+    errors.append("MAIP must be >= inlet pressure.")
 if inlet_input == 0:
     errors.append("Inlet pressure is required.")
 if outlet_input == 0:
@@ -410,7 +410,7 @@ if run_btn:
                     f"Inlet Pressure ({inlet_units})":   inlet_input,
                     f"Outlet Pressure ({outlet_units})": outlet_input,
                     f"Gas Load ({flowrate_units})":      f"{flow_rate:,}",
-                    "MAOP (psi)":                        f"{int(maop)}",
+                    "Max Allowable Inlet Pressure (psi)":                        f"{int(maop)}",
                     "Requested Model":                   model_choice,
                     "Requested Pipe Size":               _pipe_options[pipesize_index],
                     "Overpressure Protection Required":  "Yes" if opp_choice == "Yes" else "No",
