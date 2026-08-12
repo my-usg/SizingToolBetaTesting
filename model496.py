@@ -99,7 +99,7 @@ with st.sidebar:
     pload     = 0.0
     pload_pct = 0
     if higheff == "Yes":
-        pload_pct = st.slider("% of total load feeding high-efficiency appliances", 0, 100, 50, help="Program will select a regulator that has capacity for double the load feeding high-efficiency equipment")
+        pload_pct = st.slider("% of total load feeding high-efficiency appliances", 0, 100, 100, help="Program will select a regulator that has capacity for double the load feeding high-efficiency equipment")
         pload = pload_pct / 100.0
     oversizeby      = 1.25 + (0.75 * pload)
     oversize_percent = (oversizeby - 1) * 100
