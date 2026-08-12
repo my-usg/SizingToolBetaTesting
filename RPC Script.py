@@ -630,10 +630,10 @@ def print_regulator_selection(match):
 
 print("Model 243-RPC Sizing Tool")
 
-inlet_units = input("Inlet Pressure units (psi, bar): ")
+inlet_units = input("Inlet Pressure units (psi, bar, kPa): ")
 inlet_input = float(input("Enter inlet pressure: "))
 
-outlet_units = input("Outlet Pressure units (in wc, psi, bar, oz): ")
+outlet_units = input("Outlet Pressure units (in wc, psi, oz, bar, kPa): ")
 outlet_input = float(input("Enter outlet pressure: "))
 
 flowrate_units = input("Gas Load units (CFH, BTUH, CMH): ")
@@ -655,8 +655,12 @@ elif outlet_units == "bar":
     outlet_input *= 14.5
 elif outlet_units == "oz":
     outlet_input *= 1/16
+elif outlet_units == "kPa":
+    outlet_input *= 1/6.89476
 if inlet_units == "bar":
     inlet_input *= 14.5
+elif inlet_units == "kPa":
+    inlet_input *= 1/6.89476
 
 # Overpressure Protection Inputs
 opp_input = input("Do you require overpressure protection? (y/n): ").lower()
@@ -680,6 +684,18 @@ else:
     pload = 0
 oversizeby = 1.25 + (0.75 * pload)
 oversize_percent = (oversizeby - 1) * 100
+
+# Override Oversize Option
+override_oversize = input("Override oversize by %? (y/n) ")
+if override_oversize == "y":
+    oversizeby = float(input("Oversize regulator by: "))
+    if oversizeby < 0 or oversizeby > 100:
+        print("")
+        print("Error: Percentage must be between 0-100")
+        print("")
+        exit()
+    oversizeby = 1 + (oversizeby / 100)
+    oversize_percent = (oversizeby - 1) * 100
 
 # Other Gasses
 # -----------------------------

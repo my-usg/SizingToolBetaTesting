@@ -66,10 +66,10 @@ with st.sidebar:
     st.header("📋 Inputs")
 
     st.subheader("Pressures & Flow")
-    inlet_units  = st.selectbox("Inlet pressure units",  ["psi", "bar"])
+    inlet_units  = st.selectbox("Inlet pressure units",  ["psi", "bar", "kPa"])
     inlet_input  = st.number_input(_req_label("k_inlet", "Inlet pressure"), min_value=0.0, max_value=1000.0, value=0.0, step=0.1, format="%.1f", key="k_inlet")
 
-    outlet_units = st.selectbox("Outlet pressure units", ["psi", "in wc", "bar", "oz"])
+    outlet_units = st.selectbox("Outlet pressure units", ["psi", "in wc", "oz", "bar", "kPa"])
     outlet_input = st.number_input(_req_label("k_outlet", "Outlet pressure"), min_value=0.0, max_value=1000.0, value=0.0, step=0.1, format="%.1f", key="k_outlet")
 
     flowrate_units = st.selectbox("Gas load / flow rate units", ["CFH", "CMH", "BTUH"])
@@ -103,6 +103,12 @@ with st.sidebar:
         pload = pload_pct / 100.0
     oversizeby      = 1.25 + (0.75 * pload)
     oversize_percent = (oversizeby - 1) * 100
+
+    override_oversize = st.radio("Override percentage regulator is oversized by?", ["No", "Yes"], help="Default is set to 25% or 100% for high-efficiency appliances")
+    if override_oversize == "Yes":
+        oversizeby = st.slider("Oversize regulator by:", 0, 100, 25, help="Recommended to oversize regulator by 20-30%")
+        oversizeby = 1 + (oversizeby / 100)
+        oversize_percent = (oversizeby - 1) * 100
 
     gastype_input = st.selectbox("Gas type", ["Natural Gas", "Propane", "Other"])
     gastypemult   = 1.0
@@ -245,6 +251,7 @@ def to_psi(val, units):
     if units == "in wc": return val * (1/28)
     if units == "bar":   return val * 14.5
     if units == "oz":    return val / 16
+    if units == "kPa":   return val / 6.89476
     return val
 
 inlet_psi  = to_psi(inlet_input, inlet_units)
