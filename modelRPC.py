@@ -3,10 +3,10 @@ import os
 import pandas as pd
 
 # ── page config ───────────────────────────────────────────────────────────────
-st.set_page_config(page_title="Model 243-RPC Sizing Tool", page_icon="⚙️", layout="wide", initial_sidebar_state="expanded")
+st.set_page_config(page_title="Model 243-RPC Sizing Tool", page_icon="⚙️", layout="wide", initial_sidebar_state="collapsed")
 
 st.markdown("<style>[data-testid='stSidebarCollapseButton'],[data-testid='stSidebarCollapsedControl'],[data-testid='collapsedControl']{display:none}</style><h1>Model 243-RPC Sizing Tool</h1>", unsafe_allow_html=True)
-st.markdown("Fill in the inputs on the left and click **Run Sizing**.")
+st.markdown("Fill in the inputs above and click **Run Sizing**.")
 
 # ── load script logic ─────────────────────────────────────────────────────────
 _tool_path = os.path.join(os.path.dirname(__file__), "RPC Script.py")
@@ -52,38 +52,46 @@ def _req_label(key, text):
     return f":red[{text}] ❗" if not st.session_state.get(key) else text
 
 
-with st.sidebar:
-    st.header("📋 Inputs")
+# ── INPUTS (top of page, always visible) ──────────────────────
+st.subheader("📋 Inputs")
 
-    st.subheader("Pressures & Flow")
-    inlet_units  = st.selectbox("Inlet pressure units",  ["psi", "bar", "kPa"])
+st.markdown("**Pressures & Flow**")
+_v1, _v2, _v3, _v4 = st.columns(4)
+with _v1:
     inlet_input  = st.number_input(_req_label("k_inlet", "Inlet pressure"), min_value=0.0, max_value=1000.0, value=0.0, step=0.1, format="%.1f", key="k_inlet")
-
-    outlet_units = st.selectbox("Outlet pressure units", ["psi", "in wc", "oz", "bar", "kPa"])
+with _v2:
     outlet_input = st.number_input(_req_label("k_outlet", "Outlet pressure"), min_value=0.0, max_value=1000.0, value=0.0, step=0.1, format="%.1f", key="k_outlet")
-
-    flowrate_units = st.selectbox("Gas load / flow rate units", ["CFH", "CMH", "BTUH"])
+with _v3:
     flow_rate    = st.number_input(_req_label("k_flow", "Gas load / flow rate"), min_value=0, max_value=10000000000, value=0, step=50, format="%d", key="k_flow")
+with _v4:
+    maop = st.number_input("MAOP (psi)", min_value=0, max_value=1000, value=0, step=1, format="%d", help="Not required: default 0.  Regulator sized based on inlet pressure, however program will ensure configuration can handle this max inlet pressure/MAOP.")
+_u1, _u2, _u3, _u4 = st.columns(4)
+with _u1:
+    inlet_units  = st.selectbox("Inlet pressure units",  ["psi", "bar", "kPa"])
+with _u2:
+    outlet_units = st.selectbox("Outlet pressure units", ["psi", "in wc", "oz", "bar", "kPa"])
+with _u3:
+    flowrate_units = st.selectbox("Gas load / flow rate units", ["CFH", "CMH", "BTUH"])
 
-    maop = st.number_input("MAOP (psi)", min_value=0, max_value=1000, value=0, step=1, format="%d",
-                           help="Not required: default 0.  Regulator sized based on inlet pressure, however program will ensure configuration can handle this max inlet pressure/MAOP.")
-
-    st.subheader("Design Parameters")
-
-    model_choice = st.selectbox("Desired RPC model", ["N/A (any)", "243-RPC", "243-RPC-A", "243-RPC-B"])
+_design, _loadgas = st.columns(2)
+with _design:
+    st.markdown("**Design Parameters**")
+    _ms, _ = st.columns([1, 1])
+    with _ms:
+        model_choice = st.selectbox("Desired RPC model", ["N/A (any)", "243-RPC", "243-RPC-A", "243-RPC-B"])
     model_map    = {"N/A (any)": "RPC", "243-RPC": "243-RPC", "243-RPC-A": "243-RPC-A", "243-RPC-B": "243-RPC-B"}
     model_input  = model_map[model_choice]
-
     _pipe_options = ["N/A", '1-1/4"', '1-1/2"', '2"']
-    pipesize_index = st.selectbox("Desired pipe size", range(len(_pipe_options)),
-        index=0, format_func=lambda i: _pipe_options[i])
+    _sz, _ = st.columns([1, 1])
+    with _sz:
+        pipesize_index = st.selectbox("Desired pipe size", range(len(_pipe_options)),
+            index=0, format_func=lambda i: _pipe_options[i])
     pipesize_input_raw = _pipe_options[pipesize_index]
     pipesize_input = 0 if pipesize_input_raw == "N/A" else pipesize_input_raw
-
     opp_choice = st.radio("Overpressure protection required?", ["No", "Yes"])
     opp_type   = "Monitor" if opp_choice == "Yes" else "None"
-
-    st.subheader("Load Type & Gas")
+with _loadgas:
+    st.markdown("**Load Type & Gas**")
     higheff   = st.radio("Feeding a generator or high-efficiency boiler?", ["No", "Yes"])
     pload     = 0.0
     pload_pct = 0
@@ -108,13 +116,13 @@ with st.sidebar:
         gastypemult = min(1.0, (0.6 / sg) ** 0.5)
         st.info("Contact USG for regulator compatibility with gases other than methane or propane.")
 
-    # Altitude
     elevation = st.radio("Altitude above 3,000 feet or atmospheric pressure below 13 psi", ["No", "Yes"])
     Patm = 14.4
     if elevation == "Yes":
         Patm  = st.number_input("Atmospheric Pressure (psi)",   min_value=8.80, max_value=14.73, value=14.40,   step=0.01,  format="%.1f")
 
-    run_btn = st.button("▶  Run Sizing", type="primary", use_container_width=True)
+run_btn = st.button("▶  Run Sizing", type="primary")
+st.divider()
 
 
 # ── validation ────────────────────────────────────────────────────────────────
@@ -445,4 +453,4 @@ if run_btn:
                 import traceback; st.code(traceback.format_exc())
 
 else:
-    st.info("👈  Fill in the inputs on the left and click **Run Sizing**.")
+    st.info("⬆️  Fill in the inputs above and click **Run Sizing**.")
