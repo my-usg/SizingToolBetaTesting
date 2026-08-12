@@ -5,10 +5,10 @@ import io
 from openpyxl import load_workbook
 
 # ── page config ──────────────────────────────────────────────────────────────
-st.set_page_config(page_title="General Sizing Tool - All Models", page_icon="⚙️", layout="wide", initial_sidebar_state="expanded")
+st.set_page_config(page_title="General Sizing Tool - All Models", page_icon="⚙️", layout="wide", initial_sidebar_state="collapsed")
 
 st.markdown("<style>[data-testid='stSidebarCollapseButton'],[data-testid='stSidebarCollapsedControl'],[data-testid='collapsedControl']{display:none}</style><h1>General Sizing Tool - All Models</h1>", unsafe_allow_html=True)
-st.markdown("Fill in the inputs on the left and click **Run Sizing**.")
+st.markdown("Fill in the inputs above and click **Run Sizing**.")
 
 # ── inject all the data + logic from the original script ────────────────────
 # We exec the file up to (but not including) the INPUT section so we get all
@@ -291,37 +291,40 @@ def _req_label(key, text):
     return f":red[{text}] ❗" if not st.session_state.get(key) else text
 
 
-with st.sidebar:
-    st.header("📋 Inputs")
+# ── INPUTS (top of page, always visible) ────────────────────────────────────
+st.subheader("Inputs")
 
-    st.subheader("Pressures & Flow")
+_pipe_options = ["N/A", '3/8"', '1/2"', '3/4"', '1"', '1-1/4"', '1-1/2"', '2"', '2-1/2"', '3"']
+
+st.markdown("**Pressures & Flow**")
+_pc1, _pc2, _pc3, _pc4 = st.columns(4)
+with _pc1:
     inlet_units  = st.selectbox("Inlet pressure units",  ["psi", "bar", "kPa"])
     inlet_input  = st.number_input(_req_label("k_inlet", "Inlet pressure"),   min_value=0.0, max_value=1000.0, value=0.0,   step=0.1,  format="%.1f", key="k_inlet")
-
+with _pc2:
     outlet_units = st.selectbox("Outlet pressure units", ["psi", "in wc", "oz", "bar", "kPa"])
     outlet_input = st.number_input(_req_label("k_outlet", "Outlet pressure"), min_value=0.0, max_value=1000.0,  value=0.0,  step=0.1,  format="%.1f", key="k_outlet")
-
+with _pc3:
     flowrate_units = st.selectbox("Gas load / flow rate units", ["CFH", "CMH", "BTUH"])
     flow_rate    = st.number_input(_req_label("k_flow", "Max gas load / flow rate"), min_value=0, max_value=10000000000, value=0, step=1, format="%d", key="k_flow")
+with _pc4:
     min_flow_raw = st.number_input("Min gas load / flow rate (enter 0 to use max flow)", min_value=0, max_value=10000000000, value=0, step=1, format="%d", help="Not required: default 0")
-    min_flow     = flow_rate if min_flow_raw == 0 else min_flow_raw
     maop         = st.number_input("Max inlet pressure / MAOP (psi)", min_value=0, max_value=1000, value=0, step=1, format="%d", help="Not required: default 0.  Regulator sized based on inlet pressure, however program will ensure configuration can handle this max inlet pressure/MAOP.")
+min_flow     = flow_rate if min_flow_raw == 0 else min_flow_raw
 
-    # pipe size: display value (fraction string) → actual value passed to tool
-    _pipe_options = ["N/A", '3/8"', '1/2"', '3/4"', '1"', '1-1/4"', '1-1/2"', '2"', '2-1/2"', '3"']
-
-    st.subheader("Design Parameters")
+st.markdown("**Design Parameters**")
+_dc1, _dc2 = st.columns(2)
+with _dc1:
     pipesize_index = st.selectbox("Desired pipe size", range(len(_pipe_options)),
         index=0,
         format_func=lambda i: _pipe_options[i])
     pipesize_input_raw = _pipe_options[pipesize_index]
     pipesize_input = 0 if pipesize_input_raw == "N/A" else pipesize_input_raw
-
+with _dc2:
     opp_choice = st.radio("Overpressure protection required?", ["No", "Yes"])
     irv_input  = 0.0
     opp_type   = "None"
     opp_pref   = ""
-
     if opp_choice == "Yes":
         opp_pref = st.radio("If applicable should the program prioritize sizing with an internal relief valve or default to monitor regulator sizing?", ["IRV (Internal Relief Valve)", "Monitor regulator"])
         if "IRV" in opp_pref:
@@ -335,7 +338,9 @@ with st.sidebar:
         if partial_choice == "Yes":
             opp_type = "Partial"
 
-    st.subheader("Load Type & Gas")
+st.markdown("**Load Type & Gas**")
+_lc1, _lc2, _lc3 = st.columns(3)
+with _lc1:
     higheff   = st.radio("Feeding a generator or high-efficiency boiler?", ["No", "Yes"])
     pload     = 0.0
     pload_pct = 0
@@ -349,7 +354,7 @@ with st.sidebar:
         oversizeby = st.slider("Oversize regulator by:", 0, 100, 25, help="Recommended to oversize regulator by 20-30%")
         oversizeby = 1 + (oversizeby / 100)
         oversize_percent = (oversizeby - 1) * 100
-
+with _lc2:
     combust_pref_choice = st.radio("Prefer combustion regulator (Model 121/122) sizing?", ["No", "Yes"], help="If Yes is selected, the program will attempt to select a Model 121 or 122 regulator before a Model 461 or 441 regulator.")
     combust_pref = combust_pref_choice == "Yes"
 
@@ -362,14 +367,14 @@ with st.sidebar:
         sg = st.number_input("Specific gravity", min_value=0.01, max_value=10.0, value=0.6, step=0.01, format="%.2f")
         gastypemult = min(1.0, (0.6 / sg) ** 0.5)
         st.info("Contact USG for regulator compatibility with gases other than methane or propane.")
-
-    # Altitude
+with _lc3:
     elevation = st.radio("Altitude above 3,000 feet or atmospheric pressure below 13 psi", ["No", "Yes"])
     Patm = 14.4
     if elevation == "Yes":
         Patm  = st.number_input("Atmospheric Pressure (psi)",   min_value=8.80, max_value=14.73, value=14.40,   step=0.01,  format="%.1f")
 
-    run_btn = st.button("▶  Run Sizing", type="primary", use_container_width=True)
+run_btn = st.button("▶  Run Sizing", type="primary")
+st.divider()
 
 
 # ── MAIN AREA: validation then results ──────────────────────────────────────
@@ -654,4 +659,4 @@ if run_btn:
 
 else:
     # placeholder before first run
-    st.info("👈  Fill in the inputs on the left and click **Run Sizing**.")
+    st.info("⬆️  Fill in the inputs above and click **Run Sizing**.")
