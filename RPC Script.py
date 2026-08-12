@@ -594,7 +594,7 @@ def print_model_table(title, prefix, opp, result):
         if reg.startswith(prefix)
     ]
     print("\n" + title)
-    print(tabulate(rows, headers=["Orifice Size", "Calculated Capacity (CFH)", "Will It Work?"], tablefmt="simple_grid"))
+    print(tabulate(rows, headers=["Orifice Size", "Calculated Capacity (CFH)", "Will Reg Work"], tablefmt="simple_grid"))
 
 
 def print_regulator_selection(match):
@@ -639,7 +639,7 @@ outlet_input = float(input("Enter outlet pressure: "))
 flowrate_units = input("Gas Load units (CFH, BTUH, CMH): ")
 flow_rate = float(input("Enter gas load/flow rate: "))
 
-maop = float(input("Maximum Inlet Pressure / MAOP (psi): "))
+maop = float(input("Maximum Allowable Inlet Pressure (psi): "))
 maop = inlet_input if maop == 0 else maop
 
 model_input = input('Enter desired RPC model (enter "N/A", "243-RPC", "243-RPC-A" or "243-RPC-B"): ')

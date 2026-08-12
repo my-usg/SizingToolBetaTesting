@@ -49,9 +49,9 @@ def build_table(prefix, opp_type, result):
             rows.append([orifice, cap_str, works])
 
     if opp_type == "IRV":
-        cols = ["Orifice Size", "Calculated Capacity (CFH)", "Will Reg Work?", "Will IRV Work?"]
+        cols = ["Orifice Size", "Calculated Capacity (CFH)", "Will Reg Work", "Will IRV Work"]
     else:
-        cols = ["Orifice Size", "Calculated Capacity (CFH)", "Will It Work?"]
+        cols = ["Orifice Size", "Calculated Capacity (CFH)", "Will Reg Work"]
 
     return pd.DataFrame(rows, columns=cols)
 

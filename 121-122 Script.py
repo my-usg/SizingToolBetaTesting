@@ -980,7 +980,7 @@ def print_model_table121(title, prefix, result, vp):
             if reg.startswith(prefix) and reg not in ('R1210813', 'R121081Q', 'R1211230', 'R1211630', 'R121HP13', 'R121HP1Q')
         ]
         print("\n" + title)
-        print(tabulate(rows, headers=["Body Size", "Calculated Capacity (CFH)", "Will It Work?"], tablefmt="simple_grid"))
+        print(tabulate(rows, headers=["Body Size", "Calculated Capacity (CFH)", "Will Reg Work"], tablefmt="simple_grid"))
     else:
         rows = [
             [body_type121(reg), f"{cap:,.0f}" if isinstance(cap, (int, float)) else cap, will_work_vp(cap, reg, False)]
@@ -988,7 +988,7 @@ def print_model_table121(title, prefix, result, vp):
             if reg.startswith(prefix)
         ]
         print("\n" + title)
-        print(tabulate(rows, headers=["Body Size", "Calculated Capacity (CFH)", "Will It Work?"], tablefmt="simple_grid"))
+        print(tabulate(rows, headers=["Body Size", "Calculated Capacity (CFH)", "Will Reg Work"], tablefmt="simple_grid"))
 
 def print_regulator_selection(match):
     print("REGULATOR SELECTION")
@@ -1034,10 +1034,10 @@ flow_rate = float(input("Enter gas load/flow rate: "))
 min_flow = float(input("Enter minimum gas load/flow rate: "))
 min_flow = flow_rate if min_flow == 0 else min_flow
 
-maop = float(input("Maximum Inlet Pressure/MAOP (psi): "))
+maop = float(input("Maximum Allowable Inlet Pressure (psi): "))
 maop = inlet_input if maop == 0 else maop
 
-pipesize_input = (input('Enter desired pipe size (enter N/A, 3/4", 1", 1-1/4", ect.): '))
+pipesize_input = (input('Enter desired pipe size (enter N/A, 3/4", 1", 1-1/4", 1-1/2", 2", 2-1/2", 3"): '))
 pipesize_input = 0 if pipesize_input == "N/A" else pipesize_input
 
 # Pressure Units Adjustments

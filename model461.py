@@ -46,7 +46,7 @@ def table_to_df(table):
         ]
         for row in table
     ]
-    return pd.DataFrame(rows, columns=["Applicable Models", "Body", "Orifice", "Qmax (CFH)", "Qmin (CFH)", "Y/N"])
+    return pd.DataFrame(rows, columns=["Applicable Models", "Body", "Orifice", "Qmax (CFH)", "Qmin (CFH)", "Will Reg Work"])
 
 
 # ── SIDEBAR: inputs ───────────────────────────────────────────────────────────
@@ -367,11 +367,11 @@ if run_btn:
                 if opp_type != "None":
                     st.caption("Capacity reduction due to monitor shown.")
 
-                st.markdown("**Standard Valves**")
+                st.markdown("**Sizing Table with standard valves**")
                 df_std = table_to_df(std)
                 st.dataframe(df_std, use_container_width=True, hide_index=True)
 
-                st.markdown("**V-Port Valves**")
+                st.markdown("**Sizing Table with v-port valves**")
                 df_vp = table_to_df(vp)
                 st.dataframe(df_vp, use_container_width=True, hide_index=True)
 

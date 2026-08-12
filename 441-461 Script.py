@@ -930,7 +930,7 @@ def print_441461_table(title, table):
         ]
         for row in table
     ]
-    headers = ["Applicable Models", "Body", "Orifice", "Qmax", "Qmin", "Y/N"]
+    headers = ["Applicable Models", "Body", "Orifice", "Qmax (CFH)", "Qmin (CFH)", "Will Reg Work"]
     print(tabulate(rows, headers=headers, tablefmt="simple_grid"))
 
 
@@ -950,7 +950,7 @@ flow_rate = float(input("Enter gas load/flow rate: "))
 min_flow = float(input("Enter minimum gas load/flow rate: "))
 min_flow = flow_rate if min_flow == 0 else min_flow
 
-maop = float(input("Maximum Inlet Pressure/MAOP (psi): "))
+maop = float(input("Maximum Allowable Inlet Pressure (psi): "))
 maop = inlet_input if maop == 0 else maop
 
 # Pressure Units Adjustments
@@ -1075,7 +1075,7 @@ if outlet_input >= inlet_input:
 
 if maop < inlet_input and maop != 0:
     print("")
-    print("Error: Maximum inlet pressure/MAOP must be greater than or equal to inlet pressure")
+    print("Error: Maximum allowable inlet pressure must be greater than or equal to inlet pressure")
     print("")
     exit()
 
@@ -1112,11 +1112,11 @@ print("")
 
 # Print capacity table
 print("")
-print_441461_table("STANDARD VALVES TABLE", std_table_values)
+print_441461_table("Sizing Table with standard valves", std_table_values)
 if opp_type == "Monitor":
     print("Capacity Reduction due to Monitor shown")
 print("")
-print_441461_table("V-PORT VALVES TABLE", vp_table_values)
+print_441461_table("Sizing Table with v-port valves", vp_table_values)
 print("")
 
 # END

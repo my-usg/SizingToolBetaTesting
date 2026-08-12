@@ -43,7 +43,7 @@ def build_table(prefix, result):
         cap_str = f"{cap:,.0f}" if isinstance(cap, (int, float)) else str(cap)
         works   = _globals["will_work"](cap, reg, _globals["orifice_maxRPC"](reg))
         rows.append([orifice, cap_str, works])
-    return pd.DataFrame(rows, columns=["Orifice Size", "Calculated Capacity (CFH)", "Will It Work?"])
+    return pd.DataFrame(rows, columns=["Orifice Size", "Calculated Capacity (CFH)", "Will Reg Work"])
 
 
 # ── SIDEBAR: inputs ───────────────────────────────────────────────────────────

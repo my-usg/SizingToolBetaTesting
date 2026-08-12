@@ -723,7 +723,7 @@ def print_model_table(title, prefix, opp, result):
             if reg.startswith(prefix)
         ]
         print("\n" + title)
-        print(tabulate(rows, headers=["Orifice Size", "Calculated Capacity (CFH)", "Will Reg Work?", "Will IRV Work?"], tablefmt="simple_grid"))
+        print(tabulate(rows, headers=["Orifice Size", "Calculated Capacity (CFH)", "Will Reg Work", "Will IRV Work"], tablefmt="simple_grid"))
     else:
         rows = [
             [orifice_type046(reg), f"{cap:,.0f}" if isinstance(cap, (int, float)) else cap, will_work(cap, reg, orifice_max046(reg))]
@@ -731,7 +731,7 @@ def print_model_table(title, prefix, opp, result):
             if reg.startswith(prefix)
         ]
         print("\n" + title)
-        print(tabulate(rows, headers=["Orifice Size", "Calculated Capacity (CFH)", "Will It Work?"], tablefmt="simple_grid"))
+        print(tabulate(rows, headers=["Orifice Size", "Calculated Capacity (CFH)", "Will Reg Work"], tablefmt="simple_grid"))
 
 def print_regulator_selection(match):
     print("REGULATOR SELECTION")
@@ -774,10 +774,10 @@ outlet_input = float(input("Enter outlet pressure: "))
 flowrate_units = input("Gas Load units (CFH, BTUH, CMH): ")
 flow_rate = float(input("Enter gas load/flow rate: "))
 
-maop = float(input("Maximum Inlet Pressure/MAOP (psi): "))
+maop = float(input("Maximum Allowable Inlet Pressure (psi): "))
 maop = inlet_input if maop == 0 else maop
 
-pipesize_input = (input('Enter desired pipe size (enter N/A, 3/4", 1", 1-1/4", ect.): '))
+pipesize_input = (input('Enter desired pipe size (enter N/A, 3/4", 1", 1-1/4"): '))
 pipesize_input = 0 if pipesize_input == "N/A" else pipesize_input
 
 # Pressure Units Adjustments
@@ -905,7 +905,7 @@ if outlet_input >= inlet_input:
 
 if maop < inlet_input and maop != 0:
     print("")
-    print("Error: Maximum inlet pressure/MAOP must be greater than or equal to inlet pressure")
+    print("Error: Maximum allowable inlet pressure must be greater than or equal to inlet pressure")
     print("")
     exit()
 

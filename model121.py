@@ -48,7 +48,7 @@ def build_table121(prefix, result, vp):
         cap_str = f"{cap:,.0f}" if isinstance(cap, (int, float)) else str(cap)
         works   = _globals["will_work_vp"](cap, reg, vp)
         rows.append([body, cap_str, works])
-    return pd.DataFrame(rows, columns=["Body Size", "Calculated Capacity (CFH)", "Will It Work?"])
+    return pd.DataFrame(rows, columns=["Body Size", "Calculated Capacity (CFH)", "Will Reg Work"])
 
 
 # ── SIDEBAR: inputs ───────────────────────────────────────────────────────────
