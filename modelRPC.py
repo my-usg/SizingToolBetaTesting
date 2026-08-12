@@ -265,17 +265,17 @@ else:
     elevation_reduction = 0
 
 errors = []
-if inlet_input > 0 and (inlet_psi > 150 or inlet_psi < 2):
+if inlet_psi > 0 and (inlet_psi > 150 or inlet_psi < 2):
     errors.append("Inlet pressure must be between 2 and 150 psi.")
-if outlet_input > 0 and (outlet_psi < 3.5/28 or outlet_psi > 35):
+if outlet_psi > 0 and (outlet_psi < 3.5/28 or outlet_psi > 35):
     errors.append("Outlet pressure must be between 3.5\" wc and 35 psi.")
-if inlet_input > 0 and outlet_input > 0 and outlet_psi >= inlet_psi:
+if inlet_psi > 0 and outlet_psi > 0 and outlet_psi >= inlet_psi:
     errors.append("Outlet pressure must be less than inlet pressure.")
 if int(maop) != 0 and maop < inlet_psi:
     errors.append("MAIP must be >= inlet pressure.")
-if inlet_input == 0:
+if inlet_psi == 0:
     errors.append("Inlet pressure is required.")
-if outlet_input == 0:
+if outlet_psi == 0:
     errors.append("Outlet pressure is required.")
 if flow_rate == 0:
     errors.append("Please enter a gas load / flow rate.")

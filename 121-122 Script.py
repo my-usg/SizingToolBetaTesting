@@ -3,6 +3,20 @@ from tabulate import tabulate
 
 # 121 Standard Data
 stddata121 = {
+    1.5/28: {
+        0.29: {'R1210813': 1500, 'R121081Q': 2000, 'R121081H': None, 'R1210820': None, 'R121082H': None, 'R121121H': 4000, 'R1211220': 5000, 'R121122H': 5500, 'R1211230': None, 'R1211630': 10000},
+        0.5: {'R1210813': 2500, 'R121081Q': 3500, 'R121081H': None, 'R1210820': None, 'R121082H': None, 'R121121H': 4900, 'R1211220': 8900, 'R121122H': 9700, 'R1211230': None, 'R1211630': 19500},
+        1: {'R1210813': 4200, 'R121081Q': 5500, 'R121081H': None, 'R1210820': None, 'R121082H': None, 'R121121H': 7400, 'R1211220': 13000, 'R121122H': 14400, 'R1211230': None, 'R1211630': 31000},
+        2: {'R1210813': 6100, 'R121081Q': 7800, 'R121081H': None, 'R1210820': None, 'R121082H': None, 'R121121H': 11500, 'R1211220': 20500, 'R121122H': 22200, 'R1211230': None, 'R1211630': 47000},
+        3: {'R1210813': 7700, 'R121081Q': 9700, 'R121081H': None, 'R1210820': None, 'R121082H': None, 'R121121H': 14600, 'R1211220': 26300, 'R121122H': 29100, 'R1211230': None, 'R1211630': 60000},
+        5: {'R1210813': 11200, 'R121081Q': 12700, 'R121081H': None, 'R1210820': None, 'R121082H': None, 'R121121H': 19500, 'R1211220': 35000, 'R121122H': 39500, 'R1211230': None, 'R1211630': 80000},
+        10: {'R1210813': 14500, 'R121081Q': 18000, 'R121081H': None, 'R1210820': None, 'R121082H': None, 'R121121H': 30000, 'R1211220': 52000, 'R121122H': 58000, 'R1211230': None, 'R1211630': 12500},
+        15: {'R1210813': 17300, 'R121081Q': 22500, 'R121081H': None, 'R1210820': None, 'R121082H': None, 'R121121H': 37000, 'R1211220': 68000, 'R121122H': 75500, 'R1211230': None, 'R1211630': 14500},
+        25: {'R1210813': 23200, 'R121081Q': 27100, 'R121081H': None, 'R1210820': None, 'R121082H': None, 'R121121H': 50000, 'R1211220': 90000, 'R121122H': 100000, 'R1211230': None, 'R1211630': 190000},
+        40: {'R1210813': 32000, 'R121081Q': 41000, 'R121081H': None, 'R1210820': None, 'R121082H': None, 'R121121H': 68000, 'R1211220': 125000, 'R121122H': 140000, 'R1211230': None, 'R1211630': 260000},
+        50: {'R1210813': 38000, 'R121081Q': 48000, 'R121081H': None, 'R1210820': None, 'R121082H': None, 'R121121H': 80000, 'R1211220': 150000, 'R121122H': 166000, 'R1211230': None, 'R1211630': None},
+        60: {'R1210813': 44000, 'R121081Q': 56000, 'R121081H': None, 'R1210820': None, 'R121082H': None, 'R121121H': 95000, 'R1211220': 175000, 'R121122H': 195000, 'R1211230': None, 'R1211630': None},    
+    },
 	0.18: {
         0.29: {'R1210813': 1500, 'R121081Q': 2000, 'R121081H': None, 'R1210820': None, 'R121082H': None, 'R121121H': 4000, 'R1211220': 5000, 'R121122H': 5500, 'R1211230': None, 'R1211630': 10000},
         0.5: {'R1210813': 2500, 'R121081Q': 3500, 'R121081H': None, 'R1210820': None, 'R121082H': None, 'R121121H': 4900, 'R1211220': 8900, 'R121122H': 9700, 'R1211230': None, 'R1211630': 19500},
@@ -865,7 +879,7 @@ def run_regulator_selection121(inlet, outlet, opp):
         return result121, result121_VP, result122, match, apply, warning
 
     # 122 can only be used up to 2 psi outlet, 1 psi outlet with monitor
-    result122 = interpolate_capacity(stddata122, inlet_input, outlet_input, monitor, vp)
+    result122 = interpolate_capacity(stddata122, inlet, outlet, monitor, vp)
         
     match = gen_match121(result121, result122, vp, opp)
 
@@ -1172,17 +1186,11 @@ if min_flow > 0 and min_flow > flow_rate:
     print("")
     exit()
 
-# Adjust outlet pressures between 1.5" wc and 5" wc to 5" wc
-if 1.5/28 <= outlet_input < 0.18:
-    outlet_input121 = 0.18
-else:
-    outlet_input121 = outlet_input
-
 
 # Run Regulator Selection
 # ------------------------------------------------------------------------------------------------------
 
-result121, result121_VP, result122, match121, apply121, warning121 = run_regulator_selection121(inlet_input, outlet_input121, opp_type)
+result121, result121_VP, result122, match121, apply121, warning121 = run_regulator_selection121(inlet_input, outlet_input, opp_type)
 
 
 # Print Output

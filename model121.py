@@ -19,7 +19,7 @@ except FileNotFoundError as e:
     st.stop()
 
 _lines  = _source.splitlines(keepends=True)
-_code   = "".join(_lines[:1021])
+_code   = "".join(_lines[:1035])
 
 _globals = {}
 try:
@@ -267,17 +267,17 @@ else:
     elevation_reduction = 0
 
 errors = []
-if inlet_input > 0 and (inlet_psi > 60 or inlet_psi < 8/28):
+if inlet_psi > 0 and (inlet_psi > 60 or inlet_psi < 8/28):
     errors.append("Inlet pressure must be between 8\" wc and 60 psi.")
-if outlet_input > 0 and (outlet_psi < 1.5/28 or outlet_psi > 10):
+if outlet_psi > 0 and (outlet_psi < 1.5/28 or outlet_psi > 10):
     errors.append("Outlet pressure must be between 1.5\" wc and 10 psi.")
-if inlet_input > 0 and outlet_input > 0 and outlet_psi >= inlet_psi:
+if inlet_psi > 0 and outlet_psi > 0 and outlet_psi >= inlet_psi:
     errors.append("Outlet pressure must be less than inlet pressure.")
 if int(maop) != 0 and maop < inlet_psi:
     errors.append("MAIP must be >= inlet pressure.")
-if inlet_input == 0:
+if inlet_psi == 0:
     errors.append("Inlet pressure is required.")
-if outlet_input == 0:
+if outlet_psi == 0:
     errors.append("Outlet pressure is required.")
 if flow_rate == 0:
     errors.append("Please enter a max gas load / flow rate.")
@@ -310,9 +310,6 @@ if run_btn:
                         st.error("BTUH conversion only supported for Natural Gas or Propane. Use CFH or CMH.")
                         st.stop()
 
-                # outlet pressure adjustment (mirror script)
-                outlet_input121 = 0.18 if 1.5/28 <= outlet_psi < 0.18 else outlet_psi
-
                 # inject globals
                 _globals.update({
                     "inlet_input":       inlet_psi,
@@ -333,7 +330,7 @@ if run_btn:
 
                 # run sizing
                 result121, result121_VP, result122, match121, apply121, warning121 = \
-                    _globals["run_regulator_selection121"](inlet_psi, outlet_input121, opp_type)
+                    _globals["run_regulator_selection121"](inlet_psi, outlet_psi, opp_type)
 
 
                 # ── regulator selection ───────────────────────────────────────
@@ -393,8 +390,8 @@ if run_btn:
 
                 show_122 = (
                     not isinstance(result122, str) and (
-                        (outlet_input121 <= 2 and opp_type != "Monitor") or
-                        (outlet_input121 <= 1 and opp_type == "Monitor")
+                        (outlet_psi <= 2 and opp_type != "Monitor") or
+                        (outlet_psi <= 1 and opp_type == "Monitor")
                     )
                 )
 
@@ -426,7 +423,7 @@ if run_btn:
                             st.markdown(f"**{title}**")
                             st.dataframe(df, use_container_width=True, hide_index=True)
 
-                elif outlet_input121 <= 3:
+                elif outlet_psi <= 3:
                     # Standard + VP, no 122
                     st.subheader("Regulator Sizing Tables")
                     st.markdown(table_label)

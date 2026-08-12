@@ -19,7 +19,7 @@ except FileNotFoundError as e:
     st.stop()
 
 _lines  = _source.splitlines(keepends=True)
-_code   = "".join(_lines[:905])
+_code   = "".join(_lines[:919])
 
 _globals = {}
 try:
@@ -286,17 +286,17 @@ else:
     elevation_reduction = 0
 
 errors = []
-if inlet_input > 0 and (inlet_psi > 125 or inlet_psi < 0.5):
+if inlet_psi > 0 and (inlet_psi > 125 or inlet_psi < 0.5):
     errors.append("Inlet pressure must be between 0.5 and 125 psi.")
-if outlet_input > 0 and (outlet_psi < 3.5/28 or outlet_psi > 10):
+if outlet_psi > 0 and (outlet_psi < 3.5/28 or outlet_psi > 10):
     errors.append("Outlet pressure must be between 3.5\" wc and 10 psi.")
-if inlet_input > 0 and outlet_input > 0 and outlet_psi >= inlet_psi:
+if inlet_psi > 0 and outlet_psi > 0 and outlet_psi >= inlet_psi:
     errors.append("Outlet pressure must be less than inlet pressure.")
 if int(maop) != 0 and maop < inlet_psi:
     errors.append("MAIP must be >= inlet pressure.")
-if inlet_input == 0:
+if inlet_psi == 0:
     errors.append("Inlet pressure is required.")
-if outlet_input == 0:
+if outlet_psi == 0:
     errors.append("Outlet pressure is required.")
 if flow_rate == 0:
     errors.append("Please enter a gas load / flow rate.")
@@ -325,12 +325,9 @@ if run_btn:
                         st.error("BTUH conversion only supported for Natural Gas or Propane. Use CFH or CMH.")
                         st.stop()
 
-                # outlet pressure adjustment (mirror script)
-                outlet_input243 = 0.25 if 0.125 <= outlet_psi < 0.25 else outlet_psi
-
                 # mirror script: IRV with outlet > 4.5 psi → sized as Monitor
                 table_opp = opp_type
-                if opp_type == "IRV" and outlet_input243 > 4.5:
+                if opp_type == "IRV" and outlet_psi > 4.5:
                     table_opp = "Monitor"
 
                 # inject globals
@@ -351,17 +348,17 @@ if run_btn:
 
                 # run sizing
                 result243, match243, apply243, warning243 = _globals["run_regulator_selection243"](
-                    inlet_psi, outlet_input243, opp_type)
+                    inlet_psi, outlet_psi, opp_type)
 
                 # pre-compute table datasets
                 if opp_type == "IRV":
-                    results_irv = _globals["interpolate_capacity"](_globals["stddata243"], inlet_psi, outlet_input243, False, False)
+                    results_irv = _globals["interpolate_capacity"](_globals["stddata243"], inlet_psi, outlet_psi, False, False)
                     # mirror script: IRV monitor fallback switches to hpdata when outlet > 3
-                    if outlet_input243 > 3:
-                        result_mon = _globals["interpolate_capacity"](_globals["hpdata243"], inlet_psi, outlet_input243, True, False)
+                    if outlet_psi > 3:
+                        result_mon = _globals["interpolate_capacity"](_globals["hpdata243"], inlet_psi, outlet_psi, True, False)
                     else:
-                        result_mon = _globals["interpolate_capacity"](_globals["stddata243"], inlet_psi, outlet_input243, True, False)
-                    result_hp   = _globals["interpolate_capacity"](_globals["hpdata243"],  inlet_psi, outlet_input243, True,  False)
+                        result_mon = _globals["interpolate_capacity"](_globals["stddata243"], inlet_psi, outlet_psi, True, False)
+                    result_hp   = _globals["interpolate_capacity"](_globals["hpdata243"],  inlet_psi, outlet_psi, True,  False)
                 else:
                     results_irv = result243
                     result_mon  = result243
@@ -433,7 +430,7 @@ if run_btn:
                     ('Model 243-8HP, 2" Body',      'R243HP02'),
                 ]
 
-                if opp_type == "IRV" and outlet_input243 <= 4.5:
+                if opp_type == "IRV" and outlet_psi <= 4.5:
                     # outlet <= 4.5: show IRV tables (std) + Monitor fallback tables
                     st.markdown("**Regulator Sizing Tables with IRV**")
                     for title, prefix in STD_IRV_BODIES:
@@ -443,7 +440,7 @@ if run_btn:
                             st.dataframe(df, use_container_width=True, hide_index=True)
 
                     st.markdown("**Regulator Sizing Tables with Monitor**")
-                    if outlet_input243 > 3:
+                    if outlet_psi > 3:
                         for title, prefix in HP_BODIES:
                             df = build_table(prefix, "Monitor", result_mon)
                             if not df.empty:
@@ -456,7 +453,7 @@ if run_btn:
                                 st.markdown(f"**{title}**")
                                 st.dataframe(df, use_container_width=True, hide_index=True)
 
-                elif outlet_input243 <= 3 or (outlet_input243 <= 5 and opp_type == "Partial"):
+                elif outlet_psi <= 3 or (outlet_psi <= 5 and opp_type == "Partial"):
                     label = "**Regulator Sizing Tables with Monitor**" if opp_type == "Monitor" else "**Regulator Sizing Tables**"
                     st.markdown(label)
                     for title, prefix in STD_MON_BODIES:

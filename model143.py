@@ -19,7 +19,7 @@ except FileNotFoundError as e:
     st.stop()
 
 _lines  = _source.splitlines(keepends=True)
-_code   = "".join(_lines[:480])   # stop before INPUT section
+_code   = "".join(_lines[:503])   # stop before INPUT section
 
 _globals = {}
 try:
@@ -281,17 +281,17 @@ else:
     elevation_reduction = 0
 
 errors = []
-if inlet_input > 0 and (inlet_psi > 125 or inlet_psi < 0.5):
+if inlet_psi > 0 and (inlet_psi > 125 or inlet_psi < 0.5):
     errors.append("Inlet pressure must be between 0.5 and 125 psi.")
-if outlet_input > 0 and (outlet_psi < 3.5/28 or outlet_psi > 6):
+if outlet_psi > 0 and (outlet_psi < 3.5/28 or outlet_psi > 6):
     errors.append("Outlet pressure must be between 3.5\" wc and 6 psi.")
-if inlet_input > 0 and outlet_input > 0 and outlet_psi >= inlet_psi:
+if inlet_psi > 0 and outlet_psi > 0 and outlet_psi >= inlet_psi:
     errors.append("Outlet pressure must be less than inlet pressure.")
 if int(maop) != 0 and maop < inlet_psi:
     errors.append("MAIP must be >= inlet pressure.")
-if inlet_input == 0:
+if inlet_psi == 0:
     errors.append("Inlet pressure is required.")
-if outlet_input == 0:
+if outlet_psi == 0:
     errors.append("Outlet pressure is required.")
 if flow_rate == 0:
     errors.append("Please enter a gas load / flow rate.")
@@ -320,14 +320,6 @@ if run_btn:
                         st.error("BTUH conversion only supported for Natural Gas or Propane. Use CFH or CMH.")
                         st.stop()
 
-                # outlet pressure adjustments (mirror script)
-                if 3.5/28 <= outlet_psi < 0.25:
-                    outlet_input143 = 0.25
-                elif 2 < outlet_psi <= 6:
-                    outlet_input143 = 2
-                else:
-                    outlet_input143 = outlet_psi
-
                 # inject globals
                 _globals.update({
                     "inlet_input":       inlet_psi,
@@ -347,7 +339,7 @@ if run_btn:
 
                 # run sizing
                 result143, match143, apply143, warning143 = _globals["run_regulator_selection143"](
-                    inlet_psi, outlet_input143, opp_type)
+                    inlet_psi, outlet_psi, opp_type)
 
                 _globals["result143"] = result143
 

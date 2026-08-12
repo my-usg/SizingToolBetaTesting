@@ -19,7 +19,7 @@ except FileNotFoundError as e:
     st.stop()
 
 _lines  = _source.splitlines(keepends=True)
-_code   = "".join(_lines[:442])   # stop before INPUT section
+_code   = "".join(_lines[:461])   # stop before INPUT section
 
 _globals = {}
 try:
@@ -276,17 +276,17 @@ else:
     elevation_reduction = 0
 
 errors = []
-if inlet_input > 0 and (inlet_psi > 125 or inlet_psi < 1):
+if inlet_psi > 0 and (inlet_psi > 125 or inlet_psi < 1):
     errors.append("Inlet pressure must be between 1 and 125 psi.")
-if outlet_input > 0 and (outlet_psi < 3.5/28 or outlet_psi > 2):
+if outlet_psi > 0 and (outlet_psi < 3.5/28 or outlet_psi > 2):
     errors.append("Outlet pressure must be between 3.5\" wc and 2 psi.")
-if inlet_input > 0 and outlet_input > 0 and outlet_psi >= inlet_psi:
+if inlet_psi > 0 and outlet_psi > 0 and outlet_psi >= inlet_psi:
     errors.append("Outlet pressure must be less than inlet pressure.")
 if int(maop) != 0 and maop < inlet_psi:
     errors.append("MAIP must be >= inlet pressure.")
-if inlet_input == 0:
+if inlet_psi == 0:
     errors.append("Inlet pressure is required.")
-if outlet_input == 0:
+if outlet_psi == 0:
     errors.append("Outlet pressure is required.")
 if flow_rate == 0:
     errors.append("Please enter a gas load / flow rate.")
@@ -315,10 +315,6 @@ if run_btn:
                         st.error("BTUH conversion only supported for Natural Gas or Propane. Use CFH or CMH.")
                         st.stop()
 
-                # pressure adjustments (mirror script)
-                outlet_input496 = 0.25 if 0.125 <= outlet_psi < 0.25 else outlet_psi
-                inlet_input496  = 100  if 100 < inlet_psi <= 125 else inlet_psi
-
                 # inject globals
                 _globals.update({
                     "inlet_input":    inlet_psi,
@@ -338,7 +334,7 @@ if run_btn:
 
                 # run sizing
                 result496, match496, apply496, warning496 = _globals["run_regulator_selection496"](
-                    inlet_input496, outlet_input496, opp_type)
+                    inlet_psi, outlet_psi, opp_type)
 
                 # update result496 in globals for table builder
                 _globals["result496"] = result496

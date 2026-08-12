@@ -19,7 +19,7 @@ except FileNotFoundError as e:
     st.stop()
 
 _lines  = _source.splitlines(keepends=True)
-_code   = "".join(_lines[:763])
+_code   = "".join(_lines[:774])
 
 _globals = {}
 try:
@@ -286,17 +286,17 @@ else:
     elevation_reduction = 0
 
 errors = []
-if inlet_input > 0 and (inlet_psi > 1000 or inlet_psi < 10):
+if inlet_psi > 0 and (inlet_psi > 1000 or inlet_psi < 10):
     errors.append("Inlet pressure must be between 10 and 1,000 psi.")
-if outlet_input > 0 and (outlet_psi < 3 or outlet_psi > 200):
+if outlet_psi > 0 and (outlet_psi < 3 or outlet_psi > 200):
     errors.append("Outlet pressure must be between 3 and 200 psi.")
-if inlet_input > 0 and outlet_input > 0 and outlet_psi >= inlet_psi:
+if inlet_psi > 0 and outlet_psi > 0 and outlet_psi >= inlet_psi:
     errors.append("Outlet pressure must be less than inlet pressure.")
 if int(maop) != 0 and maop < inlet_psi:
     errors.append("MAIP must be >= inlet pressure.")
-if inlet_input == 0:
+if inlet_psi == 0:
     errors.append("Inlet pressure is required.")
-if outlet_input == 0:
+if outlet_psi == 0:
     errors.append("Outlet pressure is required.")
 if flow_rate == 0:
     errors.append("Please enter a gas load / flow rate.")
@@ -325,9 +325,6 @@ if run_btn:
                         st.error("BTUH conversion only supported for Natural Gas or Propane. Use CFH or CMH.")
                         st.stop()
 
-                # outlet pressure adjustment (mirror script: 3–5 psi → 5 psi)
-                outlet_input046 = 5 if 3 <= outlet_psi < 5 else outlet_psi
-
                 # inject globals
                 _globals.update({
                     "inlet_input":       inlet_psi,
@@ -346,12 +343,12 @@ if run_btn:
 
                 # run sizing
                 result046, match046, apply046, warning046 = _globals["run_regulator_selection046"](
-                    inlet_psi, outlet_input046, opp_type)
+                    inlet_psi, outlet_psi, opp_type)
 
                 # for IRV: also compute separate irv/monitor results for tables
                 if opp_type == "IRV":
-                    result_irv = _globals["interpolate_capacity"](_globals["data046"], inlet_psi, outlet_input046, False, False)
-                    result_mon = _globals["interpolate_capacity"](_globals["data046"], inlet_psi, outlet_input046, True, False)
+                    result_irv = _globals["interpolate_capacity"](_globals["data046"], inlet_psi, outlet_psi, False, False)
+                    result_mon = _globals["interpolate_capacity"](_globals["data046"], inlet_psi, outlet_psi, True, False)
                 else:
                     result_irv = result046
                     result_mon = result046

@@ -22,7 +22,7 @@ with open(_tool_path, "r") as f:
 
 # Split at line 3587 — the print("ULTIMATE SIZING TOOL") line that starts the I/O section
 _lines  = _source.splitlines(keepends=True)
-_code   = "".join(_lines[:4001])
+_code   = "".join(_lines[:4068])
 
 _globals = {}
 exec(compile(_code, _tool_path, "exec"), _globals)
@@ -161,31 +161,16 @@ def build_summary_pdf(inputs, selection, capacity, part_numbers, warnings, adjus
     return buf
 
 def run_tool(
-    inlet_input, outlet_input, flow_rate, min_flow, maop,
+    inlet, outlet, flow_rate, min_flow, maop,
     pipesize_input, opp_type, irv_input,
     oversizeby, gastypemult, pload, combust_pref
 ):
     """Run all regulator selection functions and return (result_dict, warnings)."""
 
-    # ── pressure adjustments (mirror the original script) ───────────────────
-    outlet_input496 = 0.25 if 0.125 <= outlet_input < 0.25 else outlet_input
-    inlet_input496  = 100  if 100 < inlet_input <= 125  else inlet_input
-
-    if 3.5/28 <= outlet_input < 0.25:
-        outlet_input143 = 0.25
-    elif 2 < outlet_input <= 6:
-        outlet_input143 = 2
-    else:
-        outlet_input143 = outlet_input
-
-    outlet_input243 = 0.25 if 0.125 <= outlet_input < 0.25 else outlet_input
-    outlet_input046 = 5    if 3 <= outlet_input < 5        else outlet_input
-    outlet_input121 = 0.18 if 1.5/28 <= outlet_input < 0.18 else outlet_input
-
     # ── inject globals that the functions read ───────────────────────────────
     # Functions were exec'd into _globals, so that's where they look up names
-    _globals["inlet_input"]    = inlet_input
-    _globals["outlet_input"]   = outlet_input
+    _globals["inlet_input"]    = inlet
+    _globals["outlet_input"]   = outlet
     _globals["flow_rate"]      = flow_rate
     _globals["min_flow"]       = min_flow
     _globals["maop"]           = maop
@@ -203,7 +188,7 @@ def run_tool(
 
     # 143 -------------------------------------------------------------------
     r143, m143, ok143, w143 = run_regulator_selection143(
-        inlet_input, outlet_input143, opp_type)
+        inlet, outlet, opp_type)
     if ok143:
         if w143: msgs.append(w143)
         result["match"] = m143
@@ -212,7 +197,7 @@ def run_tool(
 
     # 496 -------------------------------------------------------------------
     r496, m496, ok496, w496 = run_regulator_selection496(
-        inlet_input496, outlet_input496, opp_type)
+        inlet, outlet, opp_type)
     if ok496:
         if w496: msgs.append(w496)
         result["match"]  = m496
@@ -221,7 +206,7 @@ def run_tool(
 
     # 243 -------------------------------------------------------------------
     r243, m243, ok243, w243 = run_regulator_selection243(
-        inlet_input, outlet_input243, opp_type)
+        inlet, outlet, opp_type)
     if ok243:
         if w243: msgs.append(w243)
         result["match"] = m243
@@ -230,7 +215,7 @@ def run_tool(
 
     # 046 -------------------------------------------------------------------
     r046, m046, ok046, w046 = run_regulator_selection046(
-        inlet_input, outlet_input046, opp_type)
+        inlet, outlet, opp_type)
     if ok046:
         if w046: msgs.append(w046)
         result["match"] = m046
@@ -240,18 +225,18 @@ def run_tool(
     # ── new routing: high-eff + no OPP → try 121/122 before 441/461 ────────
     if combust_pref:
         r121, r121vp, r122, m121, ok121, w121 = run_regulator_selection121(
-            inlet_input, outlet_input121, opp_type)
+            inlet, outlet, opp_type)
         if ok121:
             if w121: msgs.append(w121)
             result["match"]    = m121
             result["pn"]       = hsc_pnc121(m121)
             result["note121"]  = True
-            result["note121_pipe"] = body_size_min121(ip=inlet_input, reg=m121["reg"])
+            result["note121_pipe"] = body_size_min121(ip=inlet, reg=m121["reg"])
             return result, msgs
 
         # 121 didn't work — fall through to 441/461
         m461, ok461, w461 = run_regulator_selection461(
-            inlet_input, outlet_input, flow_rate, min_flow, opp_type)
+            inlet, outlet, flow_rate, min_flow, opp_type)
         if ok461:
             if w461: msgs.append(w461)
             result["match"] = m461
@@ -263,7 +248,7 @@ def run_tool(
 
     # ── standard routing: 441/461 before 121/122 ────────────────────────────
     m461, ok461, w461 = run_regulator_selection461(
-        inlet_input, outlet_input, flow_rate, min_flow, opp_type)
+        inlet, outlet, flow_rate, min_flow, opp_type)
     if ok461:
         if w461: msgs.append(w461)
         result["match"] = m461
@@ -272,13 +257,13 @@ def run_tool(
 
     # 121/122 ---------------------------------------------------------------
     r121, r121vp, r122, m121, ok121, w121 = run_regulator_selection121(
-        inlet_input, outlet_input121, opp_type)
+        inlet, outlet, opp_type)
     if ok121:
         if w121: msgs.append(w121)
         result["match"]    = m121
         result["pn"]       = hsc_pnc121(m121)
         result["note121"]  = True
-        result["note121_pipe"] = body_size_min121(ip=inlet_input, reg=m121["reg"])
+        result["note121_pipe"] = body_size_min121(ip=inlet, reg=m121["reg"])
         return result, msgs
 
     result["no_match"] = True
@@ -410,23 +395,23 @@ else:
     elevation_reduction = 0
 
 errors = []
-if inlet_input == 0:
+if inlet_psi == 0:
     errors.append("Inlet pressure is required.")
-if outlet_input == 0:
+if outlet_psi == 0:
     errors.append("Outlet pressure is required.")
 if flow_rate == 0:
     errors.append("Please enter a max gas load / flow rate.")
-if inlet_input > 0 and (inlet_psi > 1000 or inlet_psi < 0.25):
+if inlet_psi > 0 and (inlet_psi > 1000 or inlet_psi < 0.25):
     errors.append("Inlet pressure must be between 7\" wc (0.25 psi / 0.017 bar) and 1,000 psi.")
-if outlet_input > 0 and (outlet_psi < 1.5/28 or outlet_psi > 250):
+if outlet_psi > 0 and (outlet_psi < 1.5/28 or outlet_psi > 250):
     errors.append("Outlet pressure must be between 1.5\" wc and 250 psi.")
-if inlet_input > 0 and outlet_input > 0 and outlet_psi >= inlet_psi:
+if inlet_psi > 0 and outlet_psi > 0 and outlet_psi >= inlet_psi:
     errors.append("Outlet pressure must be less than inlet pressure.")
 if int(maop) != 0 and maop < inlet_psi:
     errors.append("MAIP must be >= inlet pressure.")
 if min_flow > flow_rate:
     errors.append("Minimum flow must be ≤ maximum flow rate.")
-if inlet_input > 0 and outlet_input > 0 and inlet_psi > 175 and outlet_psi < 3:
+if inlet_psi > 0 and outlet_psi > 0 and inlet_psi > 175 and outlet_psi < 3:
     errors.append("Pressure differential too large — consider two pressure cuts.")
 
 if run_btn:
