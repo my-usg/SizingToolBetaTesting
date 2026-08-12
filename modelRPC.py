@@ -64,7 +64,7 @@ with _v2:
 with _v3:
     flow_rate    = st.number_input(_req_label("k_flow", "Gas load / flow rate"), min_value=0, max_value=10000000000, value=0, step=50, format="%d", key="k_flow")
 with _v4:
-    maop = st.number_input("Max Allowable Inlet Pressure (psi)", min_value=0, max_value=1000, value=0, step=1, format="%d", help="Not required: default 0.  Regulator sized based on inlet pressure, however program will ensure configuration can handle this max inlet pressure/MAOP.")
+    maop = st.number_input("Max Allowable Inlet Pressure (psi)", min_value=0, max_value=1000, value=0, step=1, format="%d", help="Not required: default 0.  Regulator sized based on inlet pressure, however program will ensure configuration can handle this max inlet pressure.")
 _u1, _u2, _u3, _u4 = st.columns(4)
 with _u1:
     inlet_units  = st.selectbox("Inlet pressure units",  ["psi", "bar", "kPa"])
@@ -92,7 +92,7 @@ with _design:
     opp_type   = "Monitor" if opp_choice == "Yes" else "None"
 with _loadgas:
     st.markdown("**Load Type & Gas**")
-    higheff   = st.radio("Feeding a generator or high-efficiency boiler?", ["No", "Yes"])
+    higheff   = st.radio("Feeding a generator or high-efficiency boiler?", ["No", "Yes"], help="Program will select a regulator that has capacity for double the load feeding high-efficiency equipment")
     pload     = 0.0
     pload_pct = 0
     if higheff == "Yes":

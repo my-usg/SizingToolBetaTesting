@@ -78,12 +78,12 @@ with _u2:
 with _u3:
     flowrate_units = st.selectbox("Gas load / flow rate units", ["CFH", "CMH", "BTUH"])
 with _u4:
-    maop = st.number_input("Max Allowable Inlet Pressure (psi)", min_value=0, max_value=1000, value=0, step=1, format="%d", help="Not required: default 0.  Regulator sized based on inlet pressure, however program will ensure configuration can handle this max inlet pressure/MAOP.")
+    maop = st.number_input("Max Allowable Inlet Pressure (psi)", min_value=0, max_value=1000, value=0, step=1, format="%d", help="Not required: default 0.  Regulator sized based on inlet pressure, however program will ensure configuration can handle this max inlet pressure.")
 
 _design, _loadgas = st.columns(2)
 with _design:
     st.markdown("**Design Parameters**")
-    _pipe_options = ["N/A", '3/8"', '1/2"', '3/4"', '1"', '1-1/4"', '1-1/2"', '2"', '2-1/2"', '3"']
+    _pipe_options = ["N/A", '3/4"', '1"', '1-1/4"', '1-1/2"', '2"', '2-1/2"', '3"']
     _sz, _ = st.columns([1, 1])
     with _sz:
         pipesize_index = st.selectbox("Desired pipe size", range(len(_pipe_options)),
@@ -94,7 +94,7 @@ with _design:
     opp_type   = "Monitor" if opp_choice == "Yes" else "None"
 with _loadgas:
     st.markdown("**Load Type & Gas**")
-    higheff   = st.radio("Feeding a generator or high-efficiency boiler?", ["No", "Yes"])
+    higheff   = st.radio("Feeding a generator or high-efficiency boiler?", ["No", "Yes"], help="Program will select a regulator that has capacity for double the load feeding high-efficiency equipment")
     pload     = 0.0
     pload_pct = 0
     if higheff == "Yes":
