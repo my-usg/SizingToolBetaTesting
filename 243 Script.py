@@ -1109,8 +1109,8 @@ results_irv = interpolate_capacity(stddata243, inlet_input, outlet_input, False,
 result_mon = interpolate_capacity(stddata243, inlet_input, outlet_input, True, False)
 result_hp_mon = interpolate_capacity(hpdata243, inlet_input, outlet_input, True, False)
 
-# Standard Tables
-if outlet_input <= 5 and (opp_type == "None" or opp_type == "Partial"):
+# Standard Tables - 243-8 and 243-12
+if outlet_input <= 3 and (opp_type == "None" or opp_type == "Partial"):
     print("REGULATOR SIZING TABLES")
     print_model_table('Model 243-8, 1-1/4" Body','R243081Q', opp_type, result243)
     print_model_table('Model 243-8, 1-1/2" Body','R243081H', opp_type, result243)
@@ -1119,6 +1119,13 @@ if outlet_input <= 5 and (opp_type == "None" or opp_type == "Partial"):
     print_model_table('Model 243-12, 1-1/2" Body','R243121H', opp_type, result243)
     print_model_table('Model 243-12, 2" Body','R2431202', opp_type, result243)
     print_model_table('Model 243-12-1 with External Control Line','R24312EX', opp_type, result243)
+
+# Standard Tables - 243-8 only
+elif outlet_input <= 5 and (opp_type == "None" or opp_type == "Partial"):
+    print("REGULATOR SIZING TABLES")
+    print_model_table('Model 243-8, 1-1/4" Body','R243081Q', opp_type, result243)
+    print_model_table('Model 243-8, 1-1/2" Body','R243081H', opp_type, result243)
+    print_model_table('Model 243-8, 2" Body','R2430802', opp_type, result243)
 
 # IRV & Monitor Tables
 elif opp_type == "IRV":

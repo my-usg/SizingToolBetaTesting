@@ -422,13 +422,22 @@ if run_btn:
                     ('Model 243-8HP, 2" Body',      'R243HP02'),
                 ]
 
-                # Standard tables (mirror 243 Script lines 1108-1168)
-                if outlet_psi <= 5 and (opp_type == "None" or opp_type == "Partial"):
+                # Standard Tables - 243-8 and 243-12
+                if outlet_psi <= 3 and (opp_type == "None" or opp_type == "Partial"):
                     for title, prefix in STD_MON_BODIES:
                         df = build_table(prefix, opp_type, result243)
                         if not df.empty:
                             st.markdown(f"**{title}**")
                             st.dataframe(df, use_container_width=True, hide_index=True)
+
+                # Standard Tables - 243-8 only
+                elif outlet_psi <= 5 and (opp_type == "None" or opp_type == "Partial"):
+                    for title, prefix in STD_243_8_BODIES:
+                        df = build_table(prefix, opp_type, result243)
+                        if not df.empty:
+                            st.markdown(f"**{title}**")
+                            st.dataframe(df, use_container_width=True, hide_index=True)
+
 
                 # IRV + Monitor tables
                 elif opp_type == "IRV":
