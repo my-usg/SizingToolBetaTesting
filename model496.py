@@ -418,17 +418,17 @@ if run_btn:
                 summary = {
                     f"Inlet Pressure ({inlet_units})":   inlet_input,
                     f"Outlet Pressure ({outlet_units})": outlet_input,
-                    f"Gas Load ({flowrate_units})":      f"{flow_rate:,}",
-                    "Max Allowable Inlet Pressure (psi)":                        f"{int(maop)}",
-                    "Requested Pipe Size":               _pipe_options[pipesize_index],
-                    "Overpressure Protection Required":  "Yes" if opp_choice == "Yes" else "No",
+                    f"Max Flow Rate ({flowrate_units})": f"{flow_rate:,}",
+                    "Max Allowable Inlet Pressure (psi)": f"{int(maop)}",
+                    "Requested Pipe Size": _pipe_options[pipesize_index],
+                    "Overpressure Protection Required": "Yes" if opp_choice == "Yes" else "No",
                 }
-                if opp_choice == "Yes":
-                    summary["IRV Protect Downstream Pressure To (psi)"] = f"{irv_input:.1f}"
-                summary["Percent Load Feeding High-Efficiency Appliance"] = f"{pload_pct}%" if higheff == "Yes" else "N/A"
-                summary["Gas Type"]             = gastype_input
-                summary["Override Oversize %"] = f"{(oversizeby - 1) * 100:.0f}%" if override_oversize == "Yes" else "No"
-                summary["Atmospheric Pressure (psi)"] = f"{Patm:.1f}" if Patm < 14.4 else "14.4"
+                summary["Percent Load Feeding High-Efficiency Appliance"] = f"{pload_pct}%" if higheff == "Yes" else "0"
+                summary["Override percentage regulator is oversized by"] = f"{(oversizeby - 1) * 100:.0f}%" if override_oversize == "Yes" else "No"
+                summary["Gas Type"] = gastype_input
+                summary["Altitude above 3,000 feet or atmospheric pressure below 13 psi"] = elevation
+                if elevation == "Yes":
+                    summary["Atmospheric Pressure (psi)"] = f"{Patm:.1f}"        
                 # df_summary = pd.DataFrame(summary.items(), columns=["Parameter", "Value"])
                 # st.dataframe(df_summary, use_container_width=True, hide_index=True)
 

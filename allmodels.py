@@ -182,87 +182,23 @@ def run_tool(
     msgs   = []   # warning messages
     result = {}   # what we'll display
 
-    # 143 -------------------------------------------------------------------
-    r143, m143, ok143, w143 = run_regulator_selection143(
-        inlet, outlet, opp_type)
-    if ok143:
-        if w143: msgs.append(w143)
-        result["match"] = m143
-        result["pn"]    = hsc_pnc143(m143)
-        return result, msgs
+    match_selection, model_selection, warning_selection, partnumber, pipe_requirement = allmodels_selector(inlet_input, outlet_input, opp_type)
 
-    # 496 -------------------------------------------------------------------
-    r496, m496, ok496, w496 = run_regulator_selection496(
-        inlet, outlet, opp_type)
-    if ok496:
-        if w496: msgs.append(w496)
-        result["match"]  = m496
-        result["pn"]     = hsc_pnc496(m496)
-        return result, msgs
+    if model_selection:
+        if warning_selection: msgs.append(warning_selection)
+        result["match"] = match_selection
+        result["pn"] = partnumber
 
-    # 243 -------------------------------------------------------------------
-    r243, m243, ok243, w243 = run_regulator_selection243(
-        inlet, outlet, opp_type)
-    if ok243:
-        if w243: msgs.append(w243)
-        result["match"] = m243
-        result["pn"]    = hsc_pnc243(m243)
-        return result, msgs
-
-    # 046 -------------------------------------------------------------------
-    r046, m046, ok046, w046 = run_regulator_selection046(
-        inlet, outlet, opp_type)
-    if ok046:
-        if w046: msgs.append(w046)
-        result["match"] = m046
-        result["pn"]    = hsc_pnc046(m046)
-        return result, msgs
-
-    # ── new routing: high-eff + no OPP → try 121/122 before 441/461 ────────
-    if combust_pref:
-        r121, r121vp, r122, m121, ok121, w121 = run_regulator_selection121(
-            inlet, outlet, opp_type)
-        if ok121:
-            if w121: msgs.append(w121)
-            result["match"]    = m121
-            result["pn"]       = hsc_pnc121(m121)
+        if pipe_requirement:
             result["note121"]  = True
-            result["note121_pipe"] = body_size_min121(ip=inlet, reg=m121["reg"])
-            return result, msgs
+            result["note121_pipe"] = pipe_requirement
 
-        # 121 didn't work — fall through to 441/461
-        m461, ok461, w461 = run_regulator_selection461(
-            inlet, outlet, flow_rate, min_flow, opp_type)
-        if ok461:
-            if w461: msgs.append(w461)
-            result["match"] = m461
-            result["pn"]    = hsc_pnc461(m461)
-            return result, msgs
+            # old way
+            # result["note121_pipe"] = body_size_min121(ip=inlet, reg=m121["reg"])
 
+    else:
         result["no_match"] = True
-        return result, msgs
 
-    # ── standard routing: 441/461 before 121/122 ────────────────────────────
-    m461, ok461, w461 = run_regulator_selection461(
-        inlet, outlet, flow_rate, min_flow, opp_type)
-    if ok461:
-        if w461: msgs.append(w461)
-        result["match"] = m461
-        result["pn"]    = hsc_pnc461(m461)
-        return result, msgs
-
-    # 121/122 ---------------------------------------------------------------
-    r121, r121vp, r122, m121, ok121, w121 = run_regulator_selection121(
-        inlet, outlet, opp_type)
-    if ok121:
-        if w121: msgs.append(w121)
-        result["match"]    = m121
-        result["pn"]       = hsc_pnc121(m121)
-        result["note121"]  = True
-        result["note121_pipe"] = body_size_min121(ip=inlet, reg=m121["reg"])
-        return result, msgs
-
-    result["no_match"] = True
     return result, msgs
 
 
@@ -491,10 +427,7 @@ if run_btn:
 
                     if result.get("note121"):
                         pipe = result.get("note121_pipe", "")
-                        if pipe:
-                            st.info(f"ℹ️  Model 121 regulators have outlet pipe sizing requirements. This regulator was sized for use with **{pipe}** outlet pipe. For capacities with smaller outlet piping, see regulator brochure.")
-                        else:
-                            st.info("ℹ️  Model 121 regulators have outlet pipe sizing requirements — see brochure.")
+                        st.info(f"ℹ️  {pipe}")
 
                     # ── sizing adjustments ───────────────────────────────────
                     st.divider()
@@ -528,11 +461,13 @@ if run_btn:
                         summary["Protection Type"] = "IRV" if "IRV" in opp_pref else "Monitor"
                         if "IRV" in opp_pref:
                             summary["IRV Protect Downstream Pressure To (psi)"] = f"{irv_input:.1f}"
-                    summary["Percent Load Feeding High-Efficiency Appliance"] = f"{pload_pct}%" if higheff == "Yes" else "N/A"
+                    summary["Percent Load Feeding High-Efficiency Appliance"] = f"{pload_pct}%" if higheff == "Yes" else "0"
+                    summary["Override percentage regulator is oversized by"] = f"{(oversizeby - 1) * 100:.0f}%" if override_oversize == "Yes" else "No"
                     summary["Combustion Regulator Preferred"] = "Yes" if combust_pref else "No"
                     summary["Gas Type"] = gastype_input
-                    summary["Override Oversize %"] = f"{(oversizeby - 1) * 100:.0f}%" if override_oversize == "Yes" else "No"
-                    summary["Atmospheric Pressure (psi)"] = f"{Patm:.1f}" if Patm < 14.4 else "14.4"                       
+                    summary["Altitude above 3,000 feet or atmospheric pressure below 13 psi"] = elevation
+                    if elevation == "Yes":
+                        summary["Atmospheric Pressure (psi)"] = f"{Patm:.1f}"                      
                     # df = pd.DataFrame(summary.items(), columns=["Parameter", "Value"])
                     # st.dataframe(df, use_container_width=True, hide_index=True)
 

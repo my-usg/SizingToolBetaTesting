@@ -4036,6 +4036,91 @@ def hsc_pnc461(match):
 
 # ------------------------------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------------------------------
+# General Sizing Tool - All Models Regulator Selection
+# ------------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------------------------------
+
+def allmodels_selector(inlet, outlet, opp):
+
+    model_selection = None
+    match = None
+    warning = None
+    partnumber = None
+    pipe_requirement = None
+
+    result143, match143, apply143, warning143 = run_regulator_selection143(inlet, outlet, opp)
+    result496, match496, apply496, warning496 = run_regulator_selection496(inlet, outlet, opp)
+    result243, match243, apply243, warning243 = run_regulator_selection243(inlet, outlet, opp)
+    result046, match046, apply046, warning046 = run_regulator_selection046(inlet, outlet, opp)
+    result121, result121_VP, result122, match121, apply121, warning121 = run_regulator_selection121(inlet, outlet, opp)
+    match461, apply461, warning461 = run_regulator_selection461(inlet, outlet, flow_rate, min_flow, opp)
+
+    # Determine the right model to use
+    if apply143:
+        model_selection = "143"
+    elif apply496:
+        model_selection = "496"
+    elif apply046 and apply243:
+        if opp == "IRV":
+            model_selection = "046"
+        else:
+            model_selection = "243"
+    elif apply243:
+        model_selection = "243"
+    elif apply046:
+        model_selection = "046"
+    elif apply121 and apply461:
+        if combust_pref:
+            if apply121:
+                model_selection = "121"
+            else:
+                model_selection = "461"
+        else:
+            if apply461:
+                model_selection = "461"
+            else:
+                model_selection = "121"
+    elif apply461:
+        model_selection = "461"
+    elif apply121:
+        model_selection = "121"
+    else:
+        model_selection = None
+
+    # Determine the match and warning to return
+    if model_selection == "496":
+        match = match496
+        warning = warning496
+        partnumber = add_cart = hsc_pnc496(match496)
+    elif model_selection == "143":
+        match = match143
+        warning = warning143
+        partnumber = add_cart = hsc_pnc143(match143)
+    elif model_selection == "243":
+        match = match243
+        warning = warning243
+        partnumber = add_cart = hsc_pnc243(match243)
+    elif model_selection == "046":
+        match = match046
+        warning = warning046
+        partnumber = add_cart = hsc_pnc046(match046)
+    elif model_selection == "121":
+        match = match121
+        warning = warning121
+        partnumber = add_cart = hsc_pnc121(match121)
+        # 121 requires special pipe sizing
+        if match['model'] == '121-8' or match['model'] == '121-12' or match['model'] == '121-16' or match['model'] == '121-HP':
+            pipe_requirement = f"Note: Model 121 regulators have outlet pipe sizing requirements, regulator was sized for use with {body_size_min121(ip=inlet_input, reg=match['reg'])} outlet pipe.  For capacities with smaller outlet piping, see regulator brochure."
+    elif model_selection == "461":
+        match = match461
+        warning = warning461
+        partnumber = add_cart = hsc_pnc461(match461)
+    
+    return match, model_selection, warning, partnumber, pipe_requirement
+
+
+# ------------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------------------------------
 # Output Function
 # ------------------------------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------------------------------
@@ -4252,135 +4337,29 @@ if inlet_input > 175 and outlet_input < 3:
 # ------------------------------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------------------------------
 
-print("")
-result143, match143, apply143, warning143 = run_regulator_selection143(inlet_input, outlet_input, opp_type)
-if apply143:
-    if warning143:
-        print(warning143)
+# Run Tool
+match, model_selection, warning, add_cart, pipe_requirement = allmodels_selector(inlet_input, outlet_input, opp_type)
+
+if model_selection:
+    print("")
+    if warning:
+        print(warning)
         print("")
-    print_regulator_selection(match143)
+    print_regulator_selection(match)
     print("")
 
     # HSC Part Number = add_cart
-    add_cart = hsc_pnc143(match143)
     print(f"HSC P/N:", ', '.join(add_cart) if isinstance(add_cart, (list, set)) else add_cart)
     print("")
 
+    # 121 has an outlet pipe size requirements
+    if pipe_requirement:
+        print(pipe_requirement)
+        print("")
+
 else:
-    result496, match496, apply496, warning496 = run_regulator_selection496(inlet_input, outlet_input, opp_type)
-    if apply496:
-        if warning496:
-            print(warning496)
-            print("")
-        print_regulator_selection(match496)
-        print("")
+    print("No USG Regulators will work for your application")
+    print("")
 
-        # HSC Part Number = add_cart
-        add_cart = hsc_pnc496(match496)
-        print(f"HSC P/N:", ', '.join(add_cart) if isinstance(add_cart, (list, set)) else add_cart)
-        print("")
-
-    else:
-        result243, match243, apply243, warning243 = run_regulator_selection243(inlet_input, outlet_input, opp_type)
-        if apply243:
-            if warning243:
-                print(warning243)
-                print("")
-            print_regulator_selection(match243)         
-            print("")
-
-            # HSC Part Number = add_cart
-            add_cart = hsc_pnc243(match243)
-            print(f"HSC P/N:", ', '.join(add_cart) if isinstance(add_cart, (list, set)) else add_cart)
-            print("")
-
-        else:
-            result046, match046, apply046, warning046 = run_regulator_selection046(inlet_input, outlet_input, opp_type)
-            if apply046:
-                if warning046:
-                    print(warning046)
-                    print("")
-                print_regulator_selection(match046)                
-                print("")
-
-                # HSC Part Number = add_cart
-                add_cart = hsc_pnc046(match046)
-                print(f"HSC P/N:", ', '.join(add_cart) if isinstance(add_cart, (list, set)) else add_cart)
-                print("")
-
-            # For combustion regulators preferred size 121/122 first, else size 441/461 first
-            elif combust_pref:
-                #121
-                result121, result121_VP, result122, match121, apply121, warning121 = run_regulator_selection121(inlet_input, outlet_input, opp_type)
-                if apply121:
-                    if warning121:
-                        print(warning121)
-                        print("")
-                    print_regulator_selection(match121)
-                    print("")
-
-                    # HSC Part Number = add_cart
-                    add_cart = hsc_pnc121(match121)
-                    print(f"HSC P/N:", ', '.join(add_cart) if isinstance(add_cart, (list, set)) else add_cart)
-                    print("")
-
-                    # 121 has an outlet pipe size requirements
-                    if match121['model'] == '121-8' or match121['model'] == '121-12' or match121['model'] == '121-16' or match121['model'] == '121-HP':
-                        print(f"Note: Model 121 regulators have outlet pipe sizing requirements, regulator was sized for use with {body_size_min121(ip=inlet_input, reg=match121['reg'])} outlet pipe.  For capacities with smaller outlet piping, see regulator brochure.")
-                        print("")
-                
-                else:
-                    match461, apply461, warning461 = run_regulator_selection461(inlet_input, outlet_input, flow_rate, min_flow, opp_type)
-                    if apply461:
-                        if warning461:
-                            print("")
-                            print(warning461)
-                        print("")
-                        print_regulator_selection(match461)
-                        print("")
-                        
-                        # HSC Part Number = add_cart
-                        add_cart = hsc_pnc461(match461)
-                        print(f"HSC P/N:", ', '.join(add_cart) if isinstance(add_cart, (list, set)) else add_cart)
-                    else:
-                        print("No USG Regulators will work for your application")
-                        print("")
-
-            else:
-                match461, apply461, warning461 = run_regulator_selection461(inlet_input, outlet_input, flow_rate, min_flow, opp_type)
-                if apply461:
-                    if warning461:
-                        print("")
-                        print(warning461)
-                    print("")
-                    print_regulator_selection(match461)
-                    print("")
-                    
-                    # HSC Part Number = add_cart
-                    add_cart = hsc_pnc461(match461)
-                    print(f"HSC P/N:", ', '.join(add_cart) if isinstance(add_cart, (list, set)) else add_cart)
-
-                else:
-                    result121, result121_VP, result122, match121, apply121, warning121 = run_regulator_selection121(inlet_input, outlet_input, opp_type)
-                    if apply121:
-                        if warning121:
-                            print(warning121)
-                            print("")
-                        print_regulator_selection(match121)
-                        print("")
-                        
-                        # HSC Part Number = add_cart
-                        add_cart = hsc_pnc121(match121)
-                        print(f"HSC P/N:", ', '.join(add_cart) if isinstance(add_cart, (list, set)) else add_cart)
-                        print("")
-
-                        # 121 has an outlet pipe size requirements
-                        if match121['model'] == '121-8' or match121['model'] == '121-12' or match121['model'] == '121-16' or match121['model'] == '121-HP':
-                            print(f"Note: Model 121 regulators have outlet pipe sizing requirements, regulator was sized for use with {body_size_min121(ip=inlet_input, reg=match121['reg'])} outlet pipe.  For capacities with smaller outlet piping, see regulator brochure.")
-                            print("")
-                    
-                    else:
-                        print("No USG Regulators will work for your application")
-                        print("")
 
 # END
