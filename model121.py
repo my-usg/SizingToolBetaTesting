@@ -382,7 +382,9 @@ if run_btn:
 
                 # ── sizing tables ─────────────────────────────────────────────
                 st.divider()
-                table_label = "**Regulator Sizing Tables with Monitor**" if opp_type == "Monitor" else "**Regulator Sizing Tables**"
+                if opp_type == "Monitor":
+                    table_label = "**Regulator Sizing Tables with Monitor**"
+                #table_label = "**Regulator Sizing Tables with Monitor**" if opp_type == "Monitor" else "**Regulator Sizing Tables**"
 
                 show_122 = (
                     not isinstance(result122, str) and (
@@ -393,7 +395,7 @@ if run_btn:
 
                 if show_122:
                     # Standard + VP + 122
-                    #st.subheader("Regulator Sizing Tables")
+                    st.subheader("Regulator Sizing Tables")
                     st.markdown(table_label)
 
                     st.markdown("**Standard Valves**")
@@ -421,7 +423,7 @@ if run_btn:
 
                 elif outlet_psi <= 3:
                     # Standard + VP, no 122
-                    #st.subheader("Regulator Sizing Tables")
+                    st.subheader("Regulator Sizing Tables")
                     st.markdown(table_label)
 
                     st.markdown("**Standard Valves**")
