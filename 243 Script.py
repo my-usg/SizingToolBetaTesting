@@ -681,11 +681,10 @@ def run_regulator_selection243(inlet, outlet, opp):
     hp_warning = None
 
     # Correct when user requests IRV but a monitor needs to be used
-    if outlet_input > 2 and opp == "IRV":
+    if outlet_input >= 2 and opp == "IRV":
         hp_warning = "IRV cannot be sized for your application, sized for worker/monitor setup"
         opp = "Monitor"
     
-
     # Select data - standard or hp
     if opp == "Monitor":
         if outlet_input <= 3:

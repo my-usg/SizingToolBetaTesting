@@ -933,6 +933,14 @@ def run_regulator_selection496(inlet, outlet, opp):
 
     opp = "IRV" if opp == "Monitor" else opp
 
+    # if opp = IRV, fail if outlet = 2 psi
+    if opp == "IRV" and outlet_input > 0.25:
+        warning = "Cannot size IRV for elevated outlet pressures"
+        result = None
+        match = None
+        apply = False
+        return result, match, apply, warning
+
     if isinstance(result, str):
         warning = result
         result = None
@@ -1237,6 +1245,8 @@ def gen_match143(result, opp):
 
 
 def run_regulator_selection143(inlet, outlet, opp):
+
+    opp = "IRV" if opp == "Monitor" else opp
     
     # if opp = IRV, fail if outlet > 2 psi (for 143-2HP)
     if opp == "IRV" and outlet_input > 2:
@@ -1249,8 +1259,6 @@ def run_regulator_selection143(inlet, outlet, opp):
     result = interpolate_capacity(data143, inlet, outlet, False, False)
 
     warning = None
-
-    opp = "IRV" if opp == "Monitor" else opp
 
     if isinstance(result, str):
         warning = result
@@ -1749,12 +1757,9 @@ def run_regulator_selection243(inlet, outlet, opp):
     warning = None
     hp_warning = None
 
-    # Correct when user requests IRV but a 243-8HP needs to be used
-    if outlet_input > 5 and (opp == "IRV" or opp == "Partial"):
-        hp_warning = "243-HP not available with IRV, sized for worker/monitor setup"
-        opp = "Monitor"
-    elif outlet_input > 4.5 and opp == "IRV":
-        hp_warning = "243-8-2 with Cadmium spring only available with partial IRV, sized for worker/monitor setup"
+    # Correct when user requests IRV but a monitor needs to be used
+    if outlet_input >= 2 and opp == "IRV":
+        hp_warning = "IRV cannot be sized for your application, sized for worker/monitor setup"
         opp = "Monitor"
 
     # Select data - standard or hp
@@ -1763,7 +1768,7 @@ def run_regulator_selection243(inlet, outlet, opp):
             data_used243 = stddata243
         else:
             data_used243 = hpdata243
-    elif opp == "IRV" or opp == "Partial":
+    elif opp == "IRV":
         data_used243 = stddata243
     else:
         if outlet_input <= 5:

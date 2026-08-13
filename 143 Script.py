@@ -379,6 +379,8 @@ def gen_match143(result, opp):
 
 
 def run_regulator_selection143(inlet, outlet, opp):
+
+    opp = "IRV" if opp == "Monitor" else opp
     
     # if opp = IRV, fail if outlet > 2 psi (for 143-2HP)
     if opp == "IRV" and outlet_input > 2:
@@ -391,8 +393,6 @@ def run_regulator_selection143(inlet, outlet, opp):
     result = interpolate_capacity(data143, inlet, outlet, False, False)
 
     warning = None
-
-    opp = "IRV" if opp == "Monitor" else opp
 
     if isinstance(result, str):
         warning = result

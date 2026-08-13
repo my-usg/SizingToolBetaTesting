@@ -223,7 +223,7 @@ def will_irv_work496(reg, opp):
     # Partial IRV
     if opp == "Partial":
         return "Partial"
-    
+  
     irvdata496 = {
         0: {'18': 0.25, '36': 0.25, '14': 0.25, '56': 0.25, '38': 0.25, '12': 0.25},
         3: {'18': 0.39, '36': 0.39, '14': 0.39, '56': 0.39, '38': 0.39, '12': 0.46},
@@ -354,6 +354,14 @@ def run_regulator_selection496(inlet, outlet, opp):
     warning = None
 
     opp = "IRV" if opp == "Monitor" else opp
+
+    # if opp = IRV, fail if outlet = 2 psi
+    if opp == "IRV" and outlet_input > 0.25:
+        warning = "Cannot size IRV for elevated outlet pressures"
+        result = None
+        match = None
+        apply = False
+        return result, match, apply, warning
 
     if isinstance(result, str):
         warning = result
