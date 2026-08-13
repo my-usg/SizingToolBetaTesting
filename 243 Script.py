@@ -1135,8 +1135,8 @@ elif opp_type == "IRV":
     print_model_table('Model 243-12, 2" Body','R2431202', "Monitor", result_mon)
     print_model_table('Model 243-12-1 with External Control Line','R24312EX', "Monitor", result_mon)
 
-# Monitor Only Tables
-elif outlet_input <= 3 and opp_type == "Monitor":
+# Monitor Only Tables - 243-8 and 243-12
+elif outlet_input <= 2 and opp_type == "Monitor":
     print("REGULATOR SIZING TABLES WITH MONITOR")
     print_model_table('Model 243-8, 1-1/4" Body','R243081Q', "Monitor", result_mon)
     print_model_table('Model 243-8, 1-1/2" Body','R243081H', "Monitor", result_mon)
@@ -1145,6 +1145,13 @@ elif outlet_input <= 3 and opp_type == "Monitor":
     print_model_table('Model 243-12, 1-1/2" Body','R243121H', "Monitor", result_mon)
     print_model_table('Model 243-12, 2" Body','R2431202', "Monitor", result_mon)
     print_model_table('Model 243-12-1 with External Control Line','R24312EX', "Monitor", result_mon)
+
+# Monitor Only Tables - 243-8 only
+elif outlet_input <= 3 and opp_type == "Monitor":
+    print("REGULATOR SIZING TABLES WITH MONITOR")
+    print_model_table('Model 243-8, 1-1/4" Body','R243081Q', "Monitor", result_mon)
+    print_model_table('Model 243-8, 1-1/2" Body','R243081H', "Monitor", result_mon)
+    print_model_table('Model 243-8, 2" Body','R2430802', "Monitor", result_mon)
 
 # HP Standard Tables
 elif outlet_input > 5 and (opp_type == "None" or opp_type == "Partial"):

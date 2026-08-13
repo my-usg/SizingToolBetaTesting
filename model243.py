@@ -411,13 +411,18 @@ if run_btn:
                 STD_MON_BODIES = STD_IRV_BODIES + [
                     ('Model 243-12-1 with External Control Line', 'R24312EX'),
                 ]
+                STD_243_8_BODIES = [
+                    ('Model 243-8, 1-1/4" Body',  'R243081Q'),
+                    ('Model 243-8, 1-1/2" Body',  'R243081H'),
+                    ('Model 243-8, 2" Body',       'R2430802'),
+                ]
                 HP_BODIES = [
                     ('Model 243-8HP, 1-1/4" Body', 'R243HP1Q'),
                     ('Model 243-8HP, 1-1/2" Body', 'R243HP1H'),
                     ('Model 243-8HP, 2" Body',      'R243HP02'),
                 ]
 
-                # Standard tables (mirror 243 Script lines 1108-1162)
+                # Standard tables (mirror 243 Script lines 1108-1168)
                 if outlet_psi <= 5 and (opp_type == "None" or opp_type == "Partial"):
                     for title, prefix in STD_MON_BODIES:
                         df = build_table(prefix, opp_type, result243)
@@ -441,10 +446,19 @@ if run_btn:
                             st.markdown(f"**{title}**")
                             st.dataframe(df, use_container_width=True, hide_index=True)
 
-                # Monitor-only (standard) tables
-                elif outlet_psi <= 3 and opp_type == "Monitor":
+                # Monitor-only (standard) tables — 243-8 and 243-12
+                elif outlet_psi <= 2 and opp_type == "Monitor":
                     st.markdown("**With Monitor**")
                     for title, prefix in STD_MON_BODIES:
+                        df = build_table(prefix, "Monitor", result_mon)
+                        if not df.empty:
+                            st.markdown(f"**{title}**")
+                            st.dataframe(df, use_container_width=True, hide_index=True)
+
+                # Monitor-only (standard) tables — 243-8 only
+                elif outlet_psi <= 3 and opp_type == "Monitor":
+                    st.markdown("**With Monitor**")
+                    for title, prefix in STD_243_8_BODIES:
                         df = build_table(prefix, "Monitor", result_mon)
                         if not df.empty:
                             st.markdown(f"**{title}**")
