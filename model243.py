@@ -59,7 +59,7 @@ def build_table(prefix, opp_type, result):
 # ── helper: styled section label (one size up from table titles, dark blue) ────
 def section_label(text):
     st.markdown(
-        f"<p style='font-size:1.25rem; font-weight:700; color:#00008B; "
+        f"<p style='font-size:1.25rem; font-weight:400; color:#00008B; "
         f"margin:0.5rem 0 0.25rem;'>{text}</p>",
         unsafe_allow_html=True,
     )
@@ -407,7 +407,7 @@ if run_btn:
 
                 # ── sizing tables ─────────────────────────────────────────────
                 st.divider()
-                st.subheader("Regulator Sizing Tables")
+                st.markdown("<h3 style='color:#CC5500;'>Regulator Sizing Tables</h3>", unsafe_allow_html=True)
 
                 STD_IRV_BODIES = [
                     ('Model 243-8, 1-1/4" Body',  'R243081Q'),

@@ -388,7 +388,7 @@ if run_btn:
 
                 # ── sizing tables ─────────────────────────────────────────────
                 st.divider()
-                st.subheader("Regulator Sizing Tables")
+                st.markdown("<h3 style='color:#CC5500;'>Regulator Sizing Tables</h3>", unsafe_allow_html=True)
 
                 body_sizes = [
                     ('Model 143, 3/4" Body',   'R14334'),

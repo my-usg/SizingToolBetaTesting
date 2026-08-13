@@ -358,7 +358,7 @@ if run_btn:
 
                 # ── sizing tables ─────────────────────────────────────────────
                 st.divider()
-                st.subheader("Regulator Sizing Tables")
+                st.markdown("<h3 style='color:#CC5500;'>Regulator Sizing Tables</h3>", unsafe_allow_html=True)
 
                 if opp_type != "None":
                     st.caption("Capacity reduction due to monitor shown.")
