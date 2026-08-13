@@ -610,7 +610,7 @@ stddata122 = {
     },
 }
 
-#121-HP Data
+#121-8-HP Data
 hpdata121 = {
 	3: {
         5: {'R121HP13': 7500, 'R121HP1Q': 8300, 'R121HP1H': 11000, 'R121HP20': 20000, 'R121HP2H': 22000},
@@ -4062,7 +4062,10 @@ def allmodels_selector(inlet, outlet, opp):
         model_selection = "496"
     elif apply046 and apply243:
         if opp == "IRV":
-            model_selection = "046"
+            if match['model'] == '046-2':
+               model_selection = "046"
+            else:
+                model_selection = "243"
         else:
             model_selection = "243"
     elif apply243:
@@ -4109,7 +4112,7 @@ def allmodels_selector(inlet, outlet, opp):
         warning = warning121
         partnumber = add_cart = hsc_pnc121(match121)
         # 121 requires special pipe sizing
-        if match['model'] == '121-8' or match['model'] == '121-12' or match['model'] == '121-16' or match['model'] == '121-HP':
+        if match['model'] == '121-8' or match['model'] == '121-12' or match['model'] == '121-16' or match['model'] == '121-8-HP':
             pipe_requirement = f"Note: Model 121 regulators have outlet pipe sizing requirements, regulator was sized for use with {body_size_min121(ip=inlet_input, reg=match['reg'])} outlet pipe.  For capacities with smaller outlet piping, see regulator brochure."
     elif model_selection == "461":
         match = match461

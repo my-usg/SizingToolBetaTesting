@@ -156,7 +156,7 @@ stddata122 = {
     },
 }
 
-#121-HP Data
+#121-8-HP Data
 hpdata121 = {
 	3: {
         5: {'R121HP13': 7500, 'R121HP1Q': 8300, 'R121HP1H': 11000, 'R121HP20': 20000, 'R121HP2H': 22000},
@@ -1210,7 +1210,7 @@ if apply121:
     print(f"HSC P/N:", ', '.join(add_cart) if isinstance(add_cart, (list, set)) else add_cart)
     
     # 121 has an outlet pipe size requirements
-    if match121['model'] == '121-8' or match121['model'] == '121-12' or match121['model'] == '121-16' or match121['model'] == '121-HP':
+    if match121['model'] == '121-8' or match121['model'] == '121-12' or match121['model'] == '121-16' or match121['model'] == '121-8-HP':
         print("")
         print(f"Note: Model 121 regulators have outlet pipe sizing requirements, regulator was sized for use with {body_size_min121(ip=inlet_input, reg=match121['reg'])} outlet pipe.  For capacities with smaller outlet piping, see regulator brochure.")
 else:
@@ -1253,4 +1253,4 @@ else:
     print_model_table121('Model 121-8-HP','R121HP', result121, False)
     print("")
     print("V-PORT VALVES")
-    print_model_table121('Model 121-HP','R121HP', result121_VP, True)
+    print_model_table121('Model 121-8-HP','R121HP', result121_VP, True)
