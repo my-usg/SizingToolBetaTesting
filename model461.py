@@ -363,11 +363,11 @@ if run_btn:
                 if opp_type != "None":
                     st.caption("Capacity reduction due to monitor shown.")
 
-                st.markdown("**Sizing Table with standard valves**")
+                st.markdown("**Standard Valves**")
                 df_std = table_to_df(std)
                 st.dataframe(df_std, use_container_width=True, hide_index=True)
 
-                st.markdown("**Sizing Table with v-port valves**")
+                st.markdown("**V-Port Valves**")
                 df_vp = table_to_df(vp)
                 st.dataframe(df_vp, use_container_width=True, hide_index=True)
 
