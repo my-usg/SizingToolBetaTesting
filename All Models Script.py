@@ -935,7 +935,7 @@ def run_regulator_selection496(inlet, outlet, opp):
 
     # if opp = IRV, fail if outlet = 2 psi
     if opp == "IRV" and outlet_input == 2:
-        warning = "Cannot size IRV for elevated outlet pressures"
+        warning = "IRV could not be sized"
         result = None
         match = None
         apply = False
@@ -1250,7 +1250,7 @@ def run_regulator_selection143(inlet, outlet, opp):
     
     # if opp = IRV, fail if outlet > 2 psi (for 143-2HP)
     if opp == "IRV" and outlet_input > 2:
-        warning = "Cannot size IRV for outlet pressures > 2 psi"
+        warning = "IRV could not be sized"
         result = None
         match = None
         apply = False
@@ -1761,7 +1761,7 @@ def run_regulator_selection243(inlet, outlet, opp):
 
     # Correct when user requests IRV but a monitor needs to be used
     if outlet_input >= 2 and opp == "IRV":
-        hp_warning = "IRV cannot be sized >= 2 psi, sized for worker/monitor setup"
+        hp_warning = "IRV could not be sized, sized for worker/monitor setup"
         opp = "Monitor"
     
     # Select data - standard or hp
