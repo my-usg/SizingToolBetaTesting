@@ -356,7 +356,7 @@ def run_regulator_selection496(inlet, outlet, opp):
     opp = "IRV" if opp == "Monitor" else opp
 
     # if opp = IRV, fail if outlet = 2 psi
-    if opp == "IRV" and outlet_input > 0.25:
+    if opp == "IRV" and outlet_input == 2:
         warning = "Cannot size IRV for elevated outlet pressures"
         result = None
         match = None
