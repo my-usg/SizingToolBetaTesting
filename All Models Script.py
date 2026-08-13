@@ -1679,10 +1679,14 @@ def gen_match243(result, opp):
                             color = spring_243_8(outlet_input)['color']
                             range = spring_243_8(outlet_input)['range']
                             model = '243-8-2'
-                        else:
+                        elif prefix.startswith('R24312'):
                             color = spring_243_12(outlet_input)['color']
                             range = spring_243_12(outlet_input)['range']
                             model = '243-12-2'
+                        else:
+                            color = spring_243hp(outlet_input)['color']
+                            range = spring_243hp(outlet_input)['range']
+                            model = '243-8HP'
                         match = {
                             'reg' : reg,
                             'model': model,
@@ -1693,7 +1697,7 @@ def gen_match243(result, opp):
                             'color': color,
                             'range': range,
                             'capacity': cap,
-                            'opp': "IRV",
+                            'opp': "IRV" if opp == "IRV" else "None",
                             'mon_color': None,
                             'mon_range': None,
                         }
