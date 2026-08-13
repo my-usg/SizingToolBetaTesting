@@ -1654,10 +1654,8 @@ def gen_match243(result, opp):
     if opp == "Monitor":
         if outlet_input < 1:
             monset = outlet_input + 0.5
-        elif outlet_input == 1:
-            monset = 2
         elif outlet_input <= 2:
-            monset = outlet_input + 1.5
+            monset = outlet_input + 1
         elif outlet_input <= 5:
             monset = outlet_input + 2
         elif outlet_input <= 7:
@@ -1668,7 +1666,6 @@ def gen_match243(result, opp):
     if 'irv_input' in globals():
         if irv_input != 0 and monset > irv_input:
             monset = irv_input
-
 
     # IRV
     if opp == "IRV" or opp == "Partial":
@@ -1701,6 +1698,7 @@ def gen_match243(result, opp):
                             'mon_range': None,
                         }
                         return match
+
     # Other
     else:
         for prefix in ordered_prefixes:
@@ -1759,23 +1757,19 @@ def run_regulator_selection243(inlet, outlet, opp):
 
     # Correct when user requests IRV but a monitor needs to be used
     if outlet_input >= 2 and opp == "IRV":
-        hp_warning = "IRV cannot be sized for your application, sized for worker/monitor setup"
+        hp_warning = "IRV cannot be sized >= 2 psi, sized for worker/monitor setup"
         opp = "Monitor"
-
+    
     # Select data - standard or hp
-    if opp == "Monitor":
-        if outlet_input <= 3:
-            data_used243 = stddata243
-        else:
-            data_used243 = hpdata243
-    elif opp == "IRV":
+    if outlet_input <= 3:
         data_used243 = stddata243
-    else:
-        if outlet_input <= 5:
-            data_used243 = stddata243
-        else:
+    elif outlet_input <= 5:
+        if opp == "Monitor":
             data_used243 = hpdata243
-
+        else:
+            data_used243 = stddata243
+    else:
+        data_used243 = hpdata243
 
     if opp == "IRV":
         result = interpolate_capacity(data_used243, inlet, outlet, False, False)
