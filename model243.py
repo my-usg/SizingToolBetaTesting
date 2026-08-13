@@ -56,6 +56,15 @@ def build_table(prefix, opp_type, result):
     return pd.DataFrame(rows, columns=cols)
 
 
+# ── helper: styled section label (one size up from table titles, dark blue) ────
+def section_label(text):
+    st.markdown(
+        f"<p style='font-size:1.25rem; font-weight:700; color:#00008B; "
+        f"margin:0.5rem 0 0.25rem;'>{text}</p>",
+        unsafe_allow_html=True,
+    )
+
+
 # ── SIDEBAR: inputs ───────────────────────────────────────────────────────────
 def _req_label(key, text):
     """Red label with a ! while a required field is empty; normal once filled."""
@@ -441,14 +450,14 @@ if run_btn:
 
                 # IRV + Monitor tables
                 elif opp_type == "IRV":
-                    st.caption("With IRV")
+                    section_label("With IRV")
                     for title, prefix in STD_IRV_BODIES:
                         df = build_table(prefix, "IRV", results_irv)
                         if not df.empty:
                             st.markdown(f"**{title}**")
                             st.dataframe(df, use_container_width=True, hide_index=True)
 
-                    st.caption("Capacity reduction due to monitor shown.")
+                    section_label("With Monitor")
                     for title, prefix in STD_MON_BODIES:
                         df = build_table(prefix, "Monitor", result_mon)
                         if not df.empty:
@@ -457,7 +466,7 @@ if run_btn:
 
                 # Monitor-only (standard) tables — 243-8 and 243-12
                 elif outlet_psi <= 2 and opp_type == "Monitor":
-                    st.caption("Capacity reduction due to monitor shown.")
+                    section_label("With Monitor")
                     for title, prefix in STD_MON_BODIES:
                         df = build_table(prefix, "Monitor", result_mon)
                         if not df.empty:
@@ -466,7 +475,7 @@ if run_btn:
 
                 # Monitor-only (standard) tables — 243-8 only
                 elif outlet_psi <= 3 and opp_type == "Monitor":
-                    st.caption("Capacity reduction due to monitor shown.")
+                    section_label("With Monitor")
                     for title, prefix in STD_243_8_BODIES:
                         df = build_table(prefix, "Monitor", result_mon)
                         if not df.empty:
@@ -483,7 +492,7 @@ if run_btn:
 
                 # HP Monitor tables
                 elif outlet_psi > 3 and opp_type == "Monitor":
-                    st.caption("Capacity reduction due to monitor shown.")
+                    section_label("With Monitor")
                     for title, prefix in HP_BODIES:
                         df = build_table(prefix, "Monitor", result_hp_mon)
                         if not df.empty:

@@ -56,6 +56,15 @@ def build_table(prefix, opp_type, result, irv_input_val):
     return pd.DataFrame(rows, columns=cols)
 
 
+# ── helper: styled section label (one size up from table titles, dark blue) ────
+def section_label(text):
+    st.markdown(
+        f"<p style='font-size:1.25rem; font-weight:700; color:#00008B; "
+        f"margin:0.5rem 0 0.25rem;'>{text}</p>",
+        unsafe_allow_html=True,
+    )
+
+
 # ── SIDEBAR: inputs ───────────────────────────────────────────────────────────
 def _req_label(key, text):
     """Red label with a ! while a required field is empty; normal once filled."""
@@ -398,7 +407,7 @@ if run_btn:
                 st.subheader("Regulator Sizing Tables")
 
                 if opp_type == "IRV":
-                    st.caption("Regulator Sizing Tables with IRV")
+                    section_label("With IRV")
                     for title, prefix in [
                         ('Model 046-2, 3/4" Body',     'R046234'),
                         ('Model 046-2, 1" Body',        'R046210'),
@@ -409,7 +418,7 @@ if run_btn:
                             st.markdown(f"**{title}**")
                             st.dataframe(df, use_container_width=True, hide_index=True)
 
-                    st.caption("Capacity reduction due to monitor shown.")
+                    section_label("With Monitor")
                     for title, prefix in [
                         ('Model 046, 046-M or 046-2M, 3/4" Body',   'R046134'),
                         ('Model 046, 046-M or 046-2M, 1" Body',      'R046110'),
@@ -421,7 +430,7 @@ if run_btn:
                             st.dataframe(df, use_container_width=True, hide_index=True)
 
                 elif opp_type == "Partial":
-                    st.caption("Regulator Sizing Tables with Partial IRV")
+                    section_label("With Partial IRV")
                     for title, prefix in [
                         ('Model 046-2, 3/4" Body',     'R046234'),
                         ('Model 046-2, 1" Body',        'R046210'),
@@ -433,7 +442,7 @@ if run_btn:
                             st.dataframe(df, use_container_width=True, hide_index=True)
 
                 elif opp_type == "Monitor":
-                    st.caption("Capacity reduction due to monitor shown.")
+                    section_label("With Monitor")
                     for title, prefix in [
                         ('Model 046, 046-M or 046-2M, 3/4" Body',   'R046134'),
                         ('Model 046, 046-M or 046-2M, 1" Body',      'R046110'),
