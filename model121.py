@@ -382,9 +382,7 @@ if run_btn:
 
                 # ── sizing tables ─────────────────────────────────────────────
                 st.divider()
-                if opp_type == "Monitor":
-                    table_label = "**Regulator Sizing Tables with Monitor**"
-                #table_label = "**Regulator Sizing Tables with Monitor**" if opp_type == "Monitor" else "**Regulator Sizing Tables**"
+                table_label = "**Regulator Sizing Tables with Monitor**" if opp_type == "Monitor" else "**Regulator Sizing Tables**"
 
                 show_122 = (
                     not isinstance(result122, str) and (
