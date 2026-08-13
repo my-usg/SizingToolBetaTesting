@@ -419,6 +419,10 @@ def will_irv_work243(reg, opp):
     if opp == "Partial":
         return "Partial"
 
+    # Not using IRV for >= 2 psi
+    if outlet_input >= 2:
+        return "No"
+
     # determine orifice size for tables
     suf = reg[-4:]
     if suf == "1Q30" or suf == "1Q10":
@@ -578,10 +582,8 @@ def gen_match243(result, opp):
     if opp == "Monitor":
         if outlet_input < 1:
             monset = outlet_input + 0.5
-        elif outlet_input == 1:
-            monset = 2
         elif outlet_input <= 2:
-            monset = outlet_input + 1.5
+            monset = outlet_input + 1
         elif outlet_input <= 5:
             monset = outlet_input + 2
         elif outlet_input <= 7:
@@ -624,6 +626,7 @@ def gen_match243(result, opp):
                             'mon_range': None,
                         }
                         return match
+
     # Other
     else:
         for prefix in ordered_prefixes:
@@ -682,23 +685,19 @@ def run_regulator_selection243(inlet, outlet, opp):
 
     # Correct when user requests IRV but a monitor needs to be used
     if outlet_input >= 2 and opp == "IRV":
-        hp_warning = "IRV cannot be sized for your application, sized for worker/monitor setup"
+        hp_warning = "IRV cannot be sized >= 2 psi, sized for worker/monitor setup"
         opp = "Monitor"
     
     # Select data - standard or hp
-    if opp == "Monitor":
-        if outlet_input <= 3:
-            data_used243 = stddata243
-        else:
-            data_used243 = hpdata243
-    elif opp == "IRV":
+    if outlet_input <= 3:
         data_used243 = stddata243
-    else:
-        if outlet_input <= 5:
-            data_used243 = stddata243
-        else:
+    elif outlet_input <= 5:
+        if opp == "Monitor":
             data_used243 = hpdata243
-
+        else:
+            data_used243 = stddata243
+    else:
+        data_used243 = hpdata243
 
     if opp == "IRV":
         result = interpolate_capacity(data_used243, inlet, outlet, False, False)
@@ -1099,15 +1098,26 @@ print("")
 # Print Capacity Tables ------------------------------
 
 # Fixes user entered IRV but needs HP data
-if opp_type == "IRV" and outlet_input > 4.5:
+if opp_type == "IRV" and outlet_input >= 2:
     opp_type = "Monitor"
 
 results_irv = interpolate_capacity(stddata243, inlet_input, outlet_input, False, False)
 result_mon = interpolate_capacity(stddata243, inlet_input, outlet_input, True, False)
 result_hp_mon = interpolate_capacity(hpdata243, inlet_input, outlet_input, True, False)
 
-if opp_type == "IRV":
+# Standard Tables
+if outlet_input <= 5 and (opp_type == "None" or opp_type == "Partial"):
+    print("REGULATOR SIZING TABLES")
+    print_model_table('Model 243-8, 1-1/4" Body','R243081Q', opp_type, result243)
+    print_model_table('Model 243-8, 1-1/2" Body','R243081H', opp_type, result243)
+    print_model_table('Model 243-8, 2" Body','R2430802', opp_type, result243)
+    print_model_table('Model 243-12, 1-1/4" Body','R243121Q', opp_type, result243)
+    print_model_table('Model 243-12, 1-1/2" Body','R243121H', opp_type, result243)
+    print_model_table('Model 243-12, 2" Body','R2431202', opp_type, result243)
+    print_model_table('Model 243-12-1 with External Control Line','R24312EX', opp_type, result243)
 
+# IRV & Monitor Tables
+elif opp_type == "IRV":
     print("REGULATOR SIZING TABLES WITH IRV")
     print_model_table('Model 243-8, 1-1/4" Body','R243081Q', "IRV", results_irv)
     print_model_table('Model 243-8, 1-1/2" Body','R243081H', "IRV", results_irv)
@@ -1116,61 +1126,38 @@ if opp_type == "IRV":
     print_model_table('Model 243-12, 1-1/2" Body','R243121H', "IRV", results_irv)
     print_model_table('Model 243-12, 2" Body','R2431202', "IRV", results_irv)
     print("")
+    print("REGULATOR SIZING TABLES WITH MONITOR")
+    print_model_table('Model 243-8, 1-1/4" Body','R243081Q', "Monitor", result_mon)
+    print_model_table('Model 243-8, 1-1/2" Body','R243081H', "Monitor", result_mon)
+    print_model_table('Model 243-8, 2" Body','R2430802', "Monitor", result_mon)
+    print_model_table('Model 243-12, 1-1/4" Body','R243121Q', "Monitor", result_mon)
+    print_model_table('Model 243-12, 1-1/2" Body','R243121H', "Monitor", result_mon)
+    print_model_table('Model 243-12, 2" Body','R2431202', "Monitor", result_mon)
+    print_model_table('Model 243-12-1 with External Control Line','R24312EX', "Monitor", result_mon)
 
-    if outlet_input > 3:
+# Monitor Only Tables
+elif outlet_input <= 3 and opp_type == "Monitor":
+    print("REGULATOR SIZING TABLES WITH MONITOR")
+    print_model_table('Model 243-8, 1-1/4" Body','R243081Q', "Monitor", result_mon)
+    print_model_table('Model 243-8, 1-1/2" Body','R243081H', "Monitor", result_mon)
+    print_model_table('Model 243-8, 2" Body','R2430802', "Monitor", result_mon)
+    print_model_table('Model 243-12, 1-1/4" Body','R243121Q', "Monitor", result_mon)
+    print_model_table('Model 243-12, 1-1/2" Body','R243121H', "Monitor", result_mon)
+    print_model_table('Model 243-12, 2" Body','R2431202', "Monitor", result_mon)
+    print_model_table('Model 243-12-1 with External Control Line','R24312EX', "Monitor", result_mon)
 
-        print("REGULATOR SIZING TABLES WITH MONITOR")
-        print_model_table('Model 243-8HP, 1-1/4" Body', 'R243HP1Q', "Monitor", result_hp_mon)
-        print_model_table('Model 243-8HP, 1-1/2" Body', 'R243HP1H', "Monitor", result_hp_mon)
-        print_model_table('Model 243-8HP, 2" Body',     'R243HP02', "Monitor", result_hp_mon)
+# HP Standard Tables
+elif outlet_input > 5 and (opp_type == "None" or opp_type == "Partial"):
+    print("REGULATOR SIZING TABLES")
+    print_model_table('Model 243-8HP, 1-1/4" Body', 'R243HP1Q', opp_type, result243)
+    print_model_table('Model 243-8HP, 1-1/2" Body', 'R243HP1H', opp_type, result243)
+    print_model_table('Model 243-8HP, 2" Body',     'R243HP02', opp_type, result243)
 
-    else:
+# HP Monitor Tables
+elif outlet_input > 3 and opp_type == "Monitor":
+    print("REGULATOR SIZING TABLES WITH MONITOR")
+    print_model_table('Model 243-8HP, 1-1/4" Body', 'R243HP1Q', "Monitor", result_hp_mon)
+    print_model_table('Model 243-8HP, 1-1/2" Body', 'R243HP1H', "Monitor", result_hp_mon)
+    print_model_table('Model 243-8HP, 2" Body',     'R243HP02', "Monitor", result_hp_mon)
 
-        print("REGULATOR SIZING TABLES WITH MONITOR")
-        print_model_table('Model 243-8, 1-1/4" Body','R243081Q', "Monitor", result_mon)
-        print_model_table('Model 243-8, 1-1/2" Body','R243081H', "Monitor", result_mon)
-        print_model_table('Model 243-8, 2" Body','R2430802', "Monitor", result_mon)
-        print_model_table('Model 243-12, 1-1/4" Body','R243121Q', "Monitor", result_mon)
-        print_model_table('Model 243-12, 1-1/2" Body','R243121H', "Monitor", result_mon)
-        print_model_table('Model 243-12, 2" Body','R2431202', "Monitor", result_mon)
-        print_model_table('Model 243-12-1 with External Control Line','R24312EX', "Monitor", result_mon)
-
-elif opp_type == "Monitor":
-
-    if outlet_input > 3:
-
-        print("REGULATOR SIZING TABLES WITH MONITOR")
-        print_model_table('Model 243-8HP, 1-1/4" Body', 'R243HP1Q', "Monitor", result_hp_mon)
-        print_model_table('Model 243-8HP, 1-1/2" Body', 'R243HP1H', "Monitor", result_hp_mon)
-        print_model_table('Model 243-8HP, 2" Body',     'R243HP02', "Monitor", result_hp_mon)
-
-    else:
-
-        print("REGULATOR SIZING TABLES WITH MONITOR")
-        print_model_table('Model 243-8, 1-1/4" Body','R243081Q', "Monitor", result_mon)
-        print_model_table('Model 243-8, 1-1/2" Body','R243081H', "Monitor", result_mon)
-        print_model_table('Model 243-8, 2" Body','R2430802', "Monitor", result_mon)
-        print_model_table('Model 243-12, 1-1/4" Body','R243121Q', "Monitor", result_mon)
-        print_model_table('Model 243-12, 1-1/2" Body','R243121H', "Monitor", result_mon)
-        print_model_table('Model 243-12, 2" Body','R2431202', "Monitor", result_mon)
-        print_model_table('Model 243-12-1 with External Control Line','R24312EX', "Monitor", result_mon)
-
-else:
-
-    if outlet_input <= 5:
-
-        print("REGULATOR SIZING TABLES")
-        print_model_table('Model 243-8, 1-1/4" Body','R243081Q', opp_type, result243)
-        print_model_table('Model 243-8, 1-1/2" Body','R243081H', opp_type, result243)
-        print_model_table('Model 243-8, 2" Body','R2430802', opp_type, result243)
-        print_model_table('Model 243-12, 1-1/4" Body','R243121Q', opp_type, result243)
-        print_model_table('Model 243-12, 1-1/2" Body','R243121H', opp_type, result243)
-        print_model_table('Model 243-12, 2" Body','R2431202', opp_type, result243)
-        print_model_table('Model 243-12-1 with External Control Line','R24312EX', opp_type, result243)
-
-    else:
-
-        print("REGULATOR SIZING TABLES")
-        print_model_table('Model 243-8HP, 1-1/4" Body', 'R243HP1Q', opp_type, result243)
-        print_model_table('Model 243-8HP, 1-1/2" Body', 'R243HP1H', opp_type, result243)
-        print_model_table('Model 243-8HP, 2" Body',     'R243HP02', opp_type, result243)
+# End

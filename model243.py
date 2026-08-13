@@ -19,7 +19,7 @@ except FileNotFoundError as e:
     st.stop()
 
 _lines  = _source.splitlines(keepends=True)
-_code   = "".join(_lines[:918])
+_code   = "".join(_lines[:917])
 
 _globals = {}
 try:
@@ -321,11 +321,6 @@ if run_btn:
                         st.error("BTUH conversion only supported for Natural Gas or Propane. Use CFH or CMH.")
                         st.stop()
 
-                # mirror script: IRV with outlet > 4.5 psi → sized as Monitor
-                table_opp = opp_type
-                if opp_type == "IRV" and outlet_psi > 4.5:
-                    table_opp = "Monitor"
-
                 # inject globals
                 _globals.update({
                     "inlet_input":       inlet_psi,
@@ -346,19 +341,15 @@ if run_btn:
                 result243, match243, apply243, warning243 = _globals["run_regulator_selection243"](
                     inlet_psi, outlet_psi, opp_type)
 
-                # pre-compute table datasets
-                if opp_type == "IRV":
-                    results_irv = _globals["interpolate_capacity"](_globals["stddata243"], inlet_psi, outlet_psi, False, False)
-                    # mirror script: IRV monitor fallback switches to hpdata when outlet > 3
-                    if outlet_psi > 3:
-                        result_mon = _globals["interpolate_capacity"](_globals["hpdata243"], inlet_psi, outlet_psi, True, False)
-                    else:
-                        result_mon = _globals["interpolate_capacity"](_globals["stddata243"], inlet_psi, outlet_psi, True, False)
-                    result_hp   = _globals["interpolate_capacity"](_globals["hpdata243"],  inlet_psi, outlet_psi, True,  False)
-                else:
-                    results_irv = result243
-                    result_mon  = result243
-                    result_hp   = result243
+                # pre-compute table datasets (mirror 243 Script)
+                # Fixes user entered IRV but needs HP data
+                if opp_type == "IRV" and outlet_psi >= 2:
+                    opp_type = "Monitor"
+
+                results_irv   = _globals["interpolate_capacity"](_globals["stddata243"], inlet_psi, outlet_psi, False, False)
+                result_mon    = _globals["interpolate_capacity"](_globals["stddata243"], inlet_psi, outlet_psi, True,  False)
+                result_hp_mon = _globals["interpolate_capacity"](_globals["hpdata243"],  inlet_psi, outlet_psi, True,  False)
+
 
                 # ── regulator selection ───────────────────────────────────────
                 if apply243:
@@ -426,43 +417,52 @@ if run_btn:
                     ('Model 243-8HP, 2" Body',      'R243HP02'),
                 ]
 
-                if opp_type == "IRV" and outlet_psi <= 4.5:
-                    # outlet <= 4.5: show IRV tables (std) + Monitor fallback tables
-                    st.markdown("**Regulator Sizing Tables with IRV**")
+                # Standard tables (mirror 243 Script lines 1108-1162)
+                if outlet_psi <= 5 and (opp_type == "None" or opp_type == "Partial"):
+                    for title, prefix in STD_MON_BODIES:
+                        df = build_table(prefix, opp_type, result243)
+                        if not df.empty:
+                            st.markdown(f"**{title}**")
+                            st.dataframe(df, use_container_width=True, hide_index=True)
+
+                # IRV + Monitor tables
+                elif opp_type == "IRV":
+                    st.markdown("**With IRV**")
                     for title, prefix in STD_IRV_BODIES:
                         df = build_table(prefix, "IRV", results_irv)
                         if not df.empty:
                             st.markdown(f"**{title}**")
                             st.dataframe(df, use_container_width=True, hide_index=True)
 
-                    st.markdown("**Regulator Sizing Tables with Monitor**")
-                    if outlet_psi > 3:
-                        for title, prefix in HP_BODIES:
-                            df = build_table(prefix, "Monitor", result_mon)
-                            if not df.empty:
-                                st.markdown(f"**{title}**")
-                                st.dataframe(df, use_container_width=True, hide_index=True)
-                    else:
-                        for title, prefix in STD_MON_BODIES:
-                            df = build_table(prefix, "Monitor", result_mon)
-                            if not df.empty:
-                                st.markdown(f"**{title}**")
-                                st.dataframe(df, use_container_width=True, hide_index=True)
-
-                elif outlet_psi <= 3 or (outlet_psi <= 5 and opp_type == "Partial"):
-                    label = "**Regulator Sizing Tables with Monitor**" if opp_type == "Monitor" else "**Regulator Sizing Tables**"
-                    st.markdown(label)
+                    st.markdown("**With Monitor**")
                     for title, prefix in STD_MON_BODIES:
-                        df = build_table(prefix, table_opp, result243)
+                        df = build_table(prefix, "Monitor", result_mon)
                         if not df.empty:
                             st.markdown(f"**{title}**")
                             st.dataframe(df, use_container_width=True, hide_index=True)
 
-                else:
-                    label = "**Regulator Sizing Tables with Monitor**" if opp_type == "Monitor" else "**Regulator Sizing Tables**"
-                    st.markdown(label)
+                # Monitor-only (standard) tables
+                elif outlet_psi <= 3 and opp_type == "Monitor":
+                    st.markdown("**With Monitor**")
+                    for title, prefix in STD_MON_BODIES:
+                        df = build_table(prefix, "Monitor", result_mon)
+                        if not df.empty:
+                            st.markdown(f"**{title}**")
+                            st.dataframe(df, use_container_width=True, hide_index=True)
+
+                # HP standard tables
+                elif outlet_psi > 5 and (opp_type == "None" or opp_type == "Partial"):
                     for title, prefix in HP_BODIES:
-                        df = build_table(prefix, table_opp, result243)
+                        df = build_table(prefix, opp_type, result243)
+                        if not df.empty:
+                            st.markdown(f"**{title}**")
+                            st.dataframe(df, use_container_width=True, hide_index=True)
+
+                # HP Monitor tables
+                elif outlet_psi > 3 and opp_type == "Monitor":
+                    st.markdown("**With Monitor**")
+                    for title, prefix in HP_BODIES:
+                        df = build_table(prefix, "Monitor", result_hp_mon)
                         if not df.empty:
                             st.markdown(f"**{title}**")
                             st.dataframe(df, use_container_width=True, hide_index=True)
