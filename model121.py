@@ -393,7 +393,7 @@ if run_btn:
 
                 if show_122:
                     # Standard + VP + 122
-                    st.subheader("Regulator Sizing Tables")
+                    #st.subheader("Regulator Sizing Tables")
                     st.markdown(table_label)
 
                     st.markdown("**Standard Valves**")
@@ -421,7 +421,7 @@ if run_btn:
 
                 elif outlet_psi <= 3:
                     # Standard + VP, no 122
-                    st.subheader("Regulator Sizing Tables")
+                    #st.subheader("Regulator Sizing Tables")
                     st.markdown(table_label)
 
                     st.markdown("**Standard Valves**")

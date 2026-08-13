@@ -450,7 +450,7 @@ if run_btn:
                                 st.dataframe(df, use_container_width=True, hide_index=True)
 
                 elif outlet_psi <= 3 or (outlet_psi <= 5 and opp_type == "Partial"):
-                    label = "**Regulator Sizing Tables with Monitor**" if opp_type == "Monitor" else "**Regulator Sizing Tables**"
+                    label = "**Regulator Sizing Tables with Monitor**" if opp_type == "Monitor" else None
                     st.markdown(label)
                     for title, prefix in STD_MON_BODIES:
                         df = build_table(prefix, table_opp, result243)
@@ -459,7 +459,7 @@ if run_btn:
                             st.dataframe(df, use_container_width=True, hide_index=True)
 
                 else:
-                    label = "**Regulator Sizing Tables with Monitor**" if opp_type == "Monitor" else "**Regulator Sizing Tables**"
+                    label = "**Regulator Sizing Tables with Monitor**" if opp_type == "Monitor" else None
                     st.markdown(label)
                     for title, prefix in HP_BODIES:
                         df = build_table(prefix, table_opp, result243)
