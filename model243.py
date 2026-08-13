@@ -441,14 +441,14 @@ if run_btn:
 
                 # IRV + Monitor tables
                 elif opp_type == "IRV":
-                    st.markdown("**With IRV**")
+                    st.caption("With IRV")
                     for title, prefix in STD_IRV_BODIES:
                         df = build_table(prefix, "IRV", results_irv)
                         if not df.empty:
                             st.markdown(f"**{title}**")
                             st.dataframe(df, use_container_width=True, hide_index=True)
 
-                    st.markdown("**With Monitor**")
+                    st.caption("Capacity reduction due to monitor shown.")
                     for title, prefix in STD_MON_BODIES:
                         df = build_table(prefix, "Monitor", result_mon)
                         if not df.empty:
@@ -457,7 +457,7 @@ if run_btn:
 
                 # Monitor-only (standard) tables — 243-8 and 243-12
                 elif outlet_psi <= 2 and opp_type == "Monitor":
-                    st.markdown("**With Monitor**")
+                    st.caption("Capacity reduction due to monitor shown.")
                     for title, prefix in STD_MON_BODIES:
                         df = build_table(prefix, "Monitor", result_mon)
                         if not df.empty:
@@ -466,7 +466,7 @@ if run_btn:
 
                 # Monitor-only (standard) tables — 243-8 only
                 elif outlet_psi <= 3 and opp_type == "Monitor":
-                    st.markdown("**With Monitor**")
+                    st.caption("Capacity reduction due to monitor shown.")
                     for title, prefix in STD_243_8_BODIES:
                         df = build_table(prefix, "Monitor", result_mon)
                         if not df.empty:
@@ -483,7 +483,7 @@ if run_btn:
 
                 # HP Monitor tables
                 elif outlet_psi > 3 and opp_type == "Monitor":
-                    st.markdown("**With Monitor**")
+                    st.caption("Capacity reduction due to monitor shown.")
                     for title, prefix in HP_BODIES:
                         df = build_table(prefix, "Monitor", result_hp_mon)
                         if not df.empty:

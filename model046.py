@@ -398,7 +398,7 @@ if run_btn:
                 st.subheader("Regulator Sizing Tables")
 
                 if opp_type == "IRV":
-                    st.markdown("**Regulator Sizing Tables with IRV**")
+                    st.caption("Regulator Sizing Tables with IRV")
                     for title, prefix in [
                         ('Model 046-2, 3/4" Body',     'R046234'),
                         ('Model 046-2, 1" Body',        'R046210'),
@@ -409,7 +409,7 @@ if run_btn:
                             st.markdown(f"**{title}**")
                             st.dataframe(df, use_container_width=True, hide_index=True)
 
-                    st.markdown("**Regulator Sizing Tables with Monitor**")
+                    st.caption("Capacity reduction due to monitor shown.")
                     for title, prefix in [
                         ('Model 046, 046-M or 046-2M, 3/4" Body',   'R046134'),
                         ('Model 046, 046-M or 046-2M, 1" Body',      'R046110'),
@@ -421,7 +421,7 @@ if run_btn:
                             st.dataframe(df, use_container_width=True, hide_index=True)
 
                 elif opp_type == "Partial":
-                    st.markdown("**Regulator Sizing Tables with Partial IRV**")
+                    st.caption("Regulator Sizing Tables with Partial IRV")
                     for title, prefix in [
                         ('Model 046-2, 3/4" Body',     'R046234'),
                         ('Model 046-2, 1" Body',        'R046210'),
@@ -433,7 +433,7 @@ if run_btn:
                             st.dataframe(df, use_container_width=True, hide_index=True)
 
                 elif opp_type == "Monitor":
-                    st.markdown("**Regulator Sizing Tables with Monitor**")
+                    st.caption("Capacity reduction due to monitor shown.")
                     for title, prefix in [
                         ('Model 046, 046-M or 046-2M, 3/4" Body',   'R046134'),
                         ('Model 046, 046-M or 046-2M, 1" Body',      'R046110'),
