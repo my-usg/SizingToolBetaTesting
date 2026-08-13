@@ -382,7 +382,6 @@ if run_btn:
 
                 # ── sizing tables ─────────────────────────────────────────────
                 st.divider()
-                table_label = "**Regulator Sizing Tables with Monitor**" if opp_type == "Monitor" else "**Regulator Sizing Tables**"
 
                 show_122 = (
                     not isinstance(result122, str) and (
@@ -391,11 +390,13 @@ if run_btn:
                     )
                 )
 
+                st.subheader("Regulator Sizing Tables")
+
+                if opp_type != "None":
+                    st.caption("Capacity reduction due to monitor shown.")
+
                 if show_122:
                     # Standard + VP + 122
-                    st.subheader("Regulator Sizing Tables")
-                    st.markdown(table_label)
-
                     st.markdown("**Standard Valves**")
                     for title, prefix in [
                         ("Model 121-8",  "R12108"),
@@ -421,9 +422,6 @@ if run_btn:
 
                 elif outlet_psi <= 3:
                     # Standard + VP, no 122
-                    st.subheader("Regulator Sizing Tables")
-                    st.markdown(table_label)
-
                     st.markdown("**Standard Valves**")
                     for title, prefix in [
                         ("Model 121-8",  "R12108"),
@@ -447,9 +445,6 @@ if run_btn:
 
                 else:
                     # HP models only
-                    st.subheader("Regulator Sizing Tables")
-                    st.markdown(table_label)
-
                     st.markdown("**Standard Valves**")
                     df = build_table121("R121HP", result121, False)
                     if not df.empty:
