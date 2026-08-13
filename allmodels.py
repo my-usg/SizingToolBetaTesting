@@ -182,7 +182,7 @@ def run_tool(
     msgs   = []   # warning messages
     result = {}   # what we'll display
 
-    match_selection, model_selection, warning_selection, partnumber, pipe_requirement = allmodels_selector(inlet_input, outlet_input, opp_type)
+    match_selection, model_selection, warning_selection, partnumber, pipe_requirement = allmodels_selector(inlet, outlet, opp_type)
 
     if model_selection:
         if warning_selection: msgs.append(warning_selection)

@@ -4062,7 +4062,7 @@ def allmodels_selector(inlet, outlet, opp):
         model_selection = "496"
     elif apply046 and apply243:
         if opp == "IRV":
-            if match['model'] == '046-2':
+            if match046['model'] == '046-2':
                model_selection = "046"
             else:
                 model_selection = "243"
